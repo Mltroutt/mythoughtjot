@@ -6,8 +6,8 @@ from django.contrib import admin
 class Project(models.Model):
     title = models.CharField(max_length=75)
     created = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User, blank=True, null=True, related_name="project_current_owner")
-    creator = models.ForeignKey(User, blank=True, null=True, related_name = "project_original_owner")
+    owner = models.ForeignKey(User, blank=False, null=False, related_name="project_current_owner")
+    creator = models.ForeignKey(User, blank=False, null=False, related_name = "project_original_owner")
 
     def __unicode__(self):
         return self.title
@@ -15,8 +15,8 @@ class Project(models.Model):
 class Canvas(models.Model):
     title = models.CharField(max_length=75)
     created = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User, blank=True, null=True, related_name="canvas_current_owner")
-    creator = models.ForeignKey(User, blank=True, null=True, related_name = "canvas_original_owner")
+    owner = models.ForeignKey(User, blank=False, null=False, related_name="canvas_current_owner")
+    creator = models.ForeignKey(User, blank=False, null=False, related_name = "canvas_original_owner")
     collaborators = models.ManyToManyField(User)
     public = models.BooleanField(default=True)
     allow_guests = models.BooleanField(default=True)
@@ -38,7 +38,7 @@ class Node(models.Model):
     data = models.TextField(max_length=10000)
     type = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(User, blank=True, null=True)
+    creator = models.ForeignKey(User, blank=False, null=True)
     canvas = models.ForeignKey(Canvas)
 
     def __unicode__(self):
@@ -58,12 +58,13 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ["user"]
 
 class ProjectAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ["title", "owner__username", "creator__username", "created"]
 
 class CanvasAdmin(admin.ModelAdmin):
     list_display = ["title", "project", "user_names", "owner", "created", "node_count"]
     list_filter = ["project", "creator", "owner"]
+    search_fields = ["title", "project__title", "owner__username", "creator__username", "collaborators__username"]
 
 class NodeAdmin(admin.ModelAdmin):
-    search_fields = ["canvas", "creator"]
+    search_fields = ["canvas__title", "creator__username", "data"]
     list_display = ["canvas", "creator", "created"]
