@@ -1,8 +1,4 @@
 # Django settings for mythoughtjot project.
-import os
-
-APP_PATH = os.path.dirname(__file__)
-DATABASE_PATH = os.path.join(APP_PATH, 'database.db')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,12 +11,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': DATABASE_PATH,                  # Or path to database file if using sqlite3.
-        'USER': '',                             # Not used with sqlite3.
-        'PASSWORD': '',                         # Not used with sqlite3.
-        'HOST': '',                             # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                             # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'mythoughtjot_dev_db',                      # Or path to database file if using sqlite3.
+        'USER': 'root',                      # Not used with sqlite3.
+        'PASSWORD': 'root',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -87,7 +83,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '1c8b1jpt$7y4n3!-*v=&l4a)yx5iuqap77&ho)yb-fg__4z4h+'
+SECRET_KEY = '%b0qhqorwv8+n%u7$w=#yh#2vuxqcz$(-&_3u4n27(l7--%!z2'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -106,11 +102,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'mythoughtjot.urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATE_DIRS = ('/home/michael/mythoughtjot/templates',)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -123,6 +115,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'debug_toolbar',
+    'mythoughtjot.canvas',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'registration',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -147,3 +144,8 @@ LOGGING = {
         },
     }
 }
+ACCOUNT_ACTIVATION_DAYS = 7
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = 'username'
+EMAIL_HOST_PASSWORD = 'password'
