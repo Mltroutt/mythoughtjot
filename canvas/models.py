@@ -30,6 +30,7 @@ class Canvas(models.Model):
 
     def user_names(self):
         return ', '.join([u.username for u in self.collaborators.all()])
+    node_count.short_description = "# Nodes"
     user_names.short_description = "User Names"
 
 
