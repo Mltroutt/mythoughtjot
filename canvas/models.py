@@ -17,6 +17,7 @@ class Canvas(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, blank=True, null=True, related_name="canvas_current_owner")
     creator = models.ForeignKey(User, blank=True, null=True, related_name = "canvas_original_owner")
+    collaborators = models.ManyToManyField(User)
     public = models.BooleanField(default=True)
     allow_guests = models.BooleanField(default=True)
     project = models.ForeignKey(Project)
@@ -26,6 +27,11 @@ class Canvas(models.Model):
 
     def node_count(self):
         return self.node_set.count()
+
+    def user_names(self):
+        return ', '.join([u.username for u in self.collaborators.all()])
+    user_names.short_description = "User Names"
+
 
 class Node(models.Model):
     data = models.TextField(max_length=10000)
@@ -54,7 +60,7 @@ class ProjectAdmin(admin.ModelAdmin):
     pass
 
 class CanvasAdmin(admin.ModelAdmin):
-    list_display = ["title", "project", "owner", "created", "node_count"]
+    list_display = ["title", "project", "user_names", "owner", "created", "node_count"]
     list_filter = ["project", "creator", "owner"]
 
 class NodeAdmin(admin.ModelAdmin):
