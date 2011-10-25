@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^$', direct_to_template, {'template': 'index.html'}),
-    url(r'^', include('registration.urls')),
+    url(r'^profiles/', include('profiles.urls')),
     url(r'^canvas/(\d+)/$', 'mythoughtjot.canvas.views.canvas'),
     url(r'^node/(\d+)/$', 'mythoughtjot.canvas.views.node'),
     url(r'^user/(\d+)/$', 'mythoughtjot.canvas.views.user'),
