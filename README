@@ -2,11 +2,12 @@ INSTALL:
 
 1. FTP/SFTP/Upload/Mail in the files to the server
 2. Change the mail settings at the bottom of settings.py
-3. Run "python manage.py syncdb"
-4. Run "python manage.py runserver"
-5. Go to the site
-6. ???
-7. Billion dollar investments
+3. Create a new MySql DB named "mythoughtjot_dev_db"
+4. Run "python manage.py syncdb"
+5. Run "python manage.py runserver"
+6. Go to the site
+7. ???
+8. Billion dollar investments
 
 Current useful URLs and functionality:
 
