@@ -127,7 +127,7 @@ INSTALLED_APPS = (
     'mythoughtjot.canvas',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'registration',
+    'profiles',
 )
 
 # A sample logging configuration. The only tangible logging
