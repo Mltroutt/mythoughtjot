@@ -10,7 +10,7 @@ def register(request):
         user_form = UserCreationForm(request.POST, prefix='user_form')
         if user_form.is_valid():
             new_user = user_form.save()
-            return HttpResponseRedirect('success page goes here')
+            return render_to_response('registration/registration_complete.html',{'new_user':new_user})
     else:
         user_form = UserCreationForm()
     csrfContext = RequestContext(request,{'user_form':user_form})
