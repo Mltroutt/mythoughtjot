@@ -123,8 +123,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'debug_toolbar',
-    'mythoughtjot.canvas',
+    #'debug_toolbar',
+    'canvas',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'profiles',
@@ -157,3 +157,8 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 EMAIL_HOST_USER = 'username'
 EMAIL_HOST_PASSWORD = 'password'
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
