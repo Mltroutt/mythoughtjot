@@ -45,7 +45,7 @@ class Node(models.Model):
         return "Node created by " + unicode(self.creator) + " on " + self.created.strftime("%b %d, %I:%M %p")
 
 class UserProfile(models.Model):
-    avatar = models.ImageField("Profile Pic", upload_to="images/", blank=True, null=True)
+    #avatar = models.ImageField("Profile Pic", upload_to="images/", blank=True, null=True)
     user = models.ForeignKey(User, unique=True)
 
     def __unicode__(self):
