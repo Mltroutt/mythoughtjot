@@ -1,6 +1,8 @@
 # Django settings for mythoughtjot project.
 import os
 
+AUTH_PROFILE_MODULE = "canvas.UserProfile"
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -125,9 +127,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     #'debug_toolbar',
     'canvas',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
     'profiles',
+    'mythoughtjot.registration',
 )
 
 # A sample logging configuration. The only tangible logging

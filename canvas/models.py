@@ -33,6 +33,9 @@ class Canvas(models.Model):
     node_count.short_description = "# Nodes"
     user_names.short_description = "User Names"
 
+    class Meta:
+        verbose_name_plural = ('canvases')
+
 
 class Node(models.Model):
     data = models.TextField(max_length=10000)
@@ -47,6 +50,8 @@ class Node(models.Model):
 class UserProfile(models.Model):
     #avatar = models.ImageField("Profile Pic", upload_to="images/", blank=True, null=True)
     user = models.ForeignKey(User, unique=True)
+
+    canvases = models.ManyToManyField(Canvas)
 
     def __unicode__(self):
         return unicode(self.user)

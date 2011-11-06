@@ -1,5 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.views.generic.simple import direct_to_template
+from registration.views import register
+from canvas.custom_forms import RegistrationFormUserProfile
 
 
 # Uncomment the next two lines to enable the admin:
@@ -15,10 +17,12 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^$', direct_to_template, {'template': 'index.html'}),
-    url(r'^profiles/', include('profiles.urls')),
-    url(r'^canvas/(\d+)/$', 'mythoughtjot.canvas.views.canvas'),
-    url(r'^node/(\d+)/$', 'mythoughtjot.canvas.views.node'),
-    url(r'^user/(\d+)/$', 'mythoughtjot.canvas.views.user'),
+    #url(r'^profiles/', include('profiles.urls')),
+    url(r'^canvas/(\d+)/$', 'canvas.views.canvas'),
+    url(r'^node/(\d+)/$', 'canvas.views.node'),
+    #url(r'^user/(\d+)/$', 'canvas.views.user'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('registration.backends.default.urls')),
+    url(r'^register/$',register,{'form_class' : RegistrationFormUserProfile},name='registration_register'),
 
 )
