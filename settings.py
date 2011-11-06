@@ -125,7 +125,6 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     #'debug_toolbar',
     'canvas',
-    'profiles',
     'registration',
 )
 
