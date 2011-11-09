@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def canvas(request, pk):
-    #user = UserProfile.object.get(user=pk)
     canvas = Canvas.objects.get(pk=pk)
     nodes = Node.objects.filter(canvas=pk)
     return render_to_response("canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes, media_url=MEDIA_URL))
