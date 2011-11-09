@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}mythoughtjot{% endblock %}
+
+{% block scripts %}
+    <script type='text/javascript' src='{{ MEDIA_URL }}js/draw.js'></script>
+    <script type='text/javascript' src='{{ MEDIA_URL }}js/jquery.isotope.js'></script>
+    <script type='text/javascript' src='{{ MEDIA_URL }}js/jquery.isotope.min.js'></script>
+    
+    		  <script>
+  $(document).ready(function() {
+    $("#loginbox").draggable({ containment: 'parent' });
+  });
+  </script>
+    {% endblock %}
+
+{% block content %}
+	<div id="logincontent">
+		
+		
+	  <div id="loginbox">
+		<form class="primary-col" method="post" action="/authenticate">
+			<div class="ltophead">
+				<h2> Log In </h2>
+			</div>
+			<div class="lbody">
+				<label for="email-login"> Email or username </label>
+				<input id="email-login" type="text" tabindex="1" autocapitalize="off" spellcheck="false" autocorrect="off" autocomplete="off" value="" name="user">
+				<label for="password-login"> Password </label>
+				<input id="password-login" type="password" tabindex="2" name="password">
+				<a class="right" tabindex="4" style="margin: 10px 0 0;" href="/forgot">Forgot your password?</a>
+				<input class="primary" type="submit" tabindex="3" value="Log In">
+			<p class="clear">
+			New here?
+			<a href="/signup?returnUrl=/">
+			<strong>Create an Account.</strong>
+			</a>
+			</p>
+			<input type="hidden" value="/" name="returnUrl">
+		</form>
+		<form class="secondary-col clearfix" method="post" action="/authenticate_openid">
+			<label> Or log in with: </label>
+			<input type="hidden" value="https://www.google.com/accounts/o8/id" name="openid_identifier">
+			<input class="primary" type="submit" value="Google Account">
+			<input type="hidden" value="/" name="returnUrl">
+		</form>
+		</div>
+	  </div> <!-- loginbox -->
+	 </div> <!-- end login box -->
+{% endblock %}
