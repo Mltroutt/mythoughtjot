@@ -238,7 +238,7 @@
 /*applied to the menu when it is vertical. Sets the menu's background*/
 .jqx-menu-vertical
 {
-    background: #e8e8e8;
+    background: #252321;
     text-align: left;
 }
 /*applied to the sub menu. Sets the sub menu's background*/
@@ -254,20 +254,22 @@
     overflow: hidden;
     display: none;
     float: none;
-    width: 58px;
-    background-color:#E8E8E8;
+    width: 80px;
+	background: url(../images/DarkBack2.png) repeat;
     border-style: solid;
     border-width: 1px;
     border-color: #828282;
     text-align: left;
     padding: 2px;
+    border-radius: 5px 5px 5px 5px;
+    color:#fff;
 }
 /*applied to the sub menu's ul elements.*/
 .jqx-menu-dropdown ul
 {
     left: 100%;
     margin: 0px;
-    padding: 0px;
+    padding: 8px;
     right: 0;
     overflow: hidden;
     border: none;
@@ -280,24 +282,24 @@
     padding: 2px;
     right: 0;
     overflow: hidden;
-    background-color: transparent;
-    border: none;
+	background: url(../images/darkBack2.png) repeat; 
 }
 /*applied to the top level menu items.*/
 .jqx-menu-item-top
 {
     text-indent: 0;
     list-style: none;
-    padding: 4px 8px 4px 8px;
+    padding: 4px 8px;
     left: 100%;
     overflow: hidden;
-    border: 1px solid transparent;
     color: inherit;
     right: 0;
     margin: 0px 1px 0px 1px;
     font-family: Verdana,Arial,sans-serif;
     cursor: pointer;
     background-color: transparent;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #CCCCCC;
 }
 /*applied to the sub menu items.*/
 .jqx-menu-item
@@ -340,9 +342,9 @@
 /*applied to a sub menu item when the mouse is over the item.*/
 .jqx-menu-item-hover
 {
-    background-color: #e8e8e8;
+    background-color: #fff;
     border: 1px solid #aaaaaa;
-    color: inherit;
+    color: #22201d;
     right: 0;
     list-style: none;
     margin: 1px 1px 1px 1px;
@@ -351,11 +353,15 @@
     text-align: left;
     cursor: pointer;
 }
+.jqx-menu-item:active
+{
+    background-color: #f68010;
+    color:#fff;
+}
 /*applied to a top-level menu item when the mouse is over it.*/
 .jqx-menu-item-top-hover
 {
-    background-color: #e8e8e8;
-    border: 1px solid #aaaaaa;
+    background-color: #4e4c4a;
     color: inherit;
     right: 0;
     list-style: none;
@@ -364,6 +370,11 @@
     padding: 4px 8px 4px 8px;
     top: 50%;
     cursor: pointer;
+}
+.jqx-menu-item-top:active
+{
+    background-color: #f68010;
+    color:#fff;
 }
 /*applied to a sub menu item when its sub menu is opened.*/
 .jqx-menu-item-selected
@@ -392,8 +403,7 @@
 /*applied to a top-level menu item when its sub menu is opened.*/
 .jqx-menu-item-top-selected
 {
-    background-color: #E8E8E8;
-    border: 1px solid #909090;
+    background-color: #4e4c4a;
     color: #000;
     right: 0;
     list-style: none;
@@ -497,7 +507,7 @@
     margin-right: -8px;
     width: 17px;
     height: 17px;
-    background-image: url(images/icon-right.png);
+    background-image: url(../images/moreA.png);
     background-position: 100% 50%;
     background-repeat: no-repeat;
 }
