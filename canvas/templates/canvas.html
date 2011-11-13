@@ -1,46 +1,273 @@
-{% extends "base.html" %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>mythoughtjot</title>
+    <link rel="stylesheet" href="../media/css/style.css" type="text/css" media="screen" />
+     <link rel="stylesheet" href="../media/css/menustyles.css" type="text/css" media="screen" />
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.js" type="text/javascript"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script type='text/javascript' src='../media/js/pjs/processing-1.3.6.js'></script>
+    <script type='text/javascript' src='../media/js/pjs/drawing.js'></script>
+    <script type='text/javascript' src='../media/js/functions.js'></script>
+    <script type='text/javascript' src='../media/js/jQuery/jquery.isotope.min.js'></script>
+    <script type="text/javascript" src="../media/js/jQuery/jqxcore.js"></script>
+    <script type="text/javascript" src="../media/js/jQuery/jqxmenu.js"></script>		
+	<script src="http://tab-slide-out.googlecode.com/files/jquery.tabSlideOut.v1.3.js"></script>
+<!--	
+	<script type="text/javascript" src="js/htmlbox/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="js/htmlbox/jquery.codify.min.js"></script>
+	<script type="text/javascript" src="js/htmlbox/htmlbox.colors.js"></script>
+	<script type="text/javascript" src="js/htmlbox/htmlbox.styles.js"></script>
+	<script type="text/javascript" src="js/htmlbox/htmlbox.syntax.js"></script>
+	<script type="text/javascript" src="js/htmlbox/htmlbox.undoredomanager.js"></script>
+	<script type="text/javascript" src="js/htmlbox/htmlbox.min.js"></script>
+-->
+</head>
+<body>
+<div id="wrapper">
+  <div id="header">
+	<div id="coRightHeader">
+              <div id="headerLeft">
+				<h1 id="title">Welcome, User</h1>
+			  </div>
+                
+		</div> 
+	</div>		<!-- end header-->
+	
+	
+	<div id="leftCol">	
+		<div id="sidebar">
+            <div id='jqxMenu'>
+            	
+                <ul>
+                	<li onclick="draw ()" ><img src="../media/images/pencil.png" alt=""></li>
+                    <li onclick="addText()" ><img src="../media/images/text.png" alt=""></li>
+                    <li onclick="createShape ()" ><img src="../media/images/shapes.png" alt=""></li>
+                    <li onclick="draw ()" ><img src="../media/images/charts.png" alt=""></li>
+                    <li onclick="draw ()" ><img src="../media/images/share.png" alt=""></li>
+                    <li onclick="draw ()" ><img src="../media/images/magnify.png" alt=""></li>
+					<li><img src="../media/images/paper.png" alt="">
+						<ul>
+							<li onclick="changeCanvasBackground(1)" >R</li>
+							<li onclick="changeCanvasBackground(2)" >G</li>
+							<li onclick="changeCanvasBackground(3)" >P</li>
+						</ul>
+					</li>
+     
+                </ul>
+            
+        </div>
+
+	</div> <!-- End Sidebar -->
+
+ </div> <!-- end leftCol -->
+ 
+ 
+<div id="rightCol">
+
+		<div id="updateCol">
+
+	
+	<div id="coLeftHeader">
+		
+        <div class="slideoutMenu">
+            <a class="handle" href="#">Content</a>
 
 
-{% block content %}
-    <style type="text/css">
-        .main { margin-left: 25px; margin-top: 30px; }
 
-        #rtitle {
-            background: #eee; font-size: 1.3em; padding: 3px; margin-top: 40px;
-            padding-left: 20px; margin-bottom: -10px;
-        }
-        #submit { float: right; }
+        
+          </div>   <!-- end slideoutMenu -->
+          
+          
+          
+                  <div class="slideoutMenu2">
+            <a class="handle2" href="#">Content</a>
+            	 <h1>Who is doing what?</h1>
+            	                     <li>Someone
+                        <ul>
+                            <li>Person A</li>
+                            <li>Person B</li>
+                            <li>Person C</li>
+                        </ul>
+                    </li>
+           </div>   <!-- end slideoutMenu2 -->
+          
+          
+          
+		</div> <!-- end coLeftHeader -->
+	</div>		<!-- end updateCol-->
 
-        img { margin-left: 85px; border: 1px solid #ccc; padding: 4px; }
-    </style>
 
-    <div class="main">
-        {{ user.first_name }}
-        <p>
-            <h2>Canvas ID</h2>
-            {{ pk }}
-        </p>
+<div id="content">
+	
+	<div id="canvas">
 
-        <p>
-            <h2>Owner</h2>
-            {{ canvas.creator }}
-        </p>
-        <p>
-            <h2>Collaborators</h2>
-            <ul>
-                {% for user in canvas.collaborators.all %}
-                    <li>{{ user }}</li>
-                {% endfor %}
-            </ul>
-        </p>
-        <p>
-            <h2>Nodes</h2>
-            <ul>
-                {% for node in nodes.all %}
-                    <li>{{ node }}<br />{{ node.data }}</li>
-                {% endfor %}
-            </ul>
-        </p>
-    </div>
 
-{% endblock %}
+<canvas id="drawbox" data-processing-sources="js/pjs/drawing.js"></canvas>
+<input type="button" onclick="clearDrawing();" value="Clear the box" />
+
+<!--
+<h2>Blue Skin</h2>
+<textarea id="htmlbox_silk_icon_set_blue">This HtmlBox uses the wonderful Silk Icon Set</textarea>
+<script language="Javascript" type="text/javascript">
+var hb_silk_icon_set_blue = $("#htmlbox_silk_icon_set_blue").css("height","100").css("width","600").htmlbox({
+    toolbars:[
+	     ["cut","copy","paste","separator_dots","bold","italic","underline","strike","sub","sup","separator_dots","undo","redo","separator_dots",
+		 "left","center","right","justify","separator_dots","ol","ul","indent","outdent","separator_dots","link","unlink","image"],
+		 ["code","removeformat","striptags","separator_dots","quote","paragraph","hr","separator_dots",
+			 {icon:"new.png",tooltip:"New",command:function(){hb_silk_icon_set_blue.set_text("<p></p>");}},
+			 {icon:"open.png",tooltip:"Open",command:function(){alert('Open')}},
+			 {icon:"save.png",tooltip:"Save",command:function(){alert('Save')}}
+		  ]
+	],
+	icons:"silk",
+	skin:"blue"
+});
+-->
+
+</script>
+
+ <!--
+<svg  onmouseover="drag()" xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <path id="lineAB" d="M 100 350 l 150 -300" stroke="red"
+  stroke-width="3" fill="none" />
+  <path id="lineBC" d="M 250 50 l 150 300" stroke="red"
+  stroke-width="3" fill="none" />
+  <path id="lineBC" d="M 175 200 l 150 0" stroke="red"
+  stroke-width="3" fill="none" />
+  <path id="quadcurveABC" d="M 100 350 q 150 -300 300 0"
+  stroke="blue" stroke-width="5" fill="none" />
+  <!-- Mark relevant points -->
+ <!-- <g stroke="black" stroke-width="3" fill="black">
+    <circle id="pointA" cx="100" cy="350" r="3" />
+    <circle id="pointB" cx="250" cy="50" r="3" />
+    <circle id="pointC" cx="400" cy="350" r="3" />
+  </g>
+  <!-- Label the points -->
+ <!-- <g font-size="30" font="sans-serif" fill="black" stroke="none"
+  text-anchor="middle">
+    <text x="100" y="350" dx="-30">A</text>
+    <text x="250" y="50" dy="-10">B</text>
+    <text x="400" y="350" dx="30">C</text>
+  </g>
+</svg> --> 
+
+
+<script type="application/processing">
+void setup() 
+{
+	size(200, 200);
+	stroke(255);
+	background(192, 64, 0);
+}
+
+void draw() 
+{ 
+	line(150, 25, mouseX, mouseY);
+	rect(0, 0, mouseX, mouseY); 
+}
+
+void mousePressed( ) 
+{
+	background(192, 64, 0);
+}
+
+</script><canvas></canvas>
+
+
+    <script>
+/*  Isotope fit elements to page.
+jQuery('#cinnerWrapper').isotope({
+  // options
+  itemSelector : '.test1',
+  layoutMode : 'fitRows'
+});
+*/
+
+dowHeight = $(window).height();
+windowWidth = $(window).width();
+windowWidth = windowWidth- 250;
+$("#canvas").css('height', windowHeight-80 );
+
+$("#updateCol").jqxExpander({ width: '350px'});
+
+$("#canvas").resizable({ animateEasing: 'swing', containment: 'document', maxWidth: windowWidth });
+
+
+	</script>
+
+    
+  </div>  <!-- end canvas -->
+ </div>  <!-- end content -->
+ 
+ 	<div id="rightfooter">
+
+           <section id="slidenav">
+        <h3>Our Friends</h3>
+        <ul>
+            <li class="nitem"><a href="#"><span><img src="img/twitter.png" /></span> Twitter</a></li>
+                <ul class="nsub">
+                    <li><a href="http://twitter.com/designmagtweets">@DesignMagTweets</a></li>
+                    <li><a href="http://twitter.com/smashingmag">@SmashingMag</a></li>
+                    <li><a href="http://twitter.com/hongkiat">@hongkiat</a></li>
+                    <li><a href="http://twitter.com/noupemag">@noupemag</a></li>
+                    <li><a href="http://twitter.com/culturedcode">@culturedcode</a></li>
+                </ul>
+            <li class="nitem"><a href="#"><span><img src="img/facebook.png" /></span> Facebook</a></li>
+                    <ul class="nsub">
+                        <li><a href="http://www.facebook.com/Starbucks">Starbucks</a></li>
+                        <li><a href="http://www.facebook.com/smashmag">Smashing Mag</a></li>
+                        <li><a href="http://www.facebook.com/skittles">Skittles</a></li>
+                        <li><a href="http://www.facebook.com/threadless">Threadless</a></li>
+                    </ul>
+            <li class="nitem"><a href="#"><span><img src="img/dribbble.png" /></span> Dribbble</a></li>
+                <ul class="nsub">
+                    <li><a href="http://dribbble.com/dburka">Daniel Burka</a></li>
+                    <li><a href="http://dribbble.com/maxvoltar">Tim Van Damme</a></li>
+                    <li><a href="http://dribbble.com/owltastic">Meagan Fisher</a></li>
+                    <li><a href="http://dribbble.com/squaredeye">Matthew Smith</a></li>
+                    <li><a href="http://dribbble.com/kadasarva">Alex Volkov</a></li>
+                    <li><a href="http://dribbble.com/joshhemsley">Josh Hemsley</a></li>
+                    <li><a href="http://dribbble.com/brdrck">Jeff Broderick</a></li>
+                </ul>
+            <li class="nitem"><a href="#"><span><img src="img/digg.png" /></span> Digg</a></li>
+                <ul class="nsub">
+                    <li><a href="http://digg.com/kevinrose">Kevin Rose</a></li>
+                    <li><a href="http://digg.com/alexalbrecht">Alex Albrecht</a></li>
+                    <li><a href="http://digg.com/mrbabyman">Mr. Baby Man</a></li>
+                    <li><a href="http://digg.com/ltgenpanda">Lt Gen Panda</a></li>
+                    <li><a href="http://digg.com/thepowerdigger">Power Digger</a></li>
+                </ul>
+            <li class="nitem"><a href="#"><span><img src="img/gowalla.png" /></span> Gowalla</a></li>
+                <ul class="nsub">
+                    <li>Sorry!! Nothing here yet...</li>
+                </ul>
+        </ul>
+    </section>
+    
+        	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.nsub').hide(); // hide sub-navigation items by default
+			
+			$('.nitem a').live('click', function(e){
+				e.preventDefault();
+				$(this).parent().next('.nsub').slideToggle('slow');
+				
+				if($(this).parent().next('.nsub').is(':hidden')) {
+                    $(this).addClass("CurrentlySelected");
+                } else {
+                    $(this).removeClass("CurrentlySelected");
+                }
+			});
+		});
+	</script>
+
+
+
+</div><!-- end rightfooter -->
+ 
+</div> <!-- end rightCol -->
+</div> <!-- end wrapper -->
+</body>
+</html>
