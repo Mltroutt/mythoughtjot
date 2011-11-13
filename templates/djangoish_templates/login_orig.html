@@ -23,6 +23,9 @@
 			<div class="ltophead">
 				<h2> Log In </h2>
 			</div>
+            {% if error_message %}
+                <p class="errornote">{{ error_message }}</p>
+            {% endif %}
 			<div class="lbody">
 				<label for="email-login"> Email or username </label>
 				<input id="email-login" type="text" tabindex="1" autocapitalize="off" spellcheck="false" autocorrect="off" autocomplete="off" value="" name="user">
@@ -32,7 +35,7 @@
 				<input class="primary" type="submit" tabindex="3" value="Log In">
 			<p class="clear">
 			New here?
-			<a href="/signup?returnUrl=/">
+			<a href="/register?returnUrl=/">
 			<strong>Create an Account.</strong>
 			</a>
 			</p>

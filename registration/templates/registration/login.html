@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>mythoughtjot</title>
-    <link rel="stylesheet" href="../media/css/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script type='text/javascript' src='../media/js/draw.js'></script>
-    <script type='text/javascript' src='../media/js/jquery.isotope.js'></script>
-    <script type='text/javascript' src='../media/js/jquery.isotope.min.js'></script>
+    <script type='text/javascript' src='{{ MEDIA_URL }}js/draw.js'></script>
+    <script type='text/javascript' src='{{ MEDIA_URL }}js/jquery.isotope.js'></script>
+    <script type='text/javascript' src='{{ MEDIA_URL }}js/jquery.isotope.min.js'></script>
 
     		  <script>
   $(document).ready(function() {
@@ -31,23 +31,24 @@
 
 
 	  <div id="loginbox">
-		<form action="{{ app_path }}" method="post" id="login-form" class="primary-col">{% csrf_token %}
+		<form action="{% url django.contrib.auth.views.login %}" method="post" id="login-form" class="primary-col">{% csrf_token %}
 			<div class="ltophead">
 				<h2> Log In </h2>
 			</div>
-            {% if error_message %}
-                <p class="errornote">{{ error_message }}</p>
+            {% if form.errors %}
+                <br />
+                {{ form.non_field_errors }}
             {% endif %}
 			<div class="lbody">
 				<label for="id_username"> Username </label>
 				<input id="id_username" type="text" tabindex="1" autocapitalize="off" spellcheck="false" autocorrect="off" autocomplete="off" value="" name="username">
 				<label for="id_password"> Password </label>
 				<input id="id_password" type="password" tabindex="2" name="password">
-				<a class="right" tabindex="4" style="margin: 10px 0 0;" href="/forgot">Forgot your password?</a>
+				<a class="right" tabindex="4" style="margin: 10px 0 0;" href="{% url auth_password_reset %}">Forgot your password?</a>
 				<input class="primary" type="submit" tabindex="3" value="Log In">
 			<p class="clear">
 			New here?
-			<a href="/signup?returnUrl=/">
+			<a href="/register?returnUrl=/">
 			<strong>Create an Account.</strong>
 			</a>
 			</p>
