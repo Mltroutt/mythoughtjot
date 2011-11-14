@@ -26,7 +26,7 @@ Current useful URLs and functionality:
 
 Defaults:
 
-    To load default data run 'python manage.py loaddata canvas_fixtures.json
+    To load default data run 'python manage.py loaddata mythoughtjot_fixtures.json
 
     This will give you 4 default users:
         (username:password)
