@@ -729,7 +729,7 @@ p.error em {
 #menu {
 	padding:10px;
 	width:120px;
-	background: url("../img/actions_mid.png") repeat-y;
+	background: url("../images/actions_mid.png") repeat-y;
 }
 #actions ul {
 	margin:0;
@@ -751,13 +751,13 @@ p.error em {
 	background:#fff;
 }
 #actionsTop {
-	background: url("../img/actions_top.png") no-repeat;
+	background: url("../images/actions_top.png") no-repeat;
     
     height: 13px;
     width: 140px;
 }
 #actionsBottom {
-	background: url("../img/actions_bottom.png") no-repeat;
+	background: url("../images/actions_bottom.png") no-repeat;
    
     height: 13px;
     width: 140px;

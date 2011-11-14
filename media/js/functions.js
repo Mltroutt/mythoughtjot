@@ -8,15 +8,15 @@ jQuery("#myCanvas").fillArc(50, 200, 40, 40, 90.0, 180.0, {color:'#336699', alph
 jQuery("#myCanvas").fillPolygon([150, 300, 90, 30], [20, 30, 40, 60], {color:'yellow', alpha: 1});
 */
 
-function line(x1, y1, x2, y2) {
+function line(cx1, cy1, cx2, cy2) {
     c = $(document.body);
-    var dx = Math.abs(x2-x1);
-    var dy = Math.abs(y2-y1);
+    var dx = Math.abs(cx2-cx1);
+    var dy = Math.abs(cy2-cy1);
     var d = Math.max(dx, dy);
     var i=0;
     for(i=0; i < d; i++) {
         var img = $(document.createElement('img')).attr('src', 'blank.gif');
-        var div = $(document.createElement('div')).width(1).height(1).css({'background-color': '#f00', position: 'absolute', left: Math.min(x1,x2)+(i*dx/d), top: Math.min(y1,y2)+(i*dy/d) });
+        var div = $(document.createElement('div')).width(1).height(1).css({'background-color': '#f00', position: 'absolute', left: Math.min(cx1,cx2)+(i*dx/d), top: Math.min(cy1,cy2)+(i*dy/d) });
         div.append(img);
         c.append(div);
     }
@@ -26,10 +26,10 @@ function circle(x, y, r) {
     var l = 2 * Math.PI * r;
     var i=0;
     for(i=0; i < l * (1+((10-Math.log(r+1))/10)); i++) {
-        var x2 = r * Math.sin(360 * i/l);
-        var y2 = r * Math.cos(360 * i/l);
+        var cx2 = r * Math.sin(360 * i/l);
+        var cy2 = r * Math.cos(360 * i/l);
         var img = $(document.createElement('img')).attr('src', 'blank.gif');
-        var div = $(document.createElement('div')).width(1).height(1).css({'background-color': '#f00', position: 'absolute', left: x+x2, top: y+y2 });
+        var div = $(document.createElement('div')).width(1).height(1).css({'background-color': '#f00', position: 'absolute', left: x+cx2, top: y+cy2 });
         div.append(img);
         c.append(div);
     }
@@ -46,9 +46,21 @@ function createShape () {
 	$("#canvas").append('<div onclick="bringtofront()" onmouseover="drag()" class="test1">Drag Me!!!</div>');
 }
 
-// create a shape
+// add text
 function addText () {
-	$("#canvas").append('<span id="textbox" class="editText">This is a textbox, click here to edit this text!</span></div><script type="text/javascript" src="js/instantedit.js"></script><script type="text/javascript">setVarsForm("pageID=profileEdit&userID=11");</script>');
+	$("#canvas").append('<span id="textbox" class="editText">This is a textbox.</span></div><script type="text/javascript" src="js/instantedit.js"></script><script type="text/javascript">setVarsForm("pageID=profileEdit&userID=11");</script>');
+}
+
+//erase a drawing
+function erase () {
+    var p = Processing.getInstanceById('testdrawcanvas');
+    p.clearDrawing();
+}
+
+//change color of paintbrush
+function changeDrawingSize (width, height) {
+    var q = Processing.getInstanceById('testdrawcanvas');
+    q.changeSize(width, height);
 }
 
 function bringtofront() {
@@ -57,19 +69,23 @@ function bringtofront() {
 
 // make a div draggable
 function drag () {
-	      jQuery(document).ready(function() {
-    jQuery("#textbox").draggable({ containment: 'parent' });
-  });
+    $(".test1").draggable({ containment: 'parent' });
 }
 
 //change canvas background
 function changeCanvasBackground (x) {
    if (x == 1){
-    $("#canvas").css('background', '#FFF url(images/canvasNote.png) 40px 40px');}
+    $("#canvas").css('background', '#FFF url(../media/images/canvasNote.png) 40px 40px');}
    if (x == 2){
-    $("#canvas").css('background-image', 'url(images/canvasGraph.png)');}
+    $("#canvas").css('background', '#FFF url(../media/images/canvasGraph.png)');}
    if (x == 3){
-    $("#canvas").css('background-image', 'url(images/canvasDrawing.png)');}    
+    $("#canvas").css('background', '#FFF url(../media/images/canvasDrawing.png)');}  
+   if (x == 4){
+    $("#canvas").css('background-image', 'none');}    
+   if (x == 5){
+   	$("#canvas").css('background-image', 'none');
+   	$("#canvas").css('color', '#ffffff');
+    $("#canvas").css('background-color', '#26211c');}    
 
 }
 
@@ -118,5 +134,92 @@ $(document).ready(function () {
 	if (theme == null || theme == undefined) theme = '';
  
         // Create a jqxMenu
-	$("#jqxMenu").jqxMenu({ width: '120',  mode: 'vertical', theme: theme });
+	$("#jqxMenu").jqxMenu({ mode: 'vertical', theme: theme });
 });
+
+// create graph from data
+function createGraph (id, title, type) {
+	if (type == 'bar') {$(id).visualize({type: 'bar', title: title});  };
+	if (type == 'pie') {$(id).visualize({type: 'pie', pieMargin: 10, title: title});   };
+	if (type == 'line') {$(id).visualize({type: 'line', title: title});  };
+	if (type == 'area') {$(id).visualize({type: 'area', title: title});  };
+};
+
+//draw polygon
+function drawPoly () {
+	$("#canvas").drawPolygon([100, 100, 90, 30], [20, 30, 40, 60], {color:'#00FF00', alpha: .9});
+	//$("#myCanvas").drawRect(10, 10, 20, 20, {color:'blue', alpha: .5});
+	//$("#myCanvas").drawPolygon([100, 100, 90, 30], [20, 30, 40, 60], {color:'#00FF00', alpha: .9});
+	//$("#myCanvas").drawEllipse(100, 200, 40, 40, {color:'orange', stroke: 10});
+	//$("#myCanvas").fillArc(50, 200, 40, 40, 90.0, 180.0, {color:'#336699', alpha: .2});
+	//$("#myCanvas").fillPolygon([150, 300, 90, 30], [20, 30, 40, 60], {color:'yellow', alpha: 1});
+}
+
+function drawRectangle() {
+	$(document).ready(function() {
+	$('#about').click(function() {
+		
+	                   window.location.href = 'http://motyar.blogspot.com/2010/02/draw-rectangle-with-jquery.html';
+	}
+	)
+	var rx1,rx2,ry1,ry2;
+	$(document).mousedown(function(e) {
+	$("#current").attr({ id: '' })
+	box = $('<div style="border:1px #FF00FF solid;position:fixed;">').hide();
+	$(document.body).append(box);
+	
+	rx1 = e.pageX;
+	ry1 = e.pageY;
+	
+	box.attr({id: 'current'}).css({
+	top: e.pageY , //offsets
+	left: e.pageX //offsets
+	}).fadeIn();
+	});
+	$(document).mousemove(function(e) {
+	$("#current").css({
+	width:Math.abs(e.pageX - rx1), //offsets
+	height:Math.abs(e.pageY - ry1) //offsets
+	}).fadeIn();
+	});
+	
+	$(document).mouseup(function() {
+	$("#current").attr({ id: '' })
+	});
+	
+	});
+}
+
+function drawCircle() {
+		$(document).ready(function() {
+	
+	var cx1,cx2,cy1,cy2;
+	$(document).mousedown(function(e) {
+	$("#current").attr({ id: '' })
+	box = $('<div style="border:1px #FF00FF solid;position:fixed;">').hide();
+	$(document.body).append(box);
+	
+	cx1 = e.pageX;
+	cy1 = e.pageY;
+	
+	box.attr({id: 'current'}).css({
+	top: e.pageY , //offsets
+	left: e.pageX //offsets
+	}).fadeIn();
+	});
+	$(document).mousemove(function(e) {
+	$("#current").css({
+	width:Math.abs(e.pageX - cx1), //offsets
+	height:Math.abs(e.pageY - cy1),//offsets
+	'border-radius':Math.abs(Math.abs(e.pageX - cx1) / 2),
+	'-moz-border-radius':Math.abs(Math.abs(e.pageX - cx1) / 2),
+	'-webkit-border-radius':Math.abs(Math.abs(e.pageX - cx1) / 2)
+	}).fadeIn();
+	});
+	
+	$(document).mouseup(function() {
+	$("#current").attr({ id: '' })
+	});
+	
+	});
+}

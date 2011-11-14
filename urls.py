@@ -16,7 +16,6 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^$', direct_to_template, {'template': 'djangoish_templates/index.html'}),
-    url(r'^login/$', direct_to_template, {'template': 'djangoish_templates/login.html'}),
     #url(r'^profiles/', include('profiles.urls')),
     url(r'^canvas/(\d+)/$', 'canvas.views.canvas'),
     url(r'^node/(\d+)/$', 'canvas.views.node'),

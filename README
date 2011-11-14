@@ -13,11 +13,36 @@ Current useful URLs and functionality:
 /admin/
 	Admin area. Add/delete users, projects, canvases, nodes, profiles
 /canvas/*number*
-	Display canvas with the id *number*. Currently only echos *number*
+	Display canvas with the id *number*.
 /node/*number*
 	Display canvas with the id *number*. Currently only echos *number*
-/user/*number*
-	Display canvas with the id *number*. Currently only echos *number*
 /register/
-	Register a new account
+	Register a new account. No email is currently sent, but this is a feature that can be activated.
+/login/
+    Login.
+/logout/
+    Log out.
 
+
+Defaults:
+
+    To load default data run 'python manage.py loaddata mythoughtjot_fixtures.json
+
+    This will give you 4 default users:
+        (username:password)
+        admin:admin -- Default admin
+        aUser:password  -- Simple user
+        aUser2:password -- Simple user
+        aUser3:password -- Simple user
+
+    This will also load in one default project/canvas/node that can be viewed at 127.0.0.1:8000/canvas/1/
+        The default node is not displayed, but there are default nodes on the canvas.
+
+        The owner of this canvas is aUser -- this currently has no significance
+        The collaborators on this canvas are:
+            aUser,
+            aUser2,
+            admin
+
+        At this point only collaborators can view the canvas if it is set to private, but anyone who is logged
+            in can view the canvas if it is set to public. The default canvas is set to public by default.
