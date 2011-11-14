@@ -2,39 +2,50 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>mythoughtjot</title>
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
-     <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" />
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.6.js" type="text/javascript"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+ {% block styles %}
+	 <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" />
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<link rel="stylesheet" href="{{ MEDIA_URL }}css/jquery.svg.css" type="text/css" media="screen" />
+		<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/visualize.css"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/visualize-dark.css"></script>
+	{% endblock %}
+
+  	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/pjs/processing-1.3.6.js'></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/pjs/drawing.js'></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/functions.js'></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/jQuery/jquery.isotope.min.js'></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxcore.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxmenu.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxmenu.js"></script>		
 	<script src="http://tab-slide-out.googlecode.com/files/jquery.tabSlideOut.v1.3.js"></script>
-<!--	
-	<script type="text/javascript" src="js/htmlbox/jquery-1.3.2.min.js"></script>
-	<script type="text/javascript" src="js/htmlbox/jquery.codify.min.js"></script>
-	<script type="text/javascript" src="js/htmlbox/htmlbox.colors.js"></script>
-	<script type="text/javascript" src="js/htmlbox/htmlbox.styles.js"></script>
-	<script type="text/javascript" src="js/htmlbox/htmlbox.syntax.js"></script>
-	<script type="text/javascript" src="js/htmlbox/htmlbox.undoredomanager.js"></script>
-	<script type="text/javascript" src="js/htmlbox/htmlbox.min.js"></script>
--->
+	
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/visualize/visualize.jQuery.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/visualize/enhance.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/visualize/editabletable.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/basic.css"></script>
+
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/svg/jquery.svg.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/svg/svg.js"></script>
+	
 </head>
 <body>
 <div id="wrapper">
   <div id="header">
-	<div id="coRightHeader">
+	
               <div id="headerLeft">
 				<h1 id="title">Welcome, User</h1>
 			  </div>
-                
+        <div id="coRightHeader"> 
+			<li>
+                	<ul>
+					<li><a href="#">About</a></li>
+					<li><a href="#">Help</a></li>
+				</ul>
+            </li>
 		</div> 
 	</div>		<!-- end header-->
-	
 	
 	<div id="leftCol">	
 		<div id="sidebar">
@@ -43,15 +54,42 @@
                 <ul>
                 	<li onclick="draw ()" ><img src="{{ MEDIA_URL }}images/pencil.png" alt=""></li>
                     <li onclick="addText()" ><img src="{{ MEDIA_URL }}images/text.png" alt=""></li>
-                    <li onclick="createShape ()" ><img src="{{ MEDIA_URL }}images/shapes.png" alt=""></li>
-                    <li onclick="draw ()" ><img src="{{ MEDIA_URL }}images/charts.png" alt=""></li>
-                    <li onclick="draw ()" ><img src="{{ MEDIA_URL }}images/share.png" alt=""></li>
-                    <li onclick="draw ()" ><img src="{{ MEDIA_URL }}images/magnify.png" alt=""></li>
-					<li><img src="../media/images/paper.png" alt="">
+                    <li> <img src="{{ MEDIA_URL }}images/shapes.png" alt="">
+                    	<ul>
+							<li onclick="drawRectangle()" >Rectangle</li>
+							<li onclick="drawCircle()" >Circle</li>
+							<li onclick="createShape ()" >Triangle</li>
+							<li onclick="drawPoly ()" >Polygon</li>
+
+						</ul>
+                    </li>
+                    <li> <img src="{{ MEDIA_URL }}images/charts.png" alt="">
+                    	 <ul>
+							<li onclick="createGraph ('table', 'This is my title', 'bar')" >Bar Graph</li>
+							<li onclick="createGraph ('table', 'This is my title', 'line')" >Line Graph</li>
+							<li onclick="createGraph ('table', 'This is my title', 'pie')" >Pie Graph</li>
+							<li onclick="createGraph ('table', 'This is my title', 'area')" >Area Graph</li>
+
+						</ul>
+                    </li>
+                    <li> <img src="{{ MEDIA_URL }}images/share.png" alt="">
+  					
+                    	 <ul><h2>Share</h2>
+							<li onclick="shareCanvas ()" >Canvas</li>
+							<li onclick="shareFacebook ()" >Facebook</li>
+							<li onclick="shareTwitter ()" >Twitter</li>
+							<li onclick="shareEmail ()" >Email</li>
+
+						</ul>
+                    </li>
+                    <li><img src="{{ MEDIA_URL }}images/magnify.png" alt=""></li>
+					<li><img src="{{ MEDIA_URL }}images/paper.png" alt="">
 						<ul>
-							<li onclick="changeCanvasBackground(1)" >R</li>
-							<li onclick="changeCanvasBackground(2)" >G</li>
-							<li onclick="changeCanvasBackground(3)" >P</li>
+							<li onclick="changeCanvasBackground(1)" >Ruled</li>
+							<li onclick="changeCanvasBackground(2)" >Graph</li>
+							<li onclick="changeCanvasBackground(3)" >Sketch</li>
+							<li onclick="changeCanvasBackground(4)" >Clean</li>
+							<li onclick="changeCanvasBackground(5)" >Dark</li>
 						</ul>
 					</li>
      
@@ -71,178 +109,35 @@
 	
 	<div id="coLeftHeader">
 		
-        <div class="slideoutMenu">
-            <a class="handle" href="#">Content</a>
-
-
-
-        
-          </div>   <!-- end slideoutMenu -->
-          
-          
-          
-                  <div class="slideoutMenu2">
-            <a class="handle2" href="#">Content</a>
-            	 <h1>Who is doing what?</h1>
-            	                     <li>Someone
-                        <ul>
-                            <li>Person A</li>
-                            <li>Person B</li>
-                            <li>Person C</li>
-                        </ul>
-                    </li>
-           </div>   <!-- end slideoutMenu2 -->
-          
-          
-          
-		</div> <!-- end coLeftHeader -->
-	</div>		<!-- end updateCol-->
-
-
-<div id="content">
-	
-	<div id="canvas">
-
-
-<canvas id="drawbox" data-processing-sources="js/pjs/drawing.js"></canvas>
-<input type="button" onclick="clearDrawing();" value="Clear the box" />
-
-<!--
-<h2>Blue Skin</h2>
-<textarea id="htmlbox_silk_icon_set_blue">This HtmlBox uses the wonderful Silk Icon Set</textarea>
-<script language="Javascript" type="text/javascript">
-var hb_silk_icon_set_blue = $("#htmlbox_silk_icon_set_blue").css("height","100").css("width","600").htmlbox({
-    toolbars:[
-	     ["cut","copy","paste","separator_dots","bold","italic","underline","strike","sub","sup","separator_dots","undo","redo","separator_dots",
-		 "left","center","right","justify","separator_dots","ol","ul","indent","outdent","separator_dots","link","unlink","image"],
-		 ["code","removeformat","striptags","separator_dots","quote","paragraph","hr","separator_dots",
-			 {icon:"new.png",tooltip:"New",command:function(){hb_silk_icon_set_blue.set_text("<p></p>");}},
-			 {icon:"open.png",tooltip:"Open",command:function(){alert('Open')}},
-			 {icon:"save.png",tooltip:"Save",command:function(){alert('Save')}}
-		  ]
-	],
-	icons:"silk",
-	skin:"blue"
-});
--->
-
-</script>
-
- <!--
-<svg  onmouseover="drag()" xmlns="http://www.w3.org/2000/svg" version="1.1">
-  <path id="lineAB" d="M 100 350 l 150 -300" stroke="red"
-  stroke-width="3" fill="none" />
-  <path id="lineBC" d="M 250 50 l 150 300" stroke="red"
-  stroke-width="3" fill="none" />
-  <path id="lineBC" d="M 175 200 l 150 0" stroke="red"
-  stroke-width="3" fill="none" />
-  <path id="quadcurveABC" d="M 100 350 q 150 -300 300 0"
-  stroke="blue" stroke-width="5" fill="none" />
-  <!-- Mark relevant points -->
- <!-- <g stroke="black" stroke-width="3" fill="black">
-    <circle id="pointA" cx="100" cy="350" r="3" />
-    <circle id="pointB" cx="250" cy="50" r="3" />
-    <circle id="pointC" cx="400" cy="350" r="3" />
-  </g>
-  <!-- Label the points -->
- <!-- <g font-size="30" font="sans-serif" fill="black" stroke="none"
-  text-anchor="middle">
-    <text x="100" y="350" dx="-30">A</text>
-    <text x="250" y="50" dy="-10">B</text>
-    <text x="400" y="350" dx="30">C</text>
-  </g>
-</svg> --> 
-
-
-<script type="application/processing">
-void setup() 
-{
-	size(200, 200);
-	stroke(255);
-	background(192, 64, 0);
-}
-
-void draw() 
-{ 
-	line(150, 25, mouseX, mouseY);
-	rect(0, 0, mouseX, mouseY); 
-}
-
-void mousePressed( ) 
-{
-	background(192, 64, 0);
-}
-
-</script><canvas></canvas>
-
-
-    <script>
-/*  Isotope fit elements to page.
-jQuery('#cinnerWrapper').isotope({
-  // options
-  itemSelector : '.test1',
-  layoutMode : 'fitRows'
-});
-*/
-
-dowHeight = $(window).height();
-windowWidth = $(window).width();
-windowWidth = windowWidth- 250;
-$("#canvas").css('height', windowHeight-80 );
-
-$("#updateCol").jqxExpander({ width: '350px'});
-
-$("#canvas").resizable({ animateEasing: 'swing', containment: 'document', maxWidth: windowWidth });
-
-
-	</script>
-
-    
-  </div>  <!-- end canvas -->
- </div>  <!-- end content -->
- 
- 	<div id="rightfooter">
+        <div class="slidedoutMenu">
 
            <section id="slidenav">
-        <h3>Our Friends</h3>
+
         <ul>
-            <li class="nitem"><a href="#"><span><img src="{{ MEDIA_URL }}img/twitter.png" /></span> Twitter</a></li>
+            <li class="nitem"><a href="#"><span></span> Me</a></li>
                 <ul class="nsub">
-                    <li><a href="http://twitter.com/designmagtweets">@DesignMagTweets</a></li>
-                    <li><a href="http://twitter.com/smashingmag">@SmashingMag</a></li>
-                    <li><a href="http://twitter.com/hongkiat">@hongkiat</a></li>
-                    <li><a href="http://twitter.com/noupemag">@noupemag</a></li>
-                    <li><a href="http://twitter.com/culturedcode">@culturedcode</a></li>
+                    <li><a href="#"><span></span> New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
+                    <li><a href="#">Project 1</a></li>
+                    <li><a href="#">Project 2</a></li>
+                    <li><a href="#">Project 3</a></li>
                 </ul>
-            <li class="nitem"><a href="#"><span><img src="{{ MEDIA_URL }}img/facebook.png" /></span> Facebook</a></li>
-                    <ul class="nsub">
-                        <li><a href="http://www.facebook.com/Starbucks">Starbucks</a></li>
-                        <li><a href="http://www.facebook.com/smashmag">Smashing Mag</a></li>
-                        <li><a href="http://www.facebook.com/skittles">Skittles</a></li>
-                        <li><a href="http://www.facebook.com/threadless">Threadless</a></li>
-                    </ul>
-            <li class="nitem"><a href="#"><span><img src="{{ MEDIA_URL }}img/dribbble.png" /></span> Dribbble</a></li>
+            <li class="nitem"><a href="#"><span></span> Others</a></li>
                 <ul class="nsub">
-                    <li><a href="http://dribbble.com/dburka">Daniel Burka</a></li>
-                    <li><a href="http://dribbble.com/maxvoltar">Tim Van Damme</a></li>
-                    <li><a href="http://dribbble.com/owltastic">Meagan Fisher</a></li>
-                    <li><a href="http://dribbble.com/squaredeye">Matthew Smith</a></li>
-                    <li><a href="http://dribbble.com/kadasarva">Alex Volkov</a></li>
-                    <li><a href="http://dribbble.com/joshhemsley">Josh Hemsley</a></li>
-                    <li><a href="http://dribbble.com/brdrck">Jeff Broderick</a></li>
+                    <li><a href="#">Project 1</a></li>
+                    <li><a href="#">Project 2</a></li>
+                    <li><a href="#">Project 3</a></li>
                 </ul>
-            <li class="nitem"><a href="#"><span><img src="{{ MEDIA_URL }}img/digg.png" /></span> Digg</a></li>
-                <ul class="nsub">
-                    <li><a href="http://digg.com/kevinrose">Kevin Rose</a></li>
-                    <li><a href="http://digg.com/alexalbrecht">Alex Albrecht</a></li>
-                    <li><a href="http://digg.com/mrbabyman">Mr. Baby Man</a></li>
-                    <li><a href="http://digg.com/ltgenpanda">Lt Gen Panda</a></li>
-                    <li><a href="http://digg.com/thepowerdigger">Power Digger</a></li>
+            <li class="nitem"><a href="#"><span></span>Collaborators</a></li>
+                <ul class="nsub"  id="updatesTab">
+                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;14 sec ago&#62;</span></li>
+                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Edited a drawing on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;30 sec ago&#62;</span></li>
+                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;2 mins ago&#62;</span></li>
+                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;10 mins ago&#62;</span></li>
+                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;32 mins ago&#62;</span></li>
+                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;47 mins ago&#62;</span></li>
+					<li class="updateLast"><a href="#">More Updates>></a></li>
                 </ul>
-            <li class="nitem"><a href="#"><span><img src="{{ MEDIA_URL }}img/gowalla.png" /></span> Gowalla</a></li>
-                <ul class="nsub">
-                    <li>Sorry!! Nothing here yet...</li>
-                </ul>
+
         </ul>
     </section>
     
@@ -263,6 +158,112 @@ $("#canvas").resizable({ animateEasing: 'swing', containment: 'document', maxWid
 		});
 	</script>
 
+        
+          </div>   <!-- end slideoutMenu -->
+                 
+          
+		</div> <!-- end coLeftHeader -->
+	</div>		<!-- end updateCol-->
+
+
+<div id="content">
+	
+	<div id="canvas">
+		
+
+<div id="sketch" class="feature">
+		<h2>Sketchpad</h2>
+		<p>Select a shape and its appearance and then drag in the panel to create it.</p>
+		<div id="svgsketch" class="svgdiv" style="width: 100%; height: 300px;"></div>
+		<div id="drawingTools">
+			<h2>Drawing Tools</h2>
+		<div class="row">
+			<span class="drawOpt">Shape</span>
+			<span class="drawOpt"><select id="shape">
+				<option value="rect">Rectangle</option><option value="circle">Circle</option>
+				<option value="ellipse">Ellipse</option><option value="line">Line</option>
+
+				<option value="polyline">Polyline</option><option value="polygon">Polygon</option>
+				</select></span>
+			<span class="drawOpt">Fill</span>
+			<span class="drawOpt"><select id="fill">
+				<option value="red">red</option><option value="yellow">yellow</option>
+				<option value="green">green</option><option value="blue">blue</option>
+
+				<option value="white">white</option><option value="gray">gray</option>
+				<option value="black">black</option><option value="none">none</option></select></span>
+		</div>
+		<div class="row">
+			<span class="drawOpt">Stroke width</span>
+			<span class="drawOpt"><select id="swidth">
+
+				<option value="1">1</option><option value="2">2</option>
+				<option value="3">3</option><option value="4">4</option>
+				<option value="5">5</option><option value="6">6</option>
+				<option value="7">7</option><option value="8">8</option>
+				<option value="9">9</option><option value="10">10</option></select></span>
+
+			<span class="drawOpt">Stroke</span>
+			<span class="drawOpt"><select id="stroke">
+				<option value="red">red</option><option value="yellow">yellow</option>
+				<option value="green">green</option><option value="blue" selected="selected">blue</option>
+				<option value="white">white</option><option value="gray">gray</option>
+
+				<option value="black">black</option><option value="none">none</option></select></span>
+		</div>
+		<div class="row">
+			<span class="drawOpt">&nbsp;</span>
+			<span class="drawOpt"><button type="button" id="undo">Undo</button></span>
+			<span class="drawOpt"><button type="button" id="clear2">Clear</button></span>
+			<span class="drawOpt"><button type="button" id="toSVG">To SVG</button></span>
+
+		</div>
+</div>		
+
+<script type="text/javascript">			
+
+// Drawing Shapes
+var drawNodes = [];
+var sketchpad = null;
+var start = null;
+var outline = null;
+var offset = null;
+
+$('#svgsketch').svg({onLoad: function(svg) {
+		sketchpad = svg;
+		var surface = svg.rect(0, 0, '100%', '100%', {id: 'surface', fill: 'transparent'});
+		$(surface).mousedown(startDrag).mousemove(dragging).mouseup(endDrag);
+		resetSize(svg, '100%', '100%');
+	}
+});
+
+// Remove the last drawn element
+$('#undo').click(function() {
+	if (!drawNodes.length) {
+		return;
+	}
+	sketchpad.remove(drawNodes[drawNodes.length - 1]);
+	drawNodes.splice(drawNodes.length - 1, 1);
+});
+
+// Clear the canvas
+$('#clear2').click(function() {
+	while (drawNodes.length) {
+		$('#undo').trigger('click');
+	}
+});
+
+// Convert to text
+$('#toSVG').click(function() {
+	alert(sketchpad.toSVG());
+});
+</script>
+
+    
+  </div>  <!-- end canvas -->
+ </div>  <!-- end content -->
+ 
+ 	<div id="rightfooter">
 
 
 </div><!-- end rightfooter -->
