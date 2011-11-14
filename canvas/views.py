@@ -3,6 +3,7 @@ from django.core.context_processors import csrf
 from mythoughtjot.settings import MEDIA_ROOT, MEDIA_URL
 from mythoughtjot.canvas.models import *
 from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
 
 @login_required
 def canvas(request, pk):
@@ -11,7 +12,7 @@ def canvas(request, pk):
     if not isCollaborator:
         return redirect('/')
     nodes = Node.objects.filter(canvas=pk)
-    return render_to_response("canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes, media_url=MEDIA_URL))
+    return render_to_response("canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
 
 def node(request, pk):
     return render_to_response("node.html", {'pk':pk})
