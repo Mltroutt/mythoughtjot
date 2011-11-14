@@ -19,6 +19,6 @@
 	background(0,0);
 }
 
-    void clearDrawing() {
+    void clearDrawidng() {
 	background(0,0);
 }
