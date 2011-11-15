@@ -52,13 +52,13 @@
 			<strong>Create an Account.</strong>
 			</a>
 			</p>
-			<input type="hidden" value="/" name="returnUrl">
-		</form>
+			<input type="hidden" value="{{ next }}" name="next" />
+		<form>
 		<form class="secondary-col clearfix" method="post" action="/authenticate_openid">
 			<label> Or log in with: </label>
 			<input type="hidden" value="https://www.google.com/accounts/o8/id" name="openid_identifier">
 			<input class="primary" type="submit" value="Google Account">
-			<input type="hidden" value="/" name="returnUrl">
+			<input type="hidden" value="{{ next }}" name="next">
 		</form>
 		</div>
 	  </div> <!-- loginbox -->
