@@ -1,3 +1,4 @@
+{% load postman_tags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -38,6 +39,7 @@
 	
               <div id="headerLeft">
 				<h1 id="title">Welcome, User</h1>
+				<button id="dostuffbutton" type="button">Click Me!</button>
 			  </div>
         <div id="coRightHeader"> 
 			<li>
@@ -156,6 +158,11 @@
                 } else {
                     $(this).removeClass("CurrentlySelected");
                 }
+			});
+			
+			$('#dostuffbutton').click(function() {
+				{% postman_unread as unread_count %}				
+   				alert('You have {{ unread_count }} unread messages.');
 			});
 		});
 	</script>
