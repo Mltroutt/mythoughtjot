@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     #url(r'^user/(\d+)/$', 'canvas.views.user'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('registration.backends.default.urls')),
+    url(r'^messages/', include('postman.urls')),
 
 )
 

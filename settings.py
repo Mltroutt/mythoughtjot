@@ -71,6 +71,8 @@ STATIC_URL = '/static/'
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
+AUTH_PROFILE_MODULE='django_messaging.DmUser'
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -103,13 +105,22 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request'
+)
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-)
+    'pagination.middleware.PaginationMiddleware',
+ )
 
 ROOT_URLCONF = 'mythoughtjot.urls'
 
@@ -134,6 +145,8 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     'canvas',
     'registration',
+    'postman',
+    'pagination',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -163,6 +176,11 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 EMAIL_HOST_USER = 'username'
 EMAIL_HOST_PASSWORD = 'password'
+
+#POSTMAN
+
+POSTMAN_DISALLOW_ANONYMOUS=True
+POSTMAN_AUTO_MODERATE_AS=True
 
 try:
     from local_settings import *
