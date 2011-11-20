@@ -11,11 +11,7 @@ def canvas(request, pk):
     if not isCollaborator and not canvas.public:
         return redirect('/')
     nodes = Node.objects.filter(canvas=pk)
-<<<<<<< HEAD
-    return render_to_response("canvas/canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
-=======
     return render_to_response("canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
->>>>>>> 95cc8b83d23a434afab25eab7853b1dabff72c57
 
 def node(request, pk):
     return render_to_response("node.html", {'pk':pk})
