@@ -8,6 +8,7 @@ class Project(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, blank=False, null=False, related_name="project_current_owner")
     creator = models.ForeignKey(User, blank=False, null=False, related_name = "project_original_owner")
+    project_collaborators = models.ManyToManyField(User)
 
     def __unicode__(self):
         return self.title
