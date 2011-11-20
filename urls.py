@@ -23,6 +23,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('registration.backends.default.urls')),
     url(r'^messages/', include('postman.urls')),
+    url(r'^project/create/', 'canvas.views.create_project'),
+    url(r'^canvas/create/', 'canvas.views.create_canvas'),
 
 )
 
