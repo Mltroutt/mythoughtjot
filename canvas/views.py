@@ -9,7 +9,7 @@ from django.forms import ModelForm
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        exclude = ["created","owner","creator"]
+        exclude = ["created","owner","creator","project_collaborators"]
 
 class CanvasForm(ModelForm):
     class Meta:
@@ -20,19 +20,31 @@ class CanvasForm(ModelForm):
 def create_project(request):
     form = ProjectForm(request.POST or None)
 
-    if request.method == 'POST' and form.is_valid():
-        Project(title=request.POST.get('title',''), owner=request.user, creator=request.user).save()
-        return redirect('/project/')
+    if request.method == 'POST':
+        if form.is_valid():
+            pre_save = form.save(commit=False)
+            pre_save.owner = request.user
+            pre_save.creator = request.user
+            pre_save.save()
+            pre_save.project_collaborators.add(request.user)
+            return redirect('/project/')
     return render_to_response('project_creation.html', add_csrf(request, form=form), context_instance=RequestContext(request))
 
 @login_required
 def create_canvas(request):
-    form = CanvasForm(request.POST or None)
-    form.fields['project'].queryset = Project.objects.filter(owner=request.user)
 
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('/canvas/')
+    if request.method == 'POST':
+        form = CanvasForm(request.POST)
+        form.fields['project'].queryset = Project.objects.filter(owner=request.user)
+        if form.is_valid():
+            pre_save = form.save(commit=False)
+            pre_save.owner = request.user
+            pre_save.creator = request.user
+            pre_save.save()
+            pre_save.collaborators.add(request.user)
+            return redirect('/canvas/')
+    form = CanvasForm()
+    form.fields['project'].queryset = Project.objects.filter(project_collaborators=request.user)
     return render_to_response('canvas_creation.html', add_csrf(request, form=form), context_instance=RequestContext(request))
 
 @login_required
