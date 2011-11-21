@@ -16,13 +16,17 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^$', 'django.contrib.auth.views.login'),
+    url(r'about$', 'django.views.generic.simple.direct_to_template', {'template':'about.html'}),
     #url(r'^profiles/', include('profiles.urls')),
+    url(r'^project/(\d+)/$', 'canvas.views.project'),
     url(r'^canvas/(\d+)/$', 'canvas.views.canvas'),
     url(r'^node/(\d+)/$', 'canvas.views.node'),
     #url(r'^user/(\d+)/$', 'canvas.views.user'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('registration.backends.default.urls')),
     url(r'^messages/', include('postman.urls')),
+    url(r'^project/create/', 'canvas.views.create_project'),
+    url(r'^canvas/create/', 'canvas.views.create_canvas'),
 
 )
 

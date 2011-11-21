@@ -5,9 +5,15 @@ from django.contrib import admin
 
 class Project(models.Model):
     title = models.CharField(max_length=75)
+    description = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, blank=False, null=False, related_name="project_current_owner")
     creator = models.ForeignKey(User, blank=False, null=False, related_name = "project_original_owner")
+    project_collaborators = models.ManyToManyField(User)
+
+    def collaborators(self):
+        return ', '.join([u.username for u in self.project_collaborators.all()])
+    collaborators.short_description = "Collaborators"
 
     def __unicode__(self):
         return self.title
@@ -31,7 +37,7 @@ class Canvas(models.Model):
     def user_names(self):
         return ', '.join([u.username for u in self.collaborators.all()])
     node_count.short_description = "# Nodes"
-    user_names.short_description = "User Names"
+    user_names.short_description = "Collaborators"
 
     class Meta:
         verbose_name_plural = ('canvases')
@@ -63,7 +69,8 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ["user"]
 
 class ProjectAdmin(admin.ModelAdmin):
-    search_fields = ["title", "owner__username", "creator__username", "created"]
+    list_display = ["title", "description", "collaborators","owner"]
+    search_fields = ["title", "description", "project_collaborators__username", "owner__username", "creator__username", "created"]
 
 class CanvasAdmin(admin.ModelAdmin):
     list_display = ["title", "project", "user_names", "owner", "created", "node_count"]

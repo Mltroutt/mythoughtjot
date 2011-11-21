@@ -213,9 +213,6 @@
     float: none;
     margin: 0px;
     visibility: hidden;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #828282;
     height: 100%;
     padding: 0px;
     overflow: hidden;
@@ -255,7 +252,7 @@
     display: none;
     float: none;
     width: 80px;
-    background: url(../images/darkBack2.png) repeat;
+	background: url(../images/DarkBack2.png) repeat;
     border-style: solid;
     border-width: 1px;
     border-color: #828282;
@@ -297,9 +294,6 @@
     margin: 0px 1px 0px 1px;
     font-family: Verdana,Arial,sans-serif;
     cursor: pointer;
-    background-color: transparent;
-    border-bottom: 1px solid #CCCCCC;
-    border-top: 1px solid #CCCCCC;
 }
 /*applied to the sub menu items.*/
 .jqx-menu-item
@@ -361,7 +355,6 @@
 /*applied to a top-level menu item when the mouse is over it.*/
 .jqx-menu-item-top-hover
 {
-    background-color: #4e4c4a;
     color: inherit;
     right: 0;
     list-style: none;
@@ -373,7 +366,7 @@
 }
 .jqx-menu-item-top:active
 {
-    background-color: #f68010;
+
     color:#fff;
 }
 /*applied to a sub menu item when its sub menu is opened.*/
