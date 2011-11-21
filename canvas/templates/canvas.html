@@ -3,99 +3,78 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>mythoughtjot</title>
-
-	 <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
+   <!-- <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" /> -->
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" href="{{ MEDIA_URL }}css/jquery.svg.css" type="text/css" media="screen" />
-	
-	
-	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/visualize.css"></script>
-	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/visualize-dark.css"></script>
 
-  	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script>!window.jQuery && document.write('<script src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"><\/script>')</script>
+
+
   	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/pjs/processing-1.3.6.js'></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/pjs/drawing.js'></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/functions.js'></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/jQuery/jquery.isotope.min.js'></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxcore.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxmenu.js"></script>		
-	<script src="http://tab-slide-out.googlecode.com/files/jquery.tabSlideOut.v1.3.js"></script>
+ 	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxcore.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jqxmenu.js"></script>	
+  	<script src="http://tab-slide-out.googlecode.com/files/jquery.tabSlideOut.v1.3.js"></script>
 	
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/visualize/visualize.jQuery.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/visualize/enhance.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/visualize/editabletable.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/basic.css"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/visualize.css"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}css/visualize/visualize-dark.css"></script>
 
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/svg/jquery.svg.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/svg/svg.js"></script>
-    
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/raphael-min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery.topzindex.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery-ink.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery-fillVertically.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/common.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery.event.drag-1.5.min.js"></script>
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/classes.js"></script>
+	
+
+<script type="text/javacript">
+
+</script>
+
 	
 </head>
 <body>
+
 <div id="wrapper">
   <div id="header">
 	
               <div id="headerLeft">
-				<h1 id="title">Welcome, User</h1>
-				<button id="dostuffbutton" type="button">Click Me!</button>
-			  </div>
+              	
+              	<div class="logo">
+              	<img src="{{ MEDIA_URL }}images/mythoughtjot.png" />
+              	</div>
+			  </div><div class="help"></div>
         <div id="coRightHeader"> 
-			<li>
-                	<ul>
-					<li><a href="#">About</a></li>
-					<li><a href="#">Help</a></li>
-				</ul>
-            </li>
+<h1 id="title">Welcome, {{ request.user.first_name }}</h1>
+           
 		</div> 
 	</div>		<!-- end header-->
 	
 	<div id="leftCol">	
 		<div id="sidebar">
-            <div id='jqxMenu'>
+            <div id='buttons'>
             	
                 <ul>
-                	<li onclick="draw ()" ><img src="{{ MEDIA_URL }}images/pencil.png" alt=""></li>
-                    <li onclick="addText()" ><img src="{{ MEDIA_URL }}images/text.png" alt=""></li>
-                    <li> <img src="{{ MEDIA_URL }}images/shapes.png" alt="">
-                    	<ul>
-							<li onclick="drawRectangle()" >Rectangle</li>
-							<li onclick="drawCircle()" >Circle</li>
-							<li onclick="createShape ()" >Triangle</li>
-							<li onclick="drawPoly ()" >Polygon</li>
-
-						</ul>
-                    </li>
-                    <li> <img src="{{ MEDIA_URL }}images/charts.png" alt="">
-                    	 <ul>
-							<li onclick="createGraph ('table', 'This is my title', 'bar')" >Bar Graph</li>
-							<li onclick="createGraph ('table', 'This is my title', 'line')" >Line Graph</li>
-							<li onclick="createGraph ('table', 'This is my title', 'pie')" >Pie Graph</li>
-							<li onclick="createGraph ('table', 'This is my title', 'area')" >Area Graph</li>
-
-						</ul>
-                    </li>
-                    <li> <img src="{{ MEDIA_URL }}images/share.png" alt="">
-  					
-                    	 <ul><h2>Share</h2>
-							<li onclick="shareCanvas ()" >Canvas</li>
-							<li onclick="shareFacebook ()" >Facebook</li>
-							<li onclick="shareTwitter ()" >Twitter</li>
-							<li onclick="shareEmail ()" >Email</li>
-
-						</ul>
-                    </li>
-                    <li><img src="{{ MEDIA_URL }}images/magnify.png" alt=""></li>
-					<li><img src="{{ MEDIA_URL }}images/paper.png" alt="">
-						<ul>
-							<li onclick="changeCanvasBackground(1)" >Ruled</li>
-							<li onclick="changeCanvasBackground(2)" >Graph</li>
-							<li onclick="changeCanvasBackground(3)" >Sketch</li>
-							<li onclick="changeCanvasBackground(4)" >Clean</li>
-							<li onclick="changeCanvasBackground(5)" >Dark</li>
-						</ul>
-					</li>
+                	<li onclick="changeToolbar('#drawingTools');initButtons();set();anode.newDrawing();"><div class="buttons" id="drawButton"><script type="text/javascript">chooseIcon("pencil");</script></div></li>
+                    <li onclick="changeToolbar('#textTools');"><div class="buttons" id="textButton"><script type="text/javascript">chooseIcon("text");</script></div></li>
+                    <li onclick="changeToolbar('#shapeTools');initShape() ;"><div class="buttons" id="shapeButton"><script type="text/javascript">chooseIcon("shape");</script></div></li>
+                    <li onclick="changeToolbar('#tableTools');"><div class="buttons" id="graphButton"><script type="text/javascript">chooseIcon("graph");</script></div></li>
+                    <li onclick="changeToolbar('#sharingTools');"><div class="buttons" id="shareButton"><script type="text/javascript">chooseIcon("share");</script></div></li>
+                    <li onclick="notfinishedyet()"><div  class="buttons" id="searchButton"><script type="text/javascript">chooseIcon("search");</script></div></li>
+					<li onclick="checkmessages()"><div class="buttons" id="messagesButton"><script type="text/javascript">chooseIcon("messages");</script></div></li>
+					<li onclick="changeToolbar('#settings');"><div class="buttons" id="canvasButton"><script type="text/javascript">chooseIcon("canvas");</script></div></li>
      
                 </ul>
             
@@ -114,76 +93,44 @@
 	<div id="coLeftHeader">
 		
         <div class="slidedoutMenu">
-
-           <section id="slidenav">
-
-        <ul>
-            <li class="nitem"><a href="#"><span></span> Me</a></li>
-                <ul class="nsub">
-                    <li><a href="#"><span></span> New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
-                    <li><a href="#">Project 1</a></li>
-                    <li><a href="#">Project 2</a></li>
-                    <li><a href="#">Project 3</a></li>
-                </ul>
-            <li class="nitem"><a href="#"><span></span> Others</a></li>
-                <ul class="nsub">
-                    <li><a href="#">Project 1</a></li>
-                    <li><a href="#">Project 2</a></li>
-                    <li><a href="#">Project 3</a></li>
-                </ul>
-            <li class="nitem"><a href="#"><span></span>Collaborators</a></li>
-                <ul class="nsub"  id="updatesTab">
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;14 sec ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Edited a drawing on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;30 sec ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;2 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;10 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;32 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;47 mins ago&#62;</span></li>
-					<li class="updateLast"><a href="#">More Updates>></a></li>
-                </ul>
-
-        </ul>
-    </section>
-    
-        	<script type="text/javascript">
-		$(document).ready(function() {
-			$('.nsub').hide(); // hide sub-navigation items by default
-			
-			$('.nitem a').live('click', function(e){
-				e.preventDefault();
-				$(this).parent().next('.nsub').slideToggle('slow');
-				
-				if($(this).parent().next('.nsub').is(':hidden')) {
-                    $(this).addClass("CurrentlySelected");
-                } else {
-                    $(this).removeClass("CurrentlySelected");
-                }
-			});
-			
-			$('#dostuffbutton').click(function() {
-				{% postman_unread as unread_count %}				
-   				alert('You have {{ unread_count }} unread messages.');
-			});
-		});
-	</script>
-
-        
-          </div>   <!-- end slideoutMenu -->
-                 
-          
-		</div> <!-- end coLeftHeader -->
-	</div>		<!-- end updateCol-->
+		<div id="toolbox">
 
 
-<div id="content">
+	<div class="toolWindow" id="drawingTools">
+		<h1>Drawing</h1>
+		<div class="inner">
+					<div id="modeRadio" class="left-stub">
+
+				<input name="modeRadio" id="writingRadio" type="radio" value="writing" checked="checked" />
+				<label for="writingRadio">Write</label>
+
+				<input name="modeRadio" id="erasingRadio" type="radio" value="erasing" />
+				<label for="erasingRadio">Erase</label>
+			</div>
+
+			<div class="left-stub">
+				<input id="clearButton" type="button" value="Clear" />
+			</div>
+				<input id="drawBoxW" type="text" value="Height" />
+				<input id="drawBoxH" type="text" value="Width" />
+				<script type="text/javascript">
+
+				</script>
+				<input id="createBox" onclick="newDrawing();" type="button" value="Create Drawing Box" />
+		</div>
+	</div>
 	
-	<div id="canvas">
-		
-
-<div id="sketch" class="feature">
-		<h2>Sketchpad</h2>
+	<div class="toolWindow" id="textTools">
+		<h1>Text</h1>
+		<div class="inner">
+			
+		</div>
+	</div>
+	
+	<div class="toolWindow" id="shapeTools">
+		<h1>Shapes</h1>
+		<div class="inner">
 		<p>Select a shape and its appearance and then drag in the panel to create it.</p>
-		<div id="svgsketch" class="svgdiv" style="width: 100%; height: 300px;"></div>
 		<div id="drawingTools">
 			<h2>Drawing Tools</h2>
 		<div class="row">
@@ -227,57 +174,131 @@
 			<span class="drawOpt"><button type="button" id="toSVG">To SVG</button></span>
 
 		</div>
-</div>		
+		<input type="button" onclick="whattodo();" value="Create Shape"/>
+	  </div>	<!-- end sketchpad -->
+		</div>
+	</div>
+	
+	<div class="toolWindow" id="tableTools">
+		<h1>Tables and Graphs</h1>
+		<div class="inner">
+			
+		</div>
+	</div>
+	
+	<div class="toolWindow" id="sharingTools">
+		<h1>Share</h1>
+		<div class="inner">
+			
+		</div>
+	</div>
+	
+	<div class="toolWindow" id="messagingTools">
+		<h1>Messages</h1>
+		<div class="inner">
+			
+		</div>
+	</div>
 
-<script type="text/javascript">			
+	<div class="toolWindow" id="settings">
+		<h1>Settings</h1>
+		<div class="inner">
+			
+		</div>
+	</div>
 
-// Drawing Shapes
-var drawNodes = [];
-var sketchpad = null;
-var start = null;
-var outline = null;
-var offset = null;
 
-$('#svgsketch').svg({onLoad: function(svg) {
-		sketchpad = svg;
-		var surface = svg.rect(0, 0, '100%', '100%', {id: 'surface', fill: 'transparent'});
-		$(surface).mousedown(startDrag).mousemove(dragging).mouseup(endDrag);
-		resetSize(svg, '100%', '100%');
+		</div>
+		
+           <section id="slidenav">
+
+        <ul>  	
+            <li class="nitem"><a href="#">Me</a></li>
+                <ul class="nsub">
+                    <li><a href="#">New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
+                    <li><a href="#">Project 1</a></li>
+                    <li><a href="#">Project 2</a></li>
+                    <li><a href="#">Project 3</a></li>
+                </ul>
+            <li class="nitem"><a href="#"><span></span> Others</a></li>
+                <ul class="nsub">
+                    <li><a href="#">Project 1</a></li>
+                    <li><a href="#">Project 2</a></li>
+                    <li><a href="#">Project 3</a></li>
+                </ul>
+            <li class="nitem"><a href="#"><span></span>Collaborators</a></li>
+                <ul class="nsub"  id="updatesTab">
+                	{% for user in canvas.collaborators.all %}
+                    	<li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">{{ user.username }}</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;14 sec ago&#62;</span></li>
+                    {% endfor %}
+					<li class="updateLast"><a href="#">More Updates>></a></li>
+                </ul>
+
+        </ul>
+    </section>
+    
+        	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.nsub').hide(); // hide sub-navigation items by default
+			
+			$('.nitem a').live('click', function(e){
+				e.preventDefault();
+				$(this).parent().next('.nsub').slideToggle('slow');
+				
+				if($(this).parent().next('.nsub').is(':hidden')) {
+                    $(this).addClass("CurrentlySelected");
+                } else {
+                    $(this).removeClass("CurrentlySelected");
+                }
+			});
+		});
+	</script>
+
+        
+          </div>   <!-- end slideoutMenu -->
+		</div> <!-- end coLeftHeader -->
+	</div>		<!-- end updateCol-->
+
+<div id="content">
+	<div id="canvas">
+		
+<div id="draggable"class="box"><div class="head">Drag Me</div>I'm a pickle</div>
+
+<script type="text/javascript">
+	$("#draggable")
+		.bind('dragstart',function( event ){
+			if ( !$(event.target).is('.head') ) return false;
+			return $( this ).css('opacity',.5)
+				.clone().addClass('active')
+				.insertAfter( this );
+			})
+		.bind('drag',function( event ){
+			$( event.dragProxy ).css({
+				top: event.offsetY,
+				left: event.offsetX
+				});
+			})
+		.bind('dragend',function( event ){
+			$( event.dragProxy ).remove();
+			$( this ).animate({
+				top: event.offsetY,
+				left: event.offsetX,
+				opacity: 1
+				})
+	}); 
+	function checkmessages() {
+		//{% postman_unread as unread_count %}				
+	   		alert('You have {{ unread_count }} unread messages.');
 	}
-});
-
-// Remove the last drawn element
-$('#undo').click(function() {
-	if (!drawNodes.length) {
-		return;
-	}
-	sketchpad.remove(drawNodes[drawNodes.length - 1]);
-	drawNodes.splice(drawNodes.length - 1, 1);
-});
-
-// Clear the canvas
-$('#clear2').click(function() {
-	while (drawNodes.length) {
-		$('#undo').trigger('click');
-	}
-});
-
-// Convert to text
-$('#toSVG').click(function() {
-	alert(sketchpad.toSVG());
-});
 </script>
 
-    
+		 
   </div>  <!-- end canvas -->
  </div>  <!-- end content -->
  
  	<div id="rightfooter">
-
-
-</div><!-- end rightfooter -->
- 
-</div> <!-- end rightCol -->
-</div> <!-- end wrapper -->
+	</div><!-- end rightfooter -->
+  </div> <!-- end rightCol -->
+ </div> <!-- end wrapper -->
 </body>
 </html>
