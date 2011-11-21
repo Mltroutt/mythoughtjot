@@ -12,6 +12,12 @@ Current useful URLs and functionality:
 
 /admin/
 	Admin area. Add/delete users, projects, canvases, nodes, profiles
+/project/create
+	Create a new project
+/project/*number*
+	Display project details
+/canvas/create
+	Create a new canvas
 /canvas/*number*
 	Display canvas with the id *number*.
 /node/*number*
