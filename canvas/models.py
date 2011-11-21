@@ -5,6 +5,7 @@ from django.contrib import admin
 
 class Project(models.Model):
     title = models.CharField(max_length=75)
+    description = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, blank=False, null=False, related_name="project_current_owner")
     creator = models.ForeignKey(User, blank=False, null=False, related_name = "project_original_owner")
@@ -68,8 +69,8 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ["user"]
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ["title", "collaborators","owner"]
-    search_fields = ["title", "owner__username", "creator__username", "created"]
+    list_display = ["title", "description", "collaborators","owner"]
+    search_fields = ["title", "description", "project_collaborators__username", "owner__username", "creator__username", "created"]
 
 class CanvasAdmin(admin.ModelAdmin):
     list_display = ["title", "project", "user_names", "owner", "created", "node_count"]

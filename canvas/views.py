@@ -9,6 +9,7 @@ from django.forms import ModelForm, forms
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
+        fields = ('title','description')
         exclude = ["created","owner","creator","project_collaborators"]
         
     def __init__(self, *args, **kwargs):
@@ -45,7 +46,7 @@ def create_project(request=None):
         pre_save.save()
         pre_save.project_collaborators.add(request.user)
         return redirect('/project/')
-    return render_to_response('project_creation.html', add_csrf(request, form=form), context_instance=RequestContext(request))
+    return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Project'), context_instance=RequestContext(request))
 
 @login_required
 def create_canvas(request):
@@ -58,11 +59,21 @@ def create_canvas(request):
         pre_save.collaborators.add(request.user)
         return redirect('/canvas/')
     form.fields['project'].queryset = Project.objects.filter(project_collaborators=request.user)
-    return render_to_response('canvas_creation.html', add_csrf(request, form=form), context_instance=RequestContext(request))
+    return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Canvas'), context_instance=RequestContext(request))
+
+@login_required
+def project(request, pk):
+    project = get_object_or_404(Project,pk=pk)
+    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
+    if not isCollaborator:
+        return redirect('/')
+    canvases = Canvas.objects.filter(project=pk)
+    return render_to_response("project.html", add_csrf(request, pk=pk, project=project, canvases=canvases), context_instance=RequestContext(request))
+
 
 @login_required
 def canvas(request, pk):
-    canvas = Canvas.objects.get(pk=pk)
+    canvas = get_object_or_404(Canvas,pk=pk)
     isCollaborator = Canvas.objects.filter(pk=pk,collaborators=request.user).exists()
     if not isCollaborator and not canvas.public:
         return redirect('/')
