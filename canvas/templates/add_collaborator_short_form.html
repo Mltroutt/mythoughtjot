@@ -1,0 +1,10 @@
+<h2>{{title}}</h2>
+<div id="messages" style="display:none"></div>
+<form action="/canvas/{create_modal}{canvas}}/add-collaborator" method="POST" id="ajax_form">{% csrf_token %}
+<table>
+{{form.as_table}}
+</table>
+    <input type="submit" value="Submit" id="submit"/>
+</form>
+
+{{form.media}}
