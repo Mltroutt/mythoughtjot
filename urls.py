@@ -27,6 +27,9 @@ urlpatterns = patterns('',
     url(r'^messages/', include('postman.urls')),
     url(r'^project/create/', 'canvas.views.create_project'),
     url(r'^canvas/create/', 'canvas.views.create_canvas'),
+    url(r'^canvas/create_modal/', 'canvas.views.create_canvas_modal'),
+    url(r'^canvas/(\d+)/add-collaborator/', 'canvas.views.canvas_add_collaborator'),
+    url(r'^canvas/(\d+)/remove-collaborator/', 'canvas.views.canvas_remove_collaborator'),
 
 )
 
