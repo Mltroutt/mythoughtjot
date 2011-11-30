@@ -56,6 +56,8 @@
               	<img src="{{ MEDIA_URL }}images/mythoughtjot.png" />
               	</div>
 			  </div><div class="help"></div>
+			  <a id="canvas_create" href="/canvas/create">Create a canvas</a> &nbsp;
+			  <a id="add_collaborator" href="/canvas/{{pk}}/add-collaborator">Add a collaborator</a> 
         <div id="coRightHeader"> 
 <h1 id="title">Welcome, {{ request.user.first_name }}</h1>
            
@@ -290,6 +292,52 @@
 		//{% postman_unread as unread_count %}				
 	   		alert('You have {{ unread_count }} unread messages.');
 	}
+	
+	/*
+	 * Canvas creation modal bax
+	 */
+	$("#canvas_create").click(function(e){
+		var url = '/canvas/create_modal/';
+            var dialog = $('<div style="display:none"></div>').appendTo('body');
+            dialog.load(
+                url, 
+                function (responseText, textStatus, XMLHttpRequest) {
+                    dialog.dialog({
+                    	draggable: false,
+                    	width: 'auto',
+                    	modal: true,
+                        // add a close listener to prevent adding multiple divs to the document
+                        close: function(event, ui) {
+                            // remove div with all data and events
+                            dialog.remove();
+                        }
+                    });
+                }
+            );
+            //prevent the browser to follow the link
+            return false;
+	});
+	$("#add_collaborator").click(function(e){
+		var url = '/canvas/{{pk}}/add-collaborator';
+            var dialog = $('<div style="display:none"></div>').appendTo('body');
+            dialog.load(
+                url, 
+                function (responseText, textStatus, XMLHttpRequest) {
+                    dialog.dialog({
+                    	draggable: false,
+                    	width: 'auto',
+                    	modal: true,
+                        // add a close listener to prevent adding multiple divs to the document
+                        close: function(event, ui) {
+                            // remove div with all data and events
+                            dialog.remove();
+                        }
+                    });
+                }
+            );
+            //prevent the browser to follow the link
+            return false;
+	});
 </script>
 
 		 
