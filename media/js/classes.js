@@ -1,5 +1,5 @@
 var idIncD = 1;
-//var turn = 0;
+var turn = 0;
 var divID = "canvas";
 var specChar = '"';
 var specChar2 = '#';
@@ -12,8 +12,6 @@ $("#canvas").click(function ()
 	});
 
 function newDrawing(){
-	//if(turn == 0){
-	//turn++;
 	idIncD++;
 	$('.help p').remove();
 	$('.help').append('<p>Hold and drag to create a new drawing box.<p>');
@@ -104,12 +102,11 @@ function newDrawing(){
 			var newheight = height + 2;
 			$('#canvas2').width(newwidth).height(newheight);
 	        });
-	         $(this).unbind('mousedown');
-	         	
+	         $(this).unbind('mousedown');      	
 	});
 		         
  } // end if
-//} // end if
+
  
 } // end newDrawing
 
@@ -124,15 +121,12 @@ function removeDrawing() {
 var idIncT = 1;
 //create a textbox
 function createTextbox() {
-	//if(turn == 0){
-	//turn++;
 	idIncT++;
 	$('.help p').remove();
 	$('.help').append('<p>Hold and drag to create a new text box.<p>');
 	$('.help p').css('color', '#feb6b6');
 	if(idIncT < 3){
 	$("#canvas").mousedown(function(e){
-	    
 	    var X1 = (e.pageX - this.offsetLeft) - 8;
 	    var Y1 = (e.pageY - this.offsetTop) - 8;
 	   	var X12 = (e.pageX) - 8;
@@ -174,9 +168,10 @@ function createTextbox() {
 			//$(".wysiwyg").resizable();
 		});
 	  $(this).unbind('mousedown');
+
+	// } // end turn if 
 	});
-	//}//end if
- // turn--;
+
   }//end if
 
 }
@@ -190,15 +185,12 @@ function removeTextbox() {
 
 var idIncS = 1;
 function newshapeBox() {
-	//if(turn == 0){
-	//turn++;
 	idIncS++;
 	$('.help p').remove();
 	$('.help').append('<p>Hold and drag to create a new text box.<p>');
 	$('.help p').css('color', '#feb6b6');
 	if(idIncS < 3){
 	$("#canvas").mousedown(function(e){
-	    
 	    var X1 = (e.pageX - this.offsetLeft) - 8;
 	    var Y1 = (e.pageY - this.offsetTop) - 8;
 	    var X12 = (e.pageX) - 8;
@@ -238,15 +230,6 @@ function newshapeBox() {
 			var outline = null;
 			var offset = null;
 		
-		/*  go to http://keith-wood.name/svgRef.html   for more information.
-		
-			$('#svgsketch').svg({onLoad: function(svg) {
-					sketchpad = svg;
-					var surface = svg.rect(0, 0, '100%', '100%', {id: 'surface', fill: 'transparent'});
-					$(surface).mousedown(startDrag).mousemove(dragging).mouseup(endDrag);
-					resetSize(svg, '100%', '100%');
-				}
-			});     */
 				$('#svgsketch').svg();
 var svg = $('#svgsketch').svg('get'); 
 
@@ -273,47 +256,6 @@ var svg = $('#svgsketch').svg('get');
 			$('#toSVG').click(function() {
 				alert(sketchpad.toSVG());
 			});
-	 
-	// Remember where we started 
-	function startDrag(event) { 
-	    offset = ($.browser.msie ? {left: 0, top: 0} : $('#canvas').offset()); 
-	    if (!$.browser.msie) { 
-	        offset.left -= document.documentElement.scrollLeft || document.body.scrollLeft; 
-	        offset.top -= document.documentElement.scrollTop || document.body.scrollTop; 
-	    } 
-	    start = {X: event.clientX - offset.left, Y: event.clientY - offset.top}; 
-	    event.preventDefault(); 
-	} 
-	 
-	// Provide feedback as we drag 
-	function dragging(event) { 
-	    if (!start) { 
-	        return; 
-	    } 
-	    if (!outline) { 
-	        outline = sketchpad.rect(0, 0, 0, 0, 
-	            {fill: 'none', stroke: '#c0c0c0', strokeWidth: 1, strokeDashArray: '2,2'}); 
-	        $(outline).mouseup(endDrag); 
-	    } 
-	    sketchpad.change(outline, {x: Math.min(event.clientX - offset.left, start.X), 
-	        y: Math.min(event.clientY - offset.top, start.Y), 
-	        width: Math.abs(event.clientX - offset.left - start.X), 
-	        height: Math.abs(event.clientY - offset.top - start.Y)}); 
-	    event.preventDefault(); 
-	} 
-	 
-	// Draw where we finish 
-	function endDrag(event) { 
-	    if (!start) { 
-	        return; 
-	    } 
-	    $(outline).remove(); 
-	    outline = null; 
-	    drawShape(start.X, start.Y, 
-	        event.clientX - offset.left, event.clientY - offset.top); 
-	    start = null; 
-	    event.preventDefault(); 
-	} 
 	 
 	// Draw the selected element on the canvas 
 	function drawShape(x1, y1, x2, y2) { 
@@ -378,7 +320,7 @@ var svg = $('#svgsketch').svg('get');
 			offset.left -= document.documentElement.scrollLeft || document.body.scrollLeft;
 			offset.top -= document.documentElement.scrollTop || document.body.scrollTop;
 		}
-		start = {X: event.clientX - offset.left, Y: event.clientY - offset.top};
+		start = {X: event.clientX - X1 - 50, Y: event.clientY - Y1 - 50};
 		event.preventDefault();
 	}
 	
@@ -394,12 +336,26 @@ var svg = $('#svgsketch').svg('get');
 		}
 		sketchpad.change(outline, {x: Math.min(event.clientX - offset.left, start.X),
 			y: Math.min(event.clientY - offset.top, start.Y),
-			width: Math.abs(event.clientX - offset.left - start.X),
-			height: Math.abs(event.clientY - offset.top - start.Y)});
+			width: Math.abs(event.clientX - X1 - start.X),
+			height: Math.abs(event.clientY - Y1 - start.Y)});
 		event.preventDefault();
 	}
+
+	// Draw where we finish 
+	function endDrag(event) { 
+	    if (!start) { 
+	        return; 
+	    } 
+	    $(outline).remove(); 
+	    outline = null; 
+	    drawShape(start.X, start.Y, 
+	        event.clientX - X1, event.clientY - Y1); 
+	    start = null; 
+	    event.preventDefault(); 
+	} 
 			
 	    });  // end mouseup
+	 
 	}); // end mousedown
 		    $('.help p').remove();
 			$('.help').append('<p>Select the Shape you want, then press and drag to create!<p>');
@@ -409,8 +365,7 @@ var svg = $('#svgsketch').svg('get');
 			//$(".wysiwyg").resizable();
 
 	}  // end if
-//turn--;
-//}  // end if
+	 
 }
 
 function removeShapebox() {
@@ -421,8 +376,6 @@ function removeShapebox() {
 
 var inIncT = 1;
 function newTable(){
-	//if(turn == 0){
-	turn++;
 	idIncT++;
 	$('.help p').remove();
 	$('.help').append('<p>Click anywhere to create a new Table.<p>');
@@ -460,12 +413,10 @@ function newTable(){
 			$("#canvasTable").draggable({ containment: "parent" });	
 			$(this).unbind('mouseup');	
 	        });
-	         $(this).unbind('mousedown');
-	         	
+	         $(this).unbind('mousedown');      	
 	});
 		         
-// } // end if
-//turn--;
+ 
 } // end if
 } // end newDrawing
 
