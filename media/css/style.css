@@ -202,7 +202,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	
 	height:32px;
 	width:226px;
-	background: url(../images/mythoughtjotLogoSD.png) no-repeat 2px 2px;
+	background: url(../images/mythoughtjotLogoAASD.png) no-repeat 2px 2px;
 }
 .logo a {
 	width:100%;
@@ -420,6 +420,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	border-radius:4px;
 	z-index:-10;
 	position:absolute;
+	background:#ddd;
 }
 .toolWindow .clickable{
 	float:right;
@@ -430,7 +431,6 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 }
 .inner {
 	padding:4px;
-	background:#f2f2f2;
 	border-radius:4px;
 	height:190px;
 }
