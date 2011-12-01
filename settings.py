@@ -91,7 +91,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '%b0qhqorwv8+n%u7$w=#yh#2vuxqcz$(-&_3u4n27(l7--%!z2'
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/canvas/1/'
 
 LOGIN_URL = '/login/'
 
