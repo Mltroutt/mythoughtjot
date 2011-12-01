@@ -151,7 +151,6 @@ h4 {
 }
 
 #logincontent {
-	background: url(../images/stripesBack.png) repeat;
 	color: #333;
 	padding: 0px 10px 10px 0px;
 	min-height: 300px;
@@ -199,10 +198,9 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 .logo {
 	border-radius: 4px;
 	padding:2px;
-	
 	height:32px;
 	width:226px;
-	background: url(../images/mythoughtjotLogoAASD.png) no-repeat 2px 2px;
+/** background: url(../images/mythoughtjotLogoAASD.png) no-repeat 2px 2px;  **/
 }
 .logo a {
 	width:100%;
@@ -828,7 +826,6 @@ body { font-size:62.5%; }
 
 /* Footer */
 #footer {
-	background:#464646;
 	height:30px;
 	color:#999;
 	border-radius: 0 0 10px 10px; 
