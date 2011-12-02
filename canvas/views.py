@@ -9,6 +9,7 @@ from django import forms
 from django.utils import simplejson
 from django.http import HttpResponse, Http404
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -122,6 +123,15 @@ def create_project(request=None):
                 id = pre_save.pk
                 return redirect('/project/'+str(id))
     return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Project'), context_instance=RequestContext(request))
+
+@login_required
+def myprojects(request):
+    
+    projects = Project.objects.select_related().filter(Q(canvas__collaborators=request.user) | Q(project_collaborators=request.user)).distinct()
+    
+    print projects.query
+    
+    return render_to_response('my_projects.html', {'projects':projects}, context_instance=RequestContext(request))
 
 @login_required
 def create_canvas_modal(request):

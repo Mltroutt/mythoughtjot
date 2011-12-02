@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic.simple import direct_to_template
+from django.views.generic.simple import direct_to_template, redirect_to
 
 
 # Uncomment the next two lines to enable the admin:
@@ -18,18 +18,19 @@ urlpatterns = patterns('',
     url(r'^$', 'django.contrib.auth.views.login'),
     url(r'about$', 'django.views.generic.simple.direct_to_template', {'template':'about.html'}),
     #url(r'^profiles/', include('profiles.urls')),
-    url(r'^project/(\d+)/$', 'canvas.views.project'),
+    url(r'^project/myprojects/$', 'canvas.views.myprojects'),
+    url(r'^project/$', redirect_to, {'url': 'myprojects'}),
     url(r'^canvas/(\d+)/$', 'canvas.views.canvas'),
     url(r'^node/(\d+)/$', 'canvas.views.node'),
     #url(r'^user/(\d+)/$', 'canvas.views.user'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('registration.backends.default.urls')),
     url(r'^messages/', include('postman.urls')),
-    url(r'^project/create/', 'canvas.views.create_project'),
-    url(r'^canvas/create/', 'canvas.views.create_canvas'),
-    url(r'^canvas/create_modal/', 'canvas.views.create_canvas_modal'),
-    url(r'^canvas/(\d+)/add-collaborator/', 'canvas.views.canvas_add_collaborator'),
-    url(r'^canvas/(\d+)/remove-collaborator/', 'canvas.views.canvas_remove_collaborator'),
+    url(r'^project/create/$', 'canvas.views.create_project'),
+    url(r'^canvas/create/$', 'canvas.views.create_canvas'),
+    url(r'^canvas/create_modal/$', 'canvas.views.create_canvas_modal'),
+    url(r'^canvas/(\d+)/add-collaborator/$', 'canvas.views.canvas_add_collaborator'),
+    url(r'^canvas/(\d+)/remove-collaborator/$', 'canvas.views.canvas_remove_collaborator'),
 
 )
 
