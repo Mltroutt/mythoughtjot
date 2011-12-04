@@ -42,13 +42,14 @@ class Canvas(models.Model):
     class Meta:
         verbose_name_plural = ('canvases')
 
-
 class Node(models.Model):
-    data = models.TextField(max_length=10000)
-    type = models.IntegerField()
+    _data = models.TextField(max_length=10000)
+    node_type = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, blank=False, null=True)
     canvas = models.ForeignKey(Canvas)
+    x_pos = models.IntegerField()
+    y_pos = models.IntegerField()
 
     def __unicode__(self):
         return "Node created by " + unicode(self.creator) + " on " + self.created.strftime("%b %d, %I:%M %p")
