@@ -47,6 +47,33 @@ class CanvasForm(ModelForm):
             raise forms.ValidationError("You are not a collaborator on this project.")
         return project
 
+class CanvasEditForm(ModelForm):
+    class Meta:
+        model = Canvas
+        exclude = {'creator','created','owner'}
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.collaborators = kwargs.pop('collaborators', None)
+        self.project_collaborator = kwargs.pop('project_collaborator', None)
+        self.project_collaborators = kwargs.pop('project_collaborators', None)
+        super(CanvasEditForm, self).__init__(*args, **kwargs)
+        self.fields['project'] = forms.ModelChoiceField(self.project_collaborator)
+        self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
+        self.fields['collaborators'] = forms.ModelMultipleChoiceField(self.collaborators)
+
+class ProjectEditForm(ModelForm):
+    class Meta:
+        model = Project
+        exclude = {'creator','created'}
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.project_collaborators = kwargs.pop('project_collaborators', None)
+        super(ProjectEditForm, self).__init__(*args, **kwargs)
+        self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
+        self.fields['project_collaborators'] = forms.ModelMultipleChoiceField(self.project_collaborators)
+
 class CollaboratorForm(forms.Form):
     user = forms.CharField(label="Username",max_length=100)
     canvas = forms.IntegerField(widget=forms.HiddenInput)
@@ -125,12 +152,47 @@ def create_project(request=None):
     return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Project'), context_instance=RequestContext(request))
 
 @login_required
+def project_delete(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    canvases = Canvas.objects.filter(project=project)
+
+    if request.is_ajax() and request.user == project.owner:
+        try:
+            project.delete()
+            for canvas in canvases:
+                canvas.delete()
+            return HttpResponse("true", mimetype='application/json')
+        except:
+            return HttpResponse("false", mimetype='application/json')
+
+    raise Http404
+
+@login_required
+def project_edit(request, pk):
+
+    project = get_object_or_404(Project, pk=pk)
+    project_collaborators = project.project_collaborators.all()
+
+    form = ProjectEditForm(request.POST or None,
+                          project_collaborators=project_collaborators,
+                          request=request, instance=project)
+
+    if request.POST and form.is_valid():
+        pre_save = form.save(commit=False)
+        pre_save.owner = form.cleaned_data['owner']
+        pre_save.creator = project.creator
+        pre_save.created = project.created
+        pre_save.save()
+        return redirect('/project/myprojects/')
+
+
+    return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Project'), context_instance=RequestContext(request))
+
+@login_required
 def myprojects(request):
     
-    projects = Project.objects.select_related().filter(Q(canvas__collaborators=request.user) | Q(project_collaborators=request.user)).distinct()
-    
-    print projects.query
-    
+    projects = Project.objects.select_related().filter(Q(project_collaborators=request.user) | Q(canvas__collaborators=request.user)).distinct()
+
     return render_to_response('my_projects.html', {'projects':projects}, context_instance=RequestContext(request))
 
 @login_required
@@ -179,7 +241,7 @@ def create_canvas_modal(request):
 @login_required
 def create_canvas(request):
     form = CanvasForm(request.POST or None, request=request)
-    if request.method == 'POST':
+    if request.POST:
         if request.is_ajax():
             return_message = {'success':False, 'messages':'', 'errors':{}}
             
@@ -225,6 +287,45 @@ def create_canvas(request):
                 return redirect('/canvas/'+str(id))
     form.fields['project'].queryset = Project.objects.filter(project_collaborators=request.user)
     return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Canvas'), context_instance=RequestContext(request))
+
+@login_required
+def canvas_delete(request, pk):
+    canvas = Canvas.objects.get(pk=pk)
+
+    if request.is_ajax() and request.user == canvas.owner:
+        try:
+            canvas.delete()
+            return HttpResponse("true", mimetype='application/json')
+        except:
+            return HttpResponse("false", mimetype='application/json')
+
+    raise Http404
+
+@login_required
+def canvas_edit(request, pk):
+    canvas = get_object_or_404(Canvas, pk=pk)
+
+    collaborators = canvas.collaborators.all()
+
+    project = canvas.project
+    project_collaborators = project.project_collaborators.all()
+    project_collaborator = Project.objects.filter(project_collaborators=request.user)
+
+    form = CanvasEditForm(request.POST or None,
+                          collaborators=collaborators, project_collaborator=project_collaborator,
+                          project_collaborators=project_collaborators,
+                          initial={'title':canvas.title, 'owner':canvas.owner.pk, 'collaborators':collaborators, 'project':project}, request=request, instance=canvas)
+
+    if request.POST and form.is_valid():
+        pre_save = form.save(commit=False)
+        pre_save.owner = form.cleaned_data['owner']
+        pre_save.creator = canvas.creator
+        pre_save.created = canvas.created
+        pre_save.save()
+        return redirect('/project/myprojects/')
+
+
+    return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Canvas'), context_instance=RequestContext(request))
 
 @login_required
 def project(request, pk):
@@ -341,7 +442,7 @@ def canvas_remove_collaborator(request, pk):
     except:
         return_message['success'] = False
 
-        return_message['message'] = "Failed to add user to this canvas"
+        return_message['message'] = "Failed to rmove user from canvas"
     finally:
         json = simplejson.dumps(return_message)
         
