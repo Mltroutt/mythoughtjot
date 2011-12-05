@@ -10,6 +10,8 @@ $(document).ready(function() {
 			if(data['success']) {
 				$('#messages').html(data['messages']);
 				$("#messages").css('display','block');
+                if(data['redirect'])
+                    window.location.href = data['redirect'];
 		  	}else{
 	  			for (error in data['errors'])
 				$("#id_" + error).after(data['errors'][error]);
@@ -29,7 +31,8 @@ $(document).ready(function() {
 			if(data['success']) {
 				$('#messages').html(data['messages']);
 				$("#messages").css('display','block');
-				window.location.href = data['redirect'];
+                if(data['redirect'])
+				    window.location.href = data['redirect'];
 
 		  	}else{
 	  			for (error in data['errors'])
