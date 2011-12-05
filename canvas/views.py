@@ -552,7 +552,7 @@ def canvas_add_collaborator(request, pk):
 #TODO: Add javascript for this
 
 @login_required
-def canvas_remove_collaborator(request, pk):
+def canvas_remove_collaborator(request, pk, user):
 
     """
     This removes collaborators from a canvas. Currently requires imagination.
@@ -561,14 +561,14 @@ def canvas_remove_collaborator(request, pk):
     if not Canvas.objects.filter(pk=pk,creator=request.user).exists():
         raise Http404
     
-    if not request.POST or request.is_ajax():
+    if not request.is_ajax():
         raise Http404
-    
+
     return_message = {'success':False, 'message':'', 'error':''}
     try:
         try:
             
-            user = User.objects.get(pk=user_id)
+            user = User.objects.get(pk=user)
         except:
             
             return_message['error'] = "User not found"
@@ -583,14 +583,13 @@ def canvas_remove_collaborator(request, pk):
         try:
             canvas.collaborators.remove(user)
             return_message['message'] = "User is no longer a collaborator"
+            return_message['success'] = True
         except:
             return_message['error'] = "User not removed"
             raise
     
     except:
-        return_message['success'] = False
-
-        return_message['message'] = "Failed to rmove user from canvas"
+        return_message['error'] = "Failed to rmove user from canvas"
     finally:
         json = simplejson.dumps(return_message)
         
