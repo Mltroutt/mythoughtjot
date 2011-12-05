@@ -35,7 +35,7 @@ urlpatterns = patterns('',
     url(r'^canvas/(\d+)/delete/$', 'canvas.views.canvas_delete'),
     url(r'^canvas/create_modal/$', 'canvas.views.create_canvas_modal'),
     url(r'^canvas/(\d+)/add-collaborator/$', 'canvas.views.canvas_add_collaborator'),
-    url(r'^canvas/(\d+)/remove-collaborator/$', 'canvas.views.canvas_remove_collaborator'),
+    url(r'^canvas/(\d+)/remove-collaborator/(\d+)/$', 'canvas.views.canvas_remove_collaborator'),
 
 )
 
