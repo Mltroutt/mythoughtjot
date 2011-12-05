@@ -10,7 +10,7 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script>!window.jQuery && document.write('<script src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"><\/script>')</script>
-
+	<script src="{{ MEDIA_URL }}js/jQuery/jQuery.js"></script>
 
   	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/pjs/processing-1.3.6.js'></script>
@@ -39,6 +39,7 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/classes.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/popup.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery.wysiwyg.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}js/graaffle.js"></script>
 </head>
 <body>
     <noscript>mythoughtjot requires JavaScript to be enabled in your browser to work properly.</noscript>
@@ -50,7 +51,7 @@
               	<div class="logo"><img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" /></div>
 			  </div><div class="help"></div>
         <div id="coRightHeader"> 
-<h1 id="title">Welcome, User</h1>
+<h1 id="title">Welcome, {{ request.user.username }}</h1>
            
 		</div> 
 	</div>		<!-- end header-->
@@ -60,10 +61,10 @@
             <div id='buttons'>
             	
                 <ul>
-                	<li onclick="changeToolbar('#drawingTools');initButtons();newDrawing();redo('pencil');"><div class="buttons" id="drawButton"><script type="text/javascript">renderIcon("pencil");</script></div></li>
-                    <li onclick="changeToolbar('#textTools');createTextbox();redo('bubble');"><div class="buttons" id="textButton"><script type="text/javascript">renderIcon("bubble");</script></div></li>
-                    <li onclick="changeToolbar('#shapeTools');newshapeBox();redo('flipv');"><div class="buttons" id="shapeButton"><script type="text/javascript">renderIcon("flipv");</script></div></li>
-                    <li onclick="changeToolbar('#tableTools');newTable();redo('barchart');"><div class="buttons" id="graphButton"><script type="text/javascript">renderIcon("barchart");</script></div></li>
+                	<li onclick="changeToolbar('#drawingTools');initButtons();redo('pencil');"><div class="buttons" id="drawButton"><script type="text/javascript">renderIcon("pencil");</script></div></li>
+                    <li onclick="changeToolbar('#textTools');redo('bubble');"><div class="buttons" id="textButton"><script type="text/javascript">renderIcon("bubble");</script></div></li>
+                    <li onclick="changeToolbar('#shapeTools');redo('flipv');"><div class="buttons" id="shapeButton"><script type="text/javascript">renderIcon("flipv");</script></div></li>
+                    <li onclick="changeToolbar('#tableTools');redo('barchart');"><div class="buttons" id="graphButton"><script type="text/javascript">renderIcon("barchart");</script></div></li>
                     <li onclick="changeToolbar('#sharingTools');redo('users');"><div class="buttons" id="shareButton"><script type="text/javascript">renderIcon("users");</script></div></li>
                     <li onclick="notfinishedyet();redo('search');"><div class="buttons" id="searchButton"><script type="text/javascript">renderIcon("search");</script></div></li>
 					<li onclick="changeToolbar('#messagingTools');redo('mail');" id="messageButton"><div class="buttons" id="messagesButton"><script type="text/javascript">renderIcon("mail");</script></div></li>
@@ -102,6 +103,8 @@
 	<div class="toolWindow" id="drawingTools">
 		<h1>Drawing</h1>
 		<div class="inner">
+			<input id="createBox" onclick="newDrawing();" type="button" value="New Drawing" />
+				<input id="createBox" onclick="removeDrawing();" type="button" value="Remove Canvas" />
 					<div id="modeRadio" class="left-stub">
 
 				<input name="modeRadio" id="writingRadio" type="radio" value="writing" checked="checked" />
@@ -118,80 +121,42 @@
 				<input id="clearButton" type="button" value="Clear" />
 				
 			</div>
-				<input id="createBox" onclick="newDrawing();" type="button" value="START" />
-				<input id="createBox" onclick="removeDrawing();" type="button" value="REMOVE" />
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="textTools">
 		<h1>Text</h1>
 		<div class="inner">
-			
+			<input id="createBox" onclick="createTextbox();" type="button" value="START" />
+				<input id="createBox" onclick="removeTextbox();" type="button" value="REMOVE" />
+				<h3>Create a Label</h3>
+				<input type="text" id="addlabel"/>
+				<input id="createtext" onclick="createLabel();" type="button" value="ADD" />
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="shapeTools">
 		<h1>Shapes</h1>
 		<div class="inner">
-		<p>Select a shape and its appearance and then drag in the panel to create it.</p>
-		<div id="drawingTools">
-			<h2>Drawing Tools</h2>
-		<div class="row">
-			<span class="drawOpt">Shape</span>
-			<span class="drawOpt"><select id="shape">
-				<option value="rect">Rectangle</option><option value="circle">Circle</option>
-				<option value="ellipse">Ellipse</option><option value="line">Line</option>
-
-				<option value="polyline">Polyline</option><option value="polygon">Polygon</option>
-				</select></span>
-			<span class="drawOpt">Fill</span>
-			<span class="drawOpt"><select id="fill">
-				<option value="red">red</option><option value="yellow">yellow</option>
-				<option value="green">green</option><option value="blue">blue</option>
-
-				<option value="white">white</option><option value="gray">gray</option>
-				<option value="black">black</option><option value="none">none</option></select></span>
-		</div>
-		<div class="row">
-			<span class="drawOpt">Stroke width</span>
-			<span class="drawOpt"><select id="swidth">
-
-				<option value="1">1</option><option value="2">2</option>
-				<option value="3">3</option><option value="4">4</option>
-				<option value="5">5</option><option value="6">6</option>
-				<option value="7">7</option><option value="8">8</option>
-				<option value="9">9</option><option value="10">10</option></select></span>
-
-			<span class="drawOpt">Stroke</span>
-			<span class="drawOpt"><select id="stroke">
-				<option value="red">red</option><option value="yellow">yellow</option>
-				<option value="green">green</option><option value="blue" selected="selected">blue</option>
-				<option value="white">white</option><option value="gray">gray</option>
-
-				<option value="black">black</option><option value="none">none</option></select></span>
-		</div>
-		<div class="row">
-			<span class="drawOpt">&nbsp;</span>
-			<span class="drawOpt"><button type="button" id="undo">Undo</button></span>
-			<span class="drawOpt"><button type="button" id="clear2">Clear</button></span>
-			<span class="drawOpt"><button type="button" id="toSVG">To SVG</button></span>
-
-		</div>
-		<input type="button" onclick="whattodo();" value="Create Shape"/>
-	  </div>	<!-- end sketchpad -->
+		<input type="button" class="circle" onclick="drawCircle();" value="Circle"/>
+		<input type="button" class="circle" onclick="drawEllipse();" value="Ellipse"/>
+		<input type="button" class="circle" onclick="drawRect();" value="Rectangle"/>
+		<input type="button" class="circle" onclick="drawRectwithRound();" value="Rounded Box"/>
+		<!-- <input type="button" class="circle" onclick="drawLine();" value="Line"/>  -->
+		
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="tableTools">
 		<h1>Tables and Graphs</h1>
 		<label>Table Title:</label>
-		<input type="text" id="addtabletitle"/>
-		<input type="button" class="addtabletitle" onclick="newTableTitle()" value="Add Title"/>
-		<input type="button"  class="addrowButton" onclick="addtablerow() " value="Add Row"/>
-		<input type="button"  class="addcolumnButton" onclick="addtablecolumn()" value="Add Column"/>
-		<div class="inner">
-			
-		</div>
+          <input type="button" class="addtabletitle" onclick="newTable()" value="New Table"/>
+          <input type="text" id="addtabletitle"/>
+          <input type="button" class="addtabletitle" onclick="newTableTitle()" value="Add Title"/>
+          <input type="button"  class="addrowButton" onclick="addtablerow() " value="Add Row"/>
+          <input type="button"  class="addcolumnButton" onclick="addtablecolumn()" value="Add Column"/>
+        <label>Create Graph:</label>
+       <input type="button" class="addtabletitle" onclick="barGraph()" value="Bar Graph"/>
 	</div>
 	
 	<div class="toolWindow" id="sharingTools">
@@ -210,8 +175,14 @@
 
 	<div class="toolWindow" id="settings">
 		<h1>Settings</h1>
+		
 		<div class="inner">
-			
+			<input type="button"  class="settings" onclick="clearCanvas()" value="Clear Canvas"/>
+			<h3>Canvas Type:</h3>
+			<input type="button"  class="background" onclick="changeCanvasBackground (1)" value="Notebook Paper"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (2)" value="Graphing Paper"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (3)" value="Sketch Paper"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (4)" value="Plain White"/>
 		</div>
 	</div>
 
@@ -262,58 +233,57 @@
                     $(this).removeClass("CurrentlySelected");
                 }
 			});
-		function checkmessages() {
-//{% postman_unread as unread_count %}
-alert('You have {{ unread_count }} unread messages.');
-}
+            function checkmessages() {
+                //{% postman_unread as unread_count %}
+                alert('You have {{ unread_count }} unread messages.');
+            }
 
-/*
-* Canvas creation modal bax
-*/
-$("#canvas_create").click(function(e){
-var url = '/canvas/create_modal/';
-            var dialog = $('<div style="display:none"></div>').appendTo('body');
-            dialog.load(
-                url,
-                function (responseText, textStatus, XMLHttpRequest) {
-                    dialog.dialog({
-                     draggable: false,
-                     width: 'auto',
-                     modal: true,
-                        // add a close listener to prevent adding multiple divs to the document
-                        close: function(event, ui) {
-                            // remove div with all data and events
-                            dialog.remove();
-                        }
-                    });
-                }
-            );
-            //prevent the browser to follow the link
-            return false;
-});
-$("#add_collaborator").click(function(e){
-var url = '/canvas/{{pk}}/add-collaborator';
-            var dialog = $('<div style="display:none"></div>').appendTo('body');
-            dialog.load(
-                url,
-                function (responseText, textStatus, XMLHttpRequest) {
-                    dialog.dialog({
-                     draggable: false,
-                     width: 'auto',
-                     modal: true,
-                        // add a close listener to prevent adding multiple divs to the document
-                        close: function(event, ui) {
-                            // remove div with all data and events
-                            dialog.remove();
-                        }
-                    });
-                }
-            );
-            //prevent the browser to follow the link
-            return false;
-});
-
-});
+            /*
+            * Canvas creation modal bax
+            */
+            $("#canvas_create").click(function(e){
+            var url = '/canvas/create_modal/';
+                        var dialog = $('<div style="display:none"></div>').appendTo('body');
+                        dialog.load(
+                            url,
+                            function (responseText, textStatus, XMLHttpRequest) {
+                                dialog.dialog({
+                                 draggable: false,
+                                 width: 'auto',
+                                 modal: true,
+                                    // add a close listener to prevent adding multiple divs to the document
+                                    close: function(event, ui) {
+                                        // remove div with all data and events
+                                        dialog.remove();
+                                    }
+                                });
+                            }
+                        );
+                        //prevent the browser to follow the link
+                        return false;
+            });
+            $("#add_collaborator").click(function(e){
+            var url = '/canvas/{{pk}}/add-collaborator';
+                        var dialog = $('<div style="display:none"></div>').appendTo('body');
+                        dialog.load(
+                            url,
+                            function (responseText, textStatus, XMLHttpRequest) {
+                                dialog.dialog({
+                                 draggable: false,
+                                 width: 'auto',
+                                 modal: true,
+                                    // add a close listener to prevent adding multiple divs to the document
+                                    close: function(event, ui) {
+                                        // remove div with all data and events
+                                        dialog.remove();
+                                    }
+                                });
+                            }
+                        );
+                        //prevent the browser to follow the link
+                        return false;
+            });
+		});
 	</script>
 
         
@@ -323,25 +293,51 @@ var url = '/canvas/{{pk}}/add-collaborator';
 
 <div id="content">
 	<div id="canvas">
-<!--
-		<table id="testTable">
+  <div id="table">
+      
+	<table id="celebs">
+		<caption><h3 id="tableTitle">My Table</h3></caption>
+      <tbody>
+        <tr>
+          <td>Matt Girard</td>
+          <td>225</td>
+          <td>320</td>
+          <td>223</td>
+        </tr>
+        <tr>
+          <td>Kate McCormly</td>
+          <td>289</td>
+          <td>123</td>
+          <td>147</td>
+        </tr>
+        <tr>
+          <td>Joy Cornwell</td>
+          <td>332</td>
+          <td>312</td>
+          <td>256</td>
+        </tr>
+        <tr>
+          <td>Josh Crews</td>
+          <td>125</td>
+          <td>176</td>
+          <td>130</td>
+        </tr>
+      </tbody>
+    </table>
+ 
+  </div>
+        
 
-			<caption>2009 Individual Sales by Category</caption>
-			<thead>
-				<tr>
-					<td></td>
-					<th>food</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-
-					<th>Mary</th>
-					<td>150</td>
-				</tr>
-			</tbody>
-		</table>
-	-->	 
+		<!--
+		<style type="text/css">
+		      #holder {
+                -moz-border-radius: 10px;
+                -webkit-border-radius: 10px;
+                border: solid 1px #333;
+            }
+            </style>
+		<div id="holder"></div>
+		-->
   </div>  <!-- end canvas -->
  </div>  <!-- end content -->
  

@@ -183,196 +183,217 @@ function removeTextbox() {
 	defaultMessage();
 }
 
-var idIncS = 1;
-function newshapeBox() {
-	idIncS++;
+//using this one
+var n = 0;
+var limitL = 0;
+
+function createLabel() {
+	n++;
+	if (limitL < 1){	
+		limitL++;
 	$('.help p').remove();
-	$('.help').append('<p>Hold and drag to create a new text box.<p>');
+	$('.help').append('<p>Now click on the canvas where you want your label to be.<p>');
 	$('.help p').css('color', '#feb6b6');
-	if(idIncS < 3){
-	$("#canvas").mousedown(function(e){
-	    var X1 = (e.pageX - this.offsetLeft) - 8;
-	    var Y1 = (e.pageY - this.offsetTop) - 8;
-	    var X12 = (e.pageX) - 8;
-	    var Y12 = (e.pageY) - 8;
-	    $("#canvas").append('<div id="showBox"></div>');
-	    $("#showBox").css('left', X1).css('top', Y1);
-	    
-	    $("#canvas").mousemove(function(e){
-	    	
-      var width = ((e.pageX - this.offsetLeft) - 8) - X1;
-      var height = ((e.pageY - this.offsetTop) - 8) - Y1;
-
-	      $("#showBox").height(height).width(width);
-    });
-	    $(this).mouseup(function(e){
-	    	$("#showBox").remove();
-	    	$(this).unbind('mousemove');
-	        var X2 = (e.pageX - this.offsetLeft) - 8;
-	        var Y2 = (e.pageY - this.offsetTop) - 8;
-	        //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
-	        $(this).unbind('mouseup');
-	       
-	       	width = X2 - X1;
-	    	height = Y2 - Y1;	
-	        
-	        $("#canvas").append('<div id="svgsketch" class="canvasNode" ></div>');
-	        $("#svgsketch").height(height).width(width);
-			$("#svgsketch").css('left', X12).css('top', Y12);
-			$("#svgsketch").append('<div class="close" style="padding:4px;" onclick="removeShapebox();"></div>');
-			//$("#svgsketch").draggable({ containment: "parent" });
-			
-	 	 $(this).unbind('mousedown');
-			// Drawing Shapes
-			var drawNodes = [];
-			var sketchpad = null;
-			var start = null;
-			var outline = null;
-			var offset = null;
-		
-				$('#svgsketch').svg();
-var svg = $('#svgsketch').svg('get'); 
-
-			sketchpad = svg;
-			var surface = svg.rect(0, 0, '100%', '100%', {id: 'surface', fill: 'transparent'});
-			$(surface).mousedown(startDrag).mousemove(dragging).mouseup(endDrag);
-			resetSize(svg, '100%', '100%');
-			// Remove the last drawn element
-			$('#undo').click(function() {
-				if (!drawNodes.length) {
-					return;
-				}
-				sketchpad.remove(drawNodes[drawNodes.length - 1]);
-				drawNodes.splice(drawNodes.length - 1, 1);
-			});
-
-			// Clear the canvas
-			$('#clear2').click(function() {
-				while (drawNodes.length) {
-					$('#undo').trigger('click');
-				}
-			});
-			// Convert to text
-			$('#toSVG').click(function() {
-				alert(sketchpad.toSVG());
-			});
-	 
-	// Draw the selected element on the canvas 
-	function drawShape(x1, y1, x2, y2) { 
-	    var left = Math.min(x1, x2); 
-	    var top = Math.min(y1, y2); 
-	    var right = Math.max(x1, x2); 
-	    var bottom = Math.max(y1, y2); 
-	    var settings = {fill: $('#fill').val(), stroke: $('#stroke').val(), 
-	        strokeWidth: $('#swidth').val()}; 
-	    var shape = $('#shape').val(); 
-	    var node = null; 
-	    if (shape == 'rect') { 
-	        node = sketchpad.rect(left, top, right - left, bottom - top, settings); 
-	    } 
-	    else if (shape == 'circle') { 
-	        var r = Math.min(right - left, bottom - top) / 2; 
-	        node = sketchpad.circle(left + r, top + r, r, settings); 
-	    } 
-	    else if (shape == 'ellipse') { 
-	        var rx = (right - left) / 2; 
-	        var ry = (bottom - top) / 2; 
-	        node = sketchpad.ellipse(left + rx, top + ry, rx, ry, settings); 
-	    } 
-	    else if (shape == 'line') { 
-	        node = sketchpad.line(x1, y1, x2, y2, settings); 
-	    } 
-	    else if (shape == 'polyline') { 
-	        node = sketchpad.polyline([[(x1 + x2) / 2, y1], [x2, y2], 
-	            [x1, (y1 + y2) / 2], [x2, (y1 + y2) / 2], [x1, y2], 
-	            [(x1 + x2) / 2, y1]], $.extend(settings, {fill: 'none'})); 
-	    } 
-	    else if (shape == 'polygon') { 
-	        node = sketchpad.polygon([[(x1 + x2) / 2, y1], [x2, y1], [x2, y2], 
-	            [(x1 + x2) / 2, y2], [x1, (y1 + y2) / 2]], settings); 
-	    } 
-	    drawNodes[drawNodes.length] = node; 
-	    $(node).mousedown(startDrag).mousemove(dragging).mouseup(endDrag); 
-	    $('#canvas').focus(); 
-	}; 
-	 
-	// Remove the last drawn element 
-	$('#undo').click(function() { 
-	    if (!drawNodes.length) { 
-	        return; 
-	    } 
-	    sketchpad.remove(drawNodes[drawNodes.length - 1]); 
-	    drawNodes.splice(drawNodes.length - 1, 1); 
-	}); 
-	 
-	// Clear the canvas 
-	$('#clear2').click(function() { 
-	    while (drawNodes.length) { 
-	        $('#undo').trigger('click'); 
-	    } 
-	}); 
-	 
-	 //Drawing Shapes
-	// Remember where we started
-	function startDrag(event) {
-		offset = ($.browser.msie ? {left: 0, top: 0} : $('#canvas').offset());
-		if (!$.browser.msie) {
-			offset.left -= document.documentElement.scrollLeft || document.body.scrollLeft;
-			offset.top -= document.documentElement.scrollTop || document.body.scrollTop;
-		}
-		start = {X: event.clientX - X1 - 50, Y: event.clientY - Y1 - 50};
-		event.preventDefault();
-	}
 	
-	// Provide feedback as we drag
-	function dragging(event) {
-		if (!start) {
-			return;
-		}
-		if (!outline) {
-			outline = sketchpad.rect(0, 0, 0, 0,
-				{fill: 'none', stroke: '#c0c0c0', strokeWidth: 1, strokeDashArray: '2,2'});
-			$(outline).mouseup(endDrag);
-		}
-		sketchpad.change(outline, {x: Math.min(event.clientX - offset.left, start.X),
-			y: Math.min(event.clientY - offset.top, start.Y),
-			width: Math.abs(event.clientX - X1 - start.X),
-			height: Math.abs(event.clientY - Y1 - start.Y)});
-		event.preventDefault();
-	}
+	$("#canvas").click(function(e){
+	var X1 = (e.pageX - this.offsetLeft) - 8;
+	var Y1 = (e.pageY - this.offsetTop) - 20;
+	
+	var label = document.getElementById("addlabel").value;
+             renderText(label); 
+             $(this).unbind('click');
+             
+         $("#addlabel").each(function() {
+        switch(this.type) {
+            case 'password':
+            case 'select-multiple':
+            case 'select-one':
+            case 'text':
+            case 'textarea':
+                $(this).val('');
+                break;
+            case 'checkbox':
+            case 'radio':
+                this.checked = false;
+        }
+    });
+     
+function renderText(textToRender){
+	n++;
+	var id = '"' + '#' + 'labelHeading' + n + '"';
+	var id2 = 'labelHeading'+n;
+    var label = '<span onhover="test1()" id="' + id2 + '">' + textToRender + '</span>';	
+    $('#canvas').append($(label));
+    attr = {font: "50px Helvetica", opacity: 0.5,};
+    var classV = '"' + '.' + 'label' + '"';
+	$('#' + id2).attr('width', 'auto').attr(attr).attr({fill: "#000"}).css("position", "absolute")
+	.css('left', X1).css('top', Y1).addClass("label").draggable({ containment: "parent" });
+	 limitL--;
+  }
+ });
+ } // end if
 
-	// Draw where we finish 
-	function endDrag(event) { 
-	    if (!start) { 
-	        return; 
-	    } 
-	    $(outline).remove(); 
-	    outline = null; 
-	    drawShape(start.X, start.Y, 
-	        event.clientX - X1, event.clientY - Y1); 
-	    start = null; 
-	    event.preventDefault(); 
-	} 
-			
-	    });  // end mouseup
-	 
-	}); // end mousedown
-		    $('.help p').remove();
-			$('.help').append('<p>Select the Shape you want, then press and drag to create!<p>');
-			$('.help p').css('color', '#a3ed9b');
-			$("#svgsketch").append('<div class="close" style="padding:4px;" onclick="removeShapebox();"></div>');
-			$("#svgsketch").draggable({ containment: "parent" });
-			//$(".wysiwyg").resizable();
-
-	}  // end if
-	 
 }
 
-function removeShapebox() {
-	$('#svgsketch').remove();
-	idIncS = 1;
-	defaultMessage();
+$('.help').click(function(e) {
+	console.log("hello");
+	//$(this).css("border", "dashed 2px #F00");
+});
+
+function drawCircle(){
+	$("#canvas").mousedown(function(e){
+    var X1 = (e.pageX - this.offsetLeft) - 8;
+    var Y1 = (e.pageY - this.offsetTop) - 8;
+    var X12 = (e.pageX) - 8;
+    var Y12 = (e.pageY) - 8;
+    $("#canvas").append('<div id="showBox"></div>');
+    $("#showBox").css('left', X1).css('top', Y1);
+    $("#canvas").mousemove(function(e){
+  var width = ((e.pageX - this.offsetLeft) - 8) - X1;
+  var height = ((e.pageX - this.offsetLeft) - 8) - X1;
+      $("#showBox").height(height).width(width);
+});
+    $(this).mouseup(function(e){
+    	$("#showBox").remove();
+    	$(this).unbind('mousemove');
+        var X2 = (e.pageX - this.offsetLeft) - 8;
+        var Y2 = (e.pageY - this.offsetTop) - 8;
+        //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
+        $(this).unbind('mouseup');
+       	width = X2 - X1;	
+		var paper = Raphael(X12, Y12, width, width);
+		var circle = paper.circle(width/2, width/2, width/2.2);
+		 $('svg').draggable({ containment: "#canvas" });
+	});
+	$(this).unbind('mousedown');
+  });	
 }
+
+function drawEllipse(){
+	$("#canvas").mousedown(function(e){
+    var X1 = (e.pageX - this.offsetLeft) - 8;
+    var Y1 = (e.pageY - this.offsetTop) - 8;
+    var X12 = (e.pageX) - 8;
+    var Y12 = (e.pageY) - 8;
+    $("#canvas").append('<div id="showBox"></div>');
+    $("#showBox").css('left', X1).css('top', Y1);
+    $("#canvas").mousemove(function(e){
+  var width = ((e.pageX - this.offsetLeft) - 8) - X1;
+  var height = ((e.pageY - this.offsetTop) - 8) - Y1;
+      $("#showBox").height(height).width(width);
+});
+    $(this).mouseup(function(e){
+    	$("#showBox").remove();
+    	$(this).unbind('mousemove');
+        var X2 = (e.pageX - this.offsetLeft) - 8;
+        var Y2 = (e.pageY - this.offsetTop) - 8;
+        //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
+        $(this).unbind('mouseup');
+       	width = X2 - X1;
+       	height = Y2 - Y1;	
+       	
+		var paper = Raphael(X12, Y12, width, height);
+		var ellipse = paper.ellipse(width/2, height/2, width/2.2, height/2.2 );
+		 $('svg').draggable({ containment: "#canvas" });
+	});
+	$(this).unbind('mousedown');
+  });	
+}
+
+function drawRect(){
+	$("#canvas").mousedown(function(e){
+    var X1 = (e.pageX - this.offsetLeft) - 8;
+    var Y1 = (e.pageY - this.offsetTop) - 8;
+    var X12 = (e.pageX) - 8;
+    var Y12 = (e.pageY) - 8;
+    $("#canvas").append('<div id="showBox"></div>');
+    $("#showBox").css('left', X1).css('top', Y1);
+    $("#canvas").mousemove(function(e){
+  var width = ((e.pageX - this.offsetLeft) - 8) - X1;
+  var height = ((e.pageY - this.offsetTop) - 8) - Y1;
+      $("#showBox").height(height).width(width);
+});
+    $(this).mouseup(function(e){
+    	$("#showBox").remove();
+    	$(this).unbind('mousemove');
+        var X2 = (e.pageX - this.offsetLeft) - 8;
+        var Y2 = (e.pageY - this.offsetTop) - 8;
+        //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
+        $(this).unbind('mouseup');
+       	width = X2 - X1;
+       	height = Y2 - Y1;		
+		var paper = Raphael(X12, Y12, width+2, width+2);
+		var rect = paper.rect(1, 1, width, height);
+		 $('svg').draggable({ containment: "#canvas" });
+	});
+	$(this).unbind('mousedown');
+  });	
+}
+
+function drawRectwithRound(){
+	$("#canvas").mousedown(function(e){
+    var X1 = (e.pageX - this.offsetLeft) - 8;
+    var Y1 = (e.pageY - this.offsetTop) - 8;
+    var X12 = (e.pageX) - 8;
+    var Y12 = (e.pageY) - 8;
+    $("#canvas").append('<div id="showBox"></div>');
+    $("#showBox").css('left', X1).css('top', Y1);
+    $("#canvas").mousemove(function(e){
+  var width = ((e.pageX - this.offsetLeft) - 8) - X1;
+  var height = ((e.pageY - this.offsetTop) - 8) - Y1;
+      $("#showBox").height(height).width(width);
+});
+    $(this).mouseup(function(e){
+    	$("#showBox").remove();
+    	$(this).unbind('mousemove');
+        var X2 = (e.pageX - this.offsetLeft) - 8;
+        var Y2 = (e.pageY - this.offsetTop) - 8;
+        //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
+        $(this).unbind('mouseup');
+       	width = X2 - X1;
+       	height = Y2 - Y1;		
+		var paper = Raphael(X12, Y12, width+2, width+2);
+		var rect = paper.rect(1, 1, width, height, 25);
+		 $('svg').draggable({ containment: "#canvas" });
+	});
+	$(this).unbind('mousedown');
+  });	
+}
+
+function drawLine(){
+	$("#canvas").mousedown(function(e){
+    var X1 = (e.pageX - this.offsetLeft) - 8;
+    var Y1 = (e.pageY - this.offsetTop) - 8;
+    var X12 = (e.pageX) - 8;
+    var Y12 = (e.pageY) - 8;
+    $("#canvas").mousemove(function(e){
+    	$('#canvas svg').remove();
+  var width = ((e.pageX - this.offsetLeft) - 8) - X1;
+  var height = ((e.pageY - this.offsetTop) - 8) - Y1;
+		var paper = Raphael(X12, Y12, e.pageX, e.pageY);
+		var stringPath = "M" + 0 + " " + 0 + "L" + width + " " + height;
+		var path = paper.path(stringPath);
+});
+    $(this).mouseup(function(e){
+    	$("#showBox").remove();
+    	$(this).unbind('mousemove');
+        var X2 = (e.pageX - this.offsetLeft) - 8;
+        var Y2 = (e.pageY - this.offsetTop) - 8;
+        //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
+        $(this).unbind('mouseup');
+       	width = X2 - X1;
+       	height = Y2 - Y1;		
+		var paper = Raphael(X12, Y12, width, width);
+		var stringPath = "M" + 0 + " " + 0 + "L" + width + " " + height;
+		var path = paper.path(stringPath);
+		 $('svg').draggable({ containment: "#canvas" });
+	});
+	$(this).unbind('mousedown');
+  });	
+}
+
+
+
 
 var inIncT = 1;
 function newTable(){
@@ -385,32 +406,36 @@ function newTable(){
 	    var X1 = (e.pageX - this.offsetLeft) - 8;
 	    var Y1 = (e.pageY - this.offsetTop) - 8;
 	    var X12 = (e.pageX) - 8;
-	    var Y12 = (e.pageY) - 8;
+    	var Y12 = (e.pageY) - 8;
+
 	    $("#canvas").append('<div id="showBoxTable"></div>');
 	    $("#showBoxTable").css('left', X1).css('top', Y1);
 	    
 	    $("#canvas").mousemove(function(e){
 	    	
-      var positionX = ((e.pageX - this.offsetLeft) - 8) - X1;
-      var positionY = ((e.pageY - this.offsetTop) - 8) - Y1;
+      var positionX = ((e.pageX - this.offsetLeft) - 8);
+      var positionY = ((e.pageY - this.offsetTop) - 8);
       	   
 	      //$("#showBoxTable").height(height).width(width);
 	    $("#showBoxTable").css('left', positionX).css('top', positionY);
     });
 
 	    $(this).mouseup(function(e){
-	    	$("#showBoxTable").remove();
+	    	 var X2 = (e.pageX);
+	        var Y2 = (e.pageY)-8;
 	    	$(this).unbind('mousemove');
-	
-			$("#canvas").append('<div id="canvasTable"><table><caption><h3>My Table</h3></caption><thead><tr><td></td><th></th></tr></thead><tbody><tr><th></th><td></td></tr></tbody></table></div>');
+	    	$("#showBoxTable").remove();
+	    	$(this).unbind('mouseup');
+	    	
+			$("#canvas").append('<div id="canvasTable"><table><caption><h3>My Table</h3></caption><thead><tr><td>sdfsd</td><th>sdfsdf</th></tr></thead><tbody><tr><th></th><td></td></tr></tbody></table></div>');
 			//position the new drawing canvas correctly
-			$("#canvasTable").css('left', X12).css('top', Y12);
-			
+			$("#canvasTable").css('left', X2).css('top', Y2);
+			//$('#canvasTable td').editable();
+
 			$('.help p').remove();
 			$('.help').append('<p>Awesome, now you can begin editting your table!<p>');
 			$('.help p').css('color', '#a3ed9b');
-			$("#canvasTable").append('<div class="close" onclick="removeTable();"></div>');
-			$("#canvasTable").draggable({ containment: "parent" });	
+			//$("#canvasTable").draggable({ containment: "parent" });	
 			$(this).unbind('mouseup');	
 	        });
 	         $(this).unbind('mousedown');      	
@@ -421,26 +446,59 @@ function newTable(){
 } // end newDrawing
 
 function removeTable() {
-	$('#canvasTable').remove();
+	$('#table').remove();
 	idIncT = 1;
 	defaultMessage();
 }
 
 function addtablerow() {
-$('#canvasTable tbody>tr:last').clone(true).insertAfter('#canvasTable tbody>tr:last');
+$('#table tbody>tr:last').clone(true).insertAfter('#canvasTable tbody>tr:last');
 }
 
 function addtablecolumn() {
-$('#canvasTable tr:first ').append("<td class='TableHeading'>second</td>");    
+$('#table tr:first ').append("<td class='TableHeading'></td>");    
 
- $('#canvasTable tr:not(:first)').each(function(){
-       $(this).append("<td class='tdMiddleCells'>second</td>");
+ $('#table tr:not(:first)').each(function(){
+       $(this).append("<td class='tdMiddleCells'></td>");
  });
 
 }
 
 function newTableTitle() {
-	$('#canvasTable caption h3').remove();
+	$('#table caption h3').remove();
 	var newTitle = document.getElementById("addtabletitle").value;
-	$('#canvasTable caption').append("<h3>" + newTitle + "</h3>");
+	$('#table caption').append("<h3>" + newTitle + "</h3>");
 }
+
+function clearCanvas() {
+	$('#canvas > *').remove();	
+}
+
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
+
+var some = $("#title").text();
+console.log(some);
+
+function barGraph(){
+	 $("table td").click(function () {
+		//var value = $('#table input:first').val();		
+		var $td= $(this).closest('tr').children('td');
+		var n = 0;
+		var value=new Array();
+		while(1){
+		var value[n]= $td.eq(n).text();
+			//$td.eq(n).css(border: '2px solid #ccc);
+			var isempty = isEmpty(value);
+			if(isempty){break;}
+			n++;
+		}
+		n--;
+		var value[n] = $('#table input:first').val();
+		for (int s = 0; s < n; s++){
+			console.log(value[s]);	
+		}
+	});
+}
+

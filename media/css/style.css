@@ -42,9 +42,20 @@ by: Christopher Reynolds
 	 opacity: .6;
 	 background:#ccc;
 }
+#labelPreview {
+	 border:2px #ddd dashed; 
+	 position:relative;
+	 width:100px;
+	 height:20px;
+	 border-radius: 4px;
+	 opacity: .6;
+	 background:#ccc;
+}
+#textLabel{
+	position:absolute;
+}
 #canvasTable {
 	position:absolute;
-	cursor:move;
 	min-width: 200px;
 }
 .head {
@@ -53,6 +64,16 @@ by: Christopher Reynolds
 	width:100%;
 	cursor:move;
 }
+.label {
+	color: #000;
+	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
+	font-size: 220%;
+	opacity: .6;
+}
+svg {
+	position:absolute;
+}
+
 iframe {
 	font-family: Arial,Verdana,sans-serif;
 }
@@ -121,6 +142,9 @@ h3 {
 	color: #FF7200;
 	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
 	font-size: 165%;
+}
+.inner h3 {
+	color: #343434;
 }
 h4 {
 	color: #FF7200;
@@ -386,7 +410,6 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	margin-top:10px;
 }
 #buttons {
-	background: url("../images/darkBack2.png") repeat scroll 0 0 transparent;
 	width:40px;
 	padding:4px 0 10px 0;
 	border:solid 1px #5b5b5b;
@@ -546,9 +569,6 @@ canvas {
 	cursor:crosshair;
 	border:1px solid #eee;
 }
-svg {
-	cursor:crosshair;
-}
 .close {
 	border:1px solid #b83a3e;
 	border-radius:4px;
@@ -562,6 +582,36 @@ svg {
 }
 .close:hover {
 	background:#e40f17;
+}
+.row span {
+	font-size:12px;
+}
+.row .drawOpt {
+	
+}
+.toolWindow label{
+	margin:10px;
+}
+#toolbox input {
+	padding:.2em;
+	border-radius:6px;
+	width:80px;
+}
+#toolbox button {
+	padding: 0.4em 1em;
+	border-radius:6px;
+}
+#table td {
+	min-height:15px;
+	height:15px;
+	width:100px;
+}
+#table tr {
+		min-height:15px;
+	height:15px;
+}
+#table .hover{
+	background:#DEECFF;
 }
 .test1 {
 	cursor:pointer;
