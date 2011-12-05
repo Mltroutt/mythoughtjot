@@ -210,9 +210,9 @@
                     <li><a href="#">Project 3</a></li>
                 </ul>
             <li class="nitem"><a href="#">Collaborators</a></li>
-                <ul class="nsub"  id="updatesTab">
+                <ul class="nsub collaborators"  id="updatesTab">
                     {% for user in canvas.collaborators.all %}
-                        <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21"><a href="/user/{{ user.username }}/">{{ user.username }}</a></span></strong></li>
+                        <li class="update"><div class="collaborator_box"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/{{ user.username }}/">{{ user.username }}</a><a class="remove_collaborator" href="/canvas/{{ canvas.pk }}/remove-collaborator/{{ user.pk }}/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Remove" title="Remove" /></a></div></li>
                     {% endfor %}
                 </ul>
 
@@ -263,7 +263,7 @@
                         return false;
             });
             $("#add_collaborator").click(function(e){
-            var url = '/canvas/{{pk}}/add-collaborator';
+            var url = '/canvas/{{ canvas.pk }}/add-collaborator';
                         var dialog = $('<div style="display:none"></div>').appendTo('body');
                         dialog.load(
                             url,
@@ -282,6 +282,21 @@
                         );
                         //prevent the browser to follow the link
                         return false;
+            });
+            $(".remove_collaborator").click(function(e){
+	            e.preventDefault();
+	            if(confirm("Delete this collaborator?")){
+	                var link = $(this).attr("href");
+	
+	                $.get(link, function(data){
+	                    if(data['success']){
+	                        alert(data['message']);
+	                        //window.location.reload();
+	                    }else{
+	                        alert(data['error']);
+	                    }
+	                });
+	            }
             });
 		});
 	</script>
