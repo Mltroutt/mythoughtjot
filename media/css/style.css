@@ -359,6 +359,14 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color: #ccc;
 }
 
+#slidenav ul.collaborators a.add_collaborator {
+	color: #fff;
+	font-size:1.2em;
+}
+#slidenav ul.collaborators a.add_collaborator:hover {
+	color: #eeeeee;
+}
+
 #slidenav ul.collaborators div.collaborator_box {
 }
 

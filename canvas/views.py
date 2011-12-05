@@ -497,7 +497,7 @@ def canvas_add_collaborator(request, pk):
 
         if request.POST:            
             if request.is_ajax():
-                return_message = {'success':False, 'messages':'', 'errors':{}}
+                return_message = {'success':False, 'messages':'', 'errors':{}, 'collaborators':{}}
                 form.canvas = pk
                 if form.is_valid():
                     try:
@@ -522,14 +522,22 @@ def canvas_add_collaborator(request, pk):
                             raise
                         
                         return_message['success'] = True
+
                 
                         return_message['messages'] = "Successfully added user to this canvas"
 
+                        users = []
                         
-                    except:
+                        for collaborator in canvas.collaborators.all():
+                            print collaborator.username
+                            users.append({'name':collaborator.username,'id':collaborator.pk})
+                        
+                        return_message['collaborators'] = users
+                        
+                    except Exception, e:
                         return_message['success'] = True
                 
-                        return_message['messages'] = "Failed to add user to this canvas"
+                        return_message['messages'] = "Failed to add user to this canvas" + e
                     finally:
                         json = simplejson.dumps(return_message)
                         
@@ -582,6 +590,15 @@ def canvas_remove_collaborator(request, pk, user):
         
         try:
             canvas.collaborators.remove(user)
+            
+            users = []
+                        
+            for collaborator in canvas.collaborators.all():
+                print collaborator.username
+                users.append({'name':collaborator.username,'id':collaborator.pk})
+            
+            return_message['collaborators'] = users
+            
             return_message['message'] = "User is no longer a collaborator"
             return_message['success'] = True
         except:
