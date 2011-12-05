@@ -3,17 +3,41 @@
 
 {% block title %}Projects for {{ request.user.username }}{% endblock %}
 
+{% block css %}
+<style>
+ul#projects {
+    list-style: none;
+    padding-left: 10px;
+    font-size: 14px;
+    line-height: 150%;
+}
+ul#projects p.description {
+    font-size: 12px;
+}
+ul#projects li {
+    padding-left: 5px;
+    padding-bottom: 15px;
+}
+ul#projects li ul {
+    list-style: none;
+    padding-left:5px;
+}
+ul#projects li ul {
+    padding-left: 5px;
+}
+</style>
+{% endblock %}
 
 {% block content %}
 
+    <h2>Projects Yo</h2>
+    <br />
+    <ul id="projects">
     {% for project in projects %}
 
 
-        {% for user in project.project_collaborators.all %}
-            {{ user }}    {{request.user}}
-        {% endfor %}
 
-        {{ project.title }}
+       <li> {{ project.title }}
         {% if request.user == project.owner %}
             <a href="/project/{{ project.pk }}/edit/">Edit</a>
             <a class="project_delete" href="/project/{{ project.pk }}/delete/">Delete</a>
@@ -22,22 +46,24 @@
             <a href="/canvas/create/">Create a canvas</a>
         {% endif %}
 
+       <p class="description">{{ project.description }}</p>
+
         <ul>
         {% for canvas in project.canvas_set.all %}
 
             {% if request.user in project.project_collaborators.all or request.user == canvas.owner %}
 
-                <li>{{ canvas.title }} <a href="/canvas/{{ canvas.pk }}/edit/">Edit</a> <a class="canvas_delete" href="/canvas/{{ canvas.pk }}/delete/">Delete</a></li>
+                <li><a href="/canvas/{{canvas.pk}}/">{{ canvas.title }}</a> <a href="/canvas/{{ canvas.pk }}/edit/">Edit</a> <a class="canvas_delete" href="/canvas/{{ canvas.pk }}/delete/">Delete</a></li>
             {% else %}{% if request.user in canvas.collaborators.all %}
                 <li>{{ canvas.title }}</li>
             {% endif %}{% endif %}
 
         {% endfor %}
         </ul>
-        <br />
+        </li>
 
     {% endfor %}
-
+     </ul>
     <script type="text/javascript">
         $(document).ready(function() {
             $(".canvas_delete").click(function(e) {
