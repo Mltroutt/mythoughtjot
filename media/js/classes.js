@@ -488,15 +488,17 @@ function barGraph(){
 		var n = 0;
 		var value=new Array();
 		while(1){
-		var value[n]= $td.eq(n).text();
+		value[n]= $td.eq(n).text();
 			//$td.eq(n).css(border: '2px solid #ccc);
-			var isempty = isEmpty(value);
-			if(isempty){break;}
+			var isempty = isEmpty(value[n]);
 			n++;
+			if(isempty){break;}
+			
 		}
 		n--;
-		var value[n] = $('#table input:first').val();
-		for (int s = 0; s < n; s++){
+		value[n] = $('#table input:first').val();
+		n++;
+		for (var s = 0; s < n; s++){
 			console.log(value[s]);	
 		}
 	});
