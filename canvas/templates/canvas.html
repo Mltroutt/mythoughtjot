@@ -39,7 +39,7 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/classes.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/popup.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery.wysiwyg.js"></script>
-		<script type="text/javascript" src="{{ MEDIA_URL }}js/graaffle.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}js/graffle.js"></script>
 </head>
 <body>
     <noscript>mythoughtjot requires JavaScript to be enabled in your browser to work properly.</noscript>
@@ -207,13 +207,9 @@
                 </ul>
             <li class="nitem"><a href="#">Collaborators</a></li>
                 <ul class="nsub"  id="updatesTab">
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;14 sec ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Edited a drawing on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;30 sec ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;2 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;10 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;32 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;47 mins ago&#62;</span></li>
-					<li class="updateLast"><a href="#">More Updates>></a></li>
+                    {% for user in canvas.collaborators.all %}
+                        <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21"><a href="/user/{{ user.username }}/">{{ user.username }}</a></span></strong></li>
+                    {% endfor %}
                 </ul>
 
         </ul>
