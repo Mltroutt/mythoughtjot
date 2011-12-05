@@ -477,7 +477,9 @@ def canvas(request, pk):
     if not isCollaborator and not canvas.public:
         raise Http404
     nodes = Node.objects.filter(canvas=pk)
-    return render_to_response("canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
+    #return the first 3 projects for the user
+    projects = Project.objects.filter(project_collaborators=request.user)[:3]
+    return render_to_response("canvas.html", add_csrf(request, pk=pk, projects=projects, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
 
     #End sucky def's
 

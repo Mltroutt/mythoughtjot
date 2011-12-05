@@ -194,10 +194,14 @@
         <ul>  	
             <li class="nitem"><a href="#">Me</a></li>
                 <ul class="nsub">
-                    <li><a href="#">New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
-                    <li><a href="#">Project 1</a></li>
-                    <li><a href="#">Project 2</a></li>
-                    <li><a href="#">Project 3</a></li>
+                    <li><a href="/project/create/">New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
+                    {% for project in projects %}
+                    <li><a href="/project/{{ project.pk }}/">{{ project.title }}</a></li>
+                    {% endfor %}
+                    {% if projects.count > 3 %}
+                    <li><a href="/project/myprojects/">More...</a></li>
+                    {% endif %}
+
                 </ul>
             <li class="nitem"><a href="#"><span></span> Others</a></li>
                 <ul class="nsub">
