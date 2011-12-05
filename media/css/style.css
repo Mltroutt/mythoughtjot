@@ -351,6 +351,29 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color: #22201d; 
 }
 
+#slidenav ul.collaborators a {
+	color: #000;
+}
+
+#slidenav ul.collaborators a:hover {
+	color: #ccc;
+}
+
+#slidenav ul.collaborators div.collaborator_box {
+}
+
+#slidenav ul.collaborators div.collaborator_box a {
+	display: inline;
+}
+#slidenav ul.collaborators div.collaborator_box img {
+	margin:0;
+	float: none;
+	margin-top: 3px;
+}
+#slidenav ul.collaborators div.collaborator_box a.collaborator_delete {
+	padding-left: 5px;
+}
+
 #slidenav .nsub { 
 	padding:10px;
 }
