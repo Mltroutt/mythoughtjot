@@ -3,7 +3,7 @@ $(document).ready(function() {
 		project = $("#id_project").val();
 		title = $("#id_title").val();
 		public_option = $("#id_public").val();
-		guest_option = $("#id_allow_guest").val();
+		guest_option = $("#id_allow_guests").val();
 		csrf = $("input[name=csrfmiddlewaretoken]").val();
 		$.post('', {'project' : project, 'title' : title, 'public' : public_option, 'allow_guests' : guest_option, 'csrfmiddlewaretoken': csrf}, function(data) {
 			$('ul.errorlist').remove();

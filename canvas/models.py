@@ -24,8 +24,8 @@ class Canvas(models.Model):
     owner = models.ForeignKey(User, blank=False, null=False, related_name="canvas_current_owner")
     creator = models.ForeignKey(User, blank=False, null=False, related_name = "canvas_original_owner")
     collaborators = models.ManyToManyField(User)
-    public = models.BooleanField(default=True)
-    allow_guests = models.BooleanField(default=True)
+    public = models.BooleanField(default=False)
+    allow_guests = models.BooleanField(default=False)
     project = models.ForeignKey(Project)
 
     def __unicode__(self):
