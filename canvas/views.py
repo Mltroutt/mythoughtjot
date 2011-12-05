@@ -11,7 +11,14 @@ from django.http import HttpResponse, Http404
 from django.template.loader import render_to_string
 from django.db.models import Q
 
+
 class ProjectForm(ModelForm):
+
+    """
+    Form for creating a project. Takes in a name and description from the form, then assigns
+    the owner, creator, created date, and collaborators automagically
+    """
+    
     class Meta:
         model = Project
         fields = ('title','description')
@@ -21,13 +28,40 @@ class ProjectForm(ModelForm):
         js = (
               "/media/js/forms/project.js",
               )
-        
+
     def __init__(self, *args, **kwargs):
+        #get the request so we can use it later
         self.request = kwargs.pop('request', None)
         super(ProjectForm, self).__init__(*args, **kwargs)
 
 
+class ProjectEditForm(ModelForm):
+
+    """
+    Edit the project. Change title, description, owner, collaborators
+    """
+
+    class Meta:
+        model = Project
+        exclude = {'creator','created'}
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        #Get only the collaborators of the project. The default adds all available
+        #users, which is bad.
+        self.project_collaborators = kwargs.pop('project_collaborators', None)
+        super(ProjectEditForm, self).__init__(*args, **kwargs)
+        self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
+        self.fields['project_collaborators'] = forms.ModelMultipleChoiceField(self.project_collaborators)
+
+
 class CanvasForm(ModelForm):
+
+    """
+    Form for creating a canvas. Takes in a canvas name, project, and a few tick boxes as options.
+    Assigns owner, creator, collaborators automagically
+    """
+
     class Meta:
         model = Canvas
         fields = ('project','title','public','allow_guests')
@@ -38,43 +72,49 @@ class CanvasForm(ModelForm):
               )
         
     def __init__(self, *args, **kwargs):
+        #get the request so we can use it later
         self.request = kwargs.pop('request', None)
         super(CanvasForm, self).__init__(*args, **kwargs)
 
+    #Check to make sure the user is a collaborator of the project they selected
     def clean_project(self):
         project = self.cleaned_data['project']
         if not Project.objects.filter(pk=project.pk,project_collaborators=self.request.user).exists():
             raise forms.ValidationError("You are not a collaborator on this project.")
         return project
 
+
 class CanvasEditForm(ModelForm):
+
+    """
+    Edit a canvas. Change the title, options, collaborators and project.
+    """
+
     class Meta:
         model = Canvas
         exclude = {'creator','created','owner'}
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
+        #The canvas collaborators
         self.collaborators = kwargs.pop('collaborators', None)
+        #projects which the user is a collaborator on
         self.project_collaborator = kwargs.pop('project_collaborator', None)
+        #All colaborators on the current project
         self.project_collaborators = kwargs.pop('project_collaborators', None)
         super(CanvasEditForm, self).__init__(*args, **kwargs)
         self.fields['project'] = forms.ModelChoiceField(self.project_collaborator)
         self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
         self.fields['collaborators'] = forms.ModelMultipleChoiceField(self.collaborators)
 
-class ProjectEditForm(ModelForm):
-    class Meta:
-        model = Project
-        exclude = {'creator','created'}
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        self.project_collaborators = kwargs.pop('project_collaborators', None)
-        super(ProjectEditForm, self).__init__(*args, **kwargs)
-        self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
-        self.fields['project_collaborators'] = forms.ModelMultipleChoiceField(self.project_collaborators)
 
 class CollaboratorForm(forms.Form):
+
+    """
+    Forn to add collaborators to a project
+    """
+
     user = forms.CharField(label="Username",max_length=100)
     canvas = forms.IntegerField(widget=forms.HiddenInput)
     
@@ -100,29 +140,52 @@ class CollaboratorForm(forms.Form):
         self.request = kwargs.pop('request', None)
         super(CollaboratorForm, self).__init__(*args, **kwargs)
     
+class UserEditForm(ModelForm):
+    class meta:
+        model = User
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(UserEditForm, self).__init__(*args, **kwargs)
+
 
 @login_required
 def create_project(request=None):
+
+    """
+    Project creation form
+    """
+
+    #request.POST or None allows you to use one line for both the
+    #pre-POST form and the post-POST form
     form = ProjectForm(request.POST or None, request=request)
 
-    if request.method == 'POST':
+    if request.POST:
         if request.is_ajax():
             return_message = {'success':False, 'messages':'', 'errors':{}}
             if form.is_valid():
                 try:
+                    #Prep the form to be saved but don't save it
                     pre_save = form.save(commit=False)
+
+                    #Add the user as both the owner and creator
                     pre_save.owner = request.user
                     pre_save.creator = request.user
+                    #Now save the form
                     pre_save.save()
+                    #then add the user as the first collaborator
                     pre_save.project_collaborators.add(request.user)
                     
                     return_message['success'] = True
             
                     return_message['messages'] = "Successfully added your project"
                     
+                    #Get the id of the poject that was just saved
                     id = pre_save.pk
-                    return redirect('/project/'+str(id))
-                    
+
+                    #and redirect to it
+                    return_message['redirect'] = '/project/'+str(id)
+
                 except:
                     return_message['success'] = True
             
@@ -142,22 +205,40 @@ def create_project(request=None):
                 return HttpResponse(json, mimetype='application/json')
         else:
             if form.is_valid():  
+                 #Prep the form to be saved but don't save it
                 pre_save = form.save(commit=False)
+
+                #Add the user as both the owner and creator
                 pre_save.owner = request.user
                 pre_save.creator = request.user
+                #Now save the form
                 pre_save.save()
+                #then add the user as the first collaborator
                 pre_save.project_collaborators.add(request.user)
+
+                #Get the id of the poject that was just saved
                 id = pre_save.pk
+
+                #and redirect to it
                 return redirect('/project/'+str(id))
+            
     return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Project'), context_instance=RequestContext(request))
+
+
 
 @login_required
 def project_delete(request, pk):
+    """
+    Delete a project
+    """
+
+    #if the project ID was not found the go to 404
     project = get_object_or_404(Project, pk=pk)
     canvases = Canvas.objects.filter(project=project)
 
     if request.is_ajax() and request.user == project.owner:
         try:
+            #delete the project and then all of the canvases associated with it
             project.delete()
             for canvas in canvases:
                 canvas.delete()
@@ -167,19 +248,28 @@ def project_delete(request, pk):
 
     raise Http404
 
+
 @login_required
 def project_edit(request, pk):
+    """
+    Edit the project
+    """
 
+    #if the project id is not found then 404
     project = get_object_or_404(Project, pk=pk)
     project_collaborators = project.project_collaborators.all()
 
+    #Get the project with the fields filled in via the instance parameter
     form = ProjectEditForm(request.POST or None,
                           project_collaborators=project_collaborators,
                           request=request, instance=project)
 
     if request.POST and form.is_valid():
+        #prep the form for submission
         pre_save = form.save(commit=False)
+        #add the new owner (if it's changed)
         pre_save.owner = form.cleaned_data['owner']
+        #save the project creator and the created date
         pre_save.creator = project.creator
         pre_save.created = project.created
         pre_save.save()
@@ -188,28 +278,44 @@ def project_edit(request, pk):
 
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Project'), context_instance=RequestContext(request))
 
+
+
 @login_required
 def myprojects(request):
-    
+    """
+    List all the projects the user is associated wtih
+    """
+
+    #The Q allows you to make more complex queries. Here I use it to add a 'or' clause
+
     projects = Project.objects.select_related().filter(Q(project_collaborators=request.user) | Q(canvas__collaborators=request.user)).distinct()
 
     return render_to_response('my_projects.html', {'projects':projects}, context_instance=RequestContext(request))
 
+
+
 @login_required
 def create_canvas_modal(request):
+    """
+    Create canvas in a modal box (JQuery)
+    """
     form = CanvasForm(request.POST or None, request=request)
     
-    if request.method == 'POST' and request.is_ajax():
+    if request.POST and request.is_ajax():
         return_message = {'success':False, 'messages':'', 'errors':{}}
         
         if form.is_valid():
             try:
+                #Prep the form for saving
                 pre_save = form.save(commit=False)
+                #add the user as the owner and creator
                 pre_save.owner = request.user
                 pre_save.creator = request.user
                 pre_save.save()
+                #add the user as the first collaborator
                 pre_save.collaborators.add(request.user)
-                
+
+                #Get the canvas ID
                 id = pre_save.pk
                 
                 return_message['success'] = True
@@ -219,6 +325,7 @@ def create_canvas_modal(request):
                 return_message['redirect'] = '/canvas/'+str(id)
                 
             except:
+                #Even though it wasn't successful, set to true so it just prints a message
                 return_message['success'] = True
         
                 return_message['messages'] = "Failed to add the canvas"
@@ -235,11 +342,17 @@ def create_canvas_modal(request):
             json = simplejson.dumps(return_message)
     
             return HttpResponse(json, mimetype='application/json')
+    #fill in the projects field with all projects the user is associated with
     form.fields['project'].queryset = Project.objects.filter(project_collaborators=request.user)
     return render_to_response('canvas_create_short_form.html', add_csrf(request, form=form, title='Create A Canvas'), context_instance=RequestContext(request))
 
+
+
 @login_required
 def create_canvas(request):
+    """
+    Create a canvas the old fashioned way. This one isn't as cool.
+    """
     form = CanvasForm(request.POST or None, request=request)
     if request.POST:
         if request.is_ajax():
@@ -258,11 +371,14 @@ def create_canvas(request):
                     return_message['success'] = True
             
                     return_message['messages'] = "Successfully added your canvas"
-                    return redirect('/canvas/'+str(id))
+
+                    return_message['redirect'] = '/canvas/'+str(id)
+
                 except:
                     return_message['success'] = True
             
                     return_message['messages'] = "Failed to add the canvas"
+
                 finally:
                     json = simplejson.dumps(return_message)
                     
@@ -290,6 +406,10 @@ def create_canvas(request):
 
 @login_required
 def canvas_delete(request, pk):
+
+    """
+    I'm not sure that this does.
+    """
     canvas = Canvas.objects.get(pk=pk)
 
     if request.is_ajax() and request.user == canvas.owner:
@@ -303,7 +423,13 @@ def canvas_delete(request, pk):
 
 @login_required
 def canvas_edit(request, pk):
+    """
+        This kind of needs to be rewritten....
+    """
     canvas = get_object_or_404(Canvas, pk=pk)
+
+    if request.user != canvas.owner:
+        raise Http404
 
     collaborators = canvas.collaborators.all()
 
@@ -327,6 +453,8 @@ def canvas_edit(request, pk):
 
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Canvas'), context_instance=RequestContext(request))
 
+   #These next two def's suck. Don't use them,
+
 @login_required
 def project(request, pk):
     project = get_object_or_404(Project,pk=pk)
@@ -335,7 +463,6 @@ def project(request, pk):
         return redirect('/')
     canvases = Canvas.objects.filter(project=pk)
     return render_to_response("project.html", add_csrf(request, pk=pk, project=project, canvases=canvases), context_instance=RequestContext(request))
-
 
 @login_required
 def canvas(request, pk):
@@ -346,8 +473,16 @@ def canvas(request, pk):
     nodes = Node.objects.filter(canvas=pk)
     return render_to_response("canvas.html", add_csrf(request, pk=pk, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
 
+    #End sucky def's
+
+
 @login_required
 def canvas_add_collaborator(request, pk):
+
+    """
+    Needs more collaborators.
+    """
+
     isCollaborator = Canvas.objects.filter(pk=pk,collaborators=request.user).exists()
     if isCollaborator:
         form = CollaboratorForm(request.POST or None, request=request, initial={'canvas' : pk})
@@ -410,6 +545,11 @@ def canvas_add_collaborator(request, pk):
 
 @login_required
 def canvas_remove_collaborator(request, pk):
+
+    """
+    This removes collaborators from a canvas. Currently requires imagination.
+    """
+
     if not Canvas.objects.filter(pk=pk,creator=request.user).exists():
         raise Http404
     
@@ -449,8 +589,18 @@ def canvas_remove_collaborator(request, pk):
         return HttpResponse(json, mimetype='application/json')
 
 def node(request, pk):
+
+    """
+    Pipe dream.
+    """
+
     return render_to_response("node.html", {'pk':pk})
 
+def edit_user(request, user):
+    user = get_object_or_404(User, username__exact = user)
+
+    form = UserEditForm(request.POST or None, request=request, instance=user)
+    return render_to_response('forms.html', add_csrf(request, form=form, title='Edit User'), context_instance=RequestContext(request))
 
 def add_csrf(request, **kwargs):
     """Add CSRF to dictionary."""
