@@ -148,6 +148,12 @@ class UserEditForm(ModelForm):
         self.request = kwargs.pop('request', None)
         super(UserEditForm, self).__init__(*args, **kwargs)
 
+def index(request):
+    
+    if request.user.is_authenticated():
+        return redirect('/project/myprojects/')
+    else:
+        return redirect('/login/')
 
 @login_required
 def create_project(request=None):
