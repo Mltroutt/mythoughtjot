@@ -106,7 +106,7 @@ class CanvasEditForm(ModelForm):
         self.fields['canvas'] = forms.IntegerField(widget=forms.HiddenInput)
         self.fields['project'] = forms.ModelChoiceField(self.project_collaborator)
         self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
-        self.fields['collaborators'] = forms.ModelMultipleChoiceField(self.collaborators)
+        self.fields['collaborators'] = forms.ModelMultipleChoiceField(self.collaborators,widget=form.SelectMultiple)
 
 
 class CollaboratorForm(forms.Form):
@@ -491,10 +491,10 @@ def canvas_edit_modal(request, pk):
                 pre_save.creator = canvas.creator
                 pre_save.created = canvas.created
                 pre_save.save()
-                pre_save.collaborators.clear()
-                for collab in form.cleaned_data['collaborator_list']:
-                    print collab
-                    pre_save.collaborators.add(User.objects.get(pk=collab))
+                #pre_save.collaborators.clear()
+                #for collab in form.cleaned_data['collaborator_list']:
+                #    print collab
+                #    pre_save.collaborators.add(User.objects.get(pk=collab))
                 return_message['success'] = True
                 return_message['messages'] = "Successfully added your canvas"
                 
@@ -677,10 +677,10 @@ def node(request, pk):
 
     return render_to_response("node.html", {'pk':pk})
 
-def edit_user(request, user):
-    user = get_object_or_404(User, username__exact = user)
+@login_required
+def edit_user(request):
 
-    form = UserEditForm(request.POST or None, request=request, instance=user)
+    form = UserEditForm(request.POST or None, request=request, instance=request.user)
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit User'), context_instance=RequestContext(request))
 
 def add_csrf(request, **kwargs):
