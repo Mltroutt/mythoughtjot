@@ -747,12 +747,12 @@ def check_messages(request):
         raise Http404
 
 @login_required
-def view_profile(request,user):
-    user = get_object_or_404(User,username__exact=user)
+def view_profile(request,in_user):
+    view_user = get_object_or_404(User,username__exact=in_user)
     
-    projects = Project.objects.filter(Q(project_collaborators=request.user) | Q(canvas__collaborators=request.user)).distinct()
+    projects = Project.objects.filter(Q(project_collaborators=view_user) | Q(canvas__collaborators=view_user)).distinct()
     
-    return render_to_response('user_profile.html', add_csrf(request, canvas=canvas, projects=projects), context_instance=RequestContext(request))
+    return render_to_response('user_profile.html', add_csrf(request, view_user=view_user, canvas=canvas, projects=projects), context_instance=RequestContext(request))
 
 def add_csrf(request, **kwargs):
     """Add CSRF to dictionary."""
