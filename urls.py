@@ -39,7 +39,7 @@ urlpatterns = patterns('',
     url(r'^canvas/(\d+)/add-collaborator/$', 'canvas.views.canvas_add_collaborator'),
     url(r'^canvas/(\d+)/remove-collaborator/(\d+)/$', 'canvas.views.canvas_remove_collaborator'),
     url(r'^user/update/$', 'canvas.views.update_profile'),
-    url(r'^user/(\w+)/$', 'canvas.views.view_profile'),
+    #url(r'^user/(\w+)/$', 'canvas.views.view_profile'),
 )
 
 if settings.DEBUG:
