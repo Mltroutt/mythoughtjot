@@ -44,14 +44,14 @@
 <body>
     <noscript>mythoughtjot requires JavaScript to be enabled in your browser to work properly.</noscript>
 <div id="wrapper">
-  <div id="header">
+  <div id="header" style="height:45px;">
 	
               <div id="headerLeft">
               	
               	<div class="logo"><img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" /></div>
 			  </div><div class="help"></div>
         <div id="coRightHeader"> 
-<h1 id="title">Welcome, {{ request.user.username }}</h1>
+<h1 id="title" style="margin-top:2px; margin-bottom:2px; padding:0;">Welcome, {{ request.user.username }}</h1><span>Not {{ request.user.username}}? <a href="/logout/" style="display:inline;">Log out</a></span>
            
 		</div> 
 	</div>		<!-- end header-->
@@ -68,7 +68,9 @@
                     <li onclick="changeToolbar('#sharingTools');redo('users');"><div class="buttons" id="shareButton"><script type="text/javascript">renderIcon("users");</script></div></li>
                     <li onclick="notfinishedyet();redo('search');"><div class="buttons" id="searchButton"><script type="text/javascript">renderIcon("search");</script></div></li>
 					<li onclick="changeToolbar('#messagingTools');redo('mail');" id="messageButton"><div class="buttons" id="messagesButton"><script type="text/javascript">renderIcon("mail");</script></div></li>
-					<li onclick="changeToolbar('#settings');redo('settings');"><div class="buttons" id="canvasButton"><script type="text/javascript">renderIcon("settings");</script></div></li>
+					{% if request.user == canvas.owner %}
+						<li onclick="changeToolbar('#settings');redo('settings');"><div class="buttons" id="canvasButton"><script type="text/javascript">renderIcon("settings");</script></div></li>
+					{% endif %}
      
                 </ul>
             
@@ -76,7 +78,6 @@
         
       <div id="popupContact">
       <a href="#" id="popupContactClose">X</a>
-      <h1>Messages</h1>
        <div id="messagebox">
         <p>and here they are...</p>
        </div>
@@ -211,10 +212,7 @@
                 </ul>
             <li class="nitem"><a href="#">Collaborators</a></li>
                 <ul class="nsub collaborators"  id="updatesTab">
-                	<a class="add_collaborator" href="/canvas/{{ canvas.pk }}/add-collaborator/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Add a new collaborator</a>
-                    {% for user in canvas.collaborators.all %}
-                        <li class="update"><div class="collaborator_box"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/{{ user.username }}/">{{ user.username }}</a><a class="remove_collaborator" href="/canvas/{{ canvas.pk }}/remove-collaborator/{{ user.pk }}/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Remove" title="Remove" /></a></div></li>
-                    {% endfor %}
+
                 </ul>
 
         </ul>
@@ -222,7 +220,14 @@
     
 <script type="text/javascript">
 		$(document).ready(function() {
+			
+			$("ul#updatesTab").empty();
+			//console.log(data['collaborators'])
+			$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
+			
 			$('.nsub').hide(); // hide sub-navigation items by default
+			
+			//checkMessages_initial();
 			
 			$('.nitem a').live('click', function(e){
 				e.preventDefault();
@@ -234,11 +239,6 @@
                     $(this).removeClass("CurrentlySelected");
                 }
 			});
-            function checkmessages() {
-                //{% postman_unread as unread_count %}
-                alert('You have {{ unread_count }} unread messages.');
-            }
-
             /*
             * Canvas creation modal bax
             */
@@ -264,8 +264,8 @@
                         return false;
             });
             $(".add_collaborator").live('click', function(e){
-            var url = '/canvas/{{ canvas.pk }}/add-collaborator';
-                        var dialog = $('<div style="display:none"></div>').appendTo('body');
+            var url = '/canvas/{{ canvas.pk }}/add-collaborator/';
+                        var dialog = $('<div id="add_collaborators" style="display:none"></div>').appendTo('body');
                         dialog.load(
                             url,
                             function (responseText, textStatus, XMLHttpRequest) {
@@ -294,11 +294,11 @@
 	                        alert(data['message']);
 	                        $("ul#updatesTab").empty();
 							//console.log(data['collaborators'])
-							$("ul#updatesTab").append('<a class=\"add_collaborator\" href="/canvas/{{ canvas.pk }}/add-collaborator/"><img src="/media/images/add.png" alt="Add" title="Add" /> Add a new collaborator</a>');
+							$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
 							console.log(data['collaborators'])
 							for(collaborator in data['collaborators']) {
-								console.log(data['collaborators'][collaborator])
-								console.log(data['collaborators'][collaborator]["name"])
+								//console.log(data['collaborators'][collaborator])
+								//console.log(data['collaborators'][collaborator]["name"])
 								$("ul#updatesTab").append('<li class="update"><div class="collaborator_box"><img src="/media/images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/' + data['collaborators'][collaborator]["name"] + '/">' + data['collaborators'][collaborator]['name'] + '</a><a class="remove_collaborator" href="/canvas/'+canvas+'/remove-collaborator/' + data['collaborators'][collaborator]["id"] + '/"><img src="/media/images/delete.png" alt="Remove" title="Remove" /></a></div></li>');
 							}
 	                    }else{
@@ -328,7 +328,38 @@
                         //prevent the browser to follow the link
                         return false;
             });
+            $("#messageButton").click(function() {
+				$("#messagebox").empty();
+				$("#messagebox").html('&nbsp').load('/messages/inbox_short/');
+			});
 		});
+		/*
+		function checkMessages_initial() {
+			$.ajax({
+	            type: "GET",
+	            url: "/check_message_count/",
+	
+	            async: true,
+	            cache: false,
+	            timeout:50000,
+	            
+	            success: function(data){
+	            	if(data['count'] > 0){
+	                	//alert("You have " + data['count'] + " new message.");
+	               	}
+	                setTimeout(
+	                    'checkMessages()', 
+	                    5000 
+	                );
+	            },
+	            error: function(XMLHttpRequest, textStatus, errorThrown){
+	                //addmsg("error", textStatus + " (" + errorThrown + ")");
+	                setTimeout(
+	                    'checkMessages()', 
+	                    30000); 
+	            },
+	        });
+		}*/
 	</script>
 
         
