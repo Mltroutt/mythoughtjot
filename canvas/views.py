@@ -574,8 +574,7 @@ def project(request, pk):
     isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
     if not isCollaborator:
         return redirect('/')
-    canvases = Canvas.objects.filter(project=pk)
-    return render_to_response("project.html", add_csrf(request, pk=pk, project=project, canvases=canvases), context_instance=RequestContext(request))
+    return render_to_response("project_view.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
 
 @login_required
 def canvas(request, pk):
@@ -746,6 +745,14 @@ def check_messages(request):
         return HttpResponse(json, mimetype='application/json')
     else:
         raise Http404
+
+@login_required
+def view_profile(request,user):
+    user = get_object_or_404(User,username__exact=user)
+    
+    projects = Project.objects.filter(Q(project_collaborators=request.user) | Q(canvas__collaborators=request.user)).distinct()
+    
+    return render_to_response('user_profile.html', add_csrf(request, canvas=canvas, projects=projects), context_instance=RequestContext(request))
 
 def add_csrf(request, **kwargs):
     """Add CSRF to dictionary."""
