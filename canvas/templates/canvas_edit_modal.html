@@ -1,0 +1,37 @@
+<h2>{{title}}</h2>
+<div id="messages" style="display:none"></div>
+<form action="/canvas/{{ pk }}/edit_modal/" method="POST" id="ajax_form">{% csrf_token %}
+<table>
+{{form.as_table}}
+</table>
+    <input type="submit" value="Submit" id="submit"/>
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("form#ajax_form").submit(function(e) {
+		canvas = $("#id_canvas").val();
+		project = $("#id_project").val();
+		title = $("#id_title").val();
+		public_option = $("#id_public").val();
+		guest_option = $("#id_allow_guests").val();
+		owner = $("#id_owner").val();
+		if($("#id_collaborators").val()){
+			collaborators = '1';
+		}
+		collaborator_list = $("#id_collaborators").val();
+		csrf = $("input[name=csrfmiddlewaretoken]").val();
+		$.post('/canvas/'+canvas+'/edit_modal/', {'project' : project, 'canvas':canvas,'title' : title, 'public' : public_option, 'allow_guests' : guest_option, 'owner':owner, 'collaborators':collaborators, 'collaborator_list':collaborator_list, 'csrfmiddlewaretoken': csrf}, function(data) {
+			$('ul.errorlist').remove();
+			if(data['success']) {
+				$('#messages').html(data['messages']);
+				$("#messages").css('display','block');
+		  	}else{
+	  			for (error in data['errors'])
+					$("#id_" + error).after(data['errors'][error]);
+		  	}
+			console.log(data);
+		});
+		return false;
+	});
+});
+</script>
