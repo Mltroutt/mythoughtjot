@@ -11,6 +11,7 @@ from django.http import HttpResponse, Http404
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.db import connection
+from postman.models import Message
 
 class UserForm(ModelForm):
     class Meta:
@@ -155,8 +156,8 @@ class CollaboratorForm(forms.Form):
         return user
     
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('canvas', None)
-        #self.request = kwargs.pop('request', None)
+        #self.request = kwargs.pop('canvas', None)
+        self.request = kwargs.pop('request', None)
         super(CollaboratorForm, self).__init__(*args, **kwargs)
     
 class UserEditForm(ModelForm):
@@ -232,7 +233,7 @@ def create_project(request=None):
                     id = pre_save.pk
 
                     #and redirect to it
-                    return_message['redirect'] = '/project/'+str(id)
+                    return_message['redirect'] = '/canvas/create/'
 
                 except:
                     return_message['success'] = True
@@ -268,7 +269,7 @@ def create_project(request=None):
                 id = pre_save.pk
 
                 #and redirect to it
-                return redirect('/project/'+str(id))
+                return redirect('/canvas/create/')
             
     return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Project'), context_instance=RequestContext(request))
 
@@ -726,6 +727,25 @@ def node(request, pk):
 
     return render_to_response("node.html", {'pk':pk})
 
+@login_required
+def collaborator_mini_form(request,pk):
+    if request.is_ajax():
+        canvas = get_object_or_404(Canvas, pk=pk)
+        collaborators = canvas.collaborators
+        
+        return render_to_response('collaborator_mini_form.html', add_csrf(request, canvas=canvas, collaborators=collaborators, title='Add a collaborator'), context_instance=RequestContext(request))
+    else:
+        raise Http404
+
+@login_required
+def check_messages(request):
+    if request.is_ajax():
+        message_count = {}
+        message_count['count'] = Message.objects.inbox_unread_count(request.user)
+        json = simplejson.dumps(message_count)
+        return HttpResponse(json, mimetype='application/json')
+    else:
+        raise Http404
 
 def add_csrf(request, **kwargs):
     """Add CSRF to dictionary."""
