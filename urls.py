@@ -40,6 +40,8 @@ urlpatterns = patterns('',
     url(r'^canvas/(\d+)/remove-collaborator/(\d+)/$', 'canvas.views.canvas_remove_collaborator'),
     url(r'^user/update/$', 'canvas.views.update_profile'),
     #url(r'^user/(\w+)/$', 'canvas.views.view_profile'),
+    url(r'^canvas/(\d+)/load_mini_collaborators/$', 'canvas.views.collaborator_mini_form'),
+    url(r'^check_message_count/$', 'canvas.views.check_messages'),
 )
 
 if settings.DEBUG:
