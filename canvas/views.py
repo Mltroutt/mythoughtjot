@@ -103,10 +103,10 @@ class CanvasEditForm(ModelForm):
         #All colaborators on the current project
         self.project_collaborators = kwargs.pop('project_collaborators', None)
         super(CanvasEditForm, self).__init__(*args, **kwargs)
+        self.fields['canvas'] = forms.IntegerField(widget=forms.HiddenInput)
         self.fields['project'] = forms.ModelChoiceField(self.project_collaborator)
         self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
         self.fields['collaborators'] = forms.ModelMultipleChoiceField(self.collaborators)
-
 
 
 class CollaboratorForm(forms.Form):
@@ -137,7 +137,7 @@ class CollaboratorForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('canvas', None)
-        self.request = kwargs.pop('request', None)
+        #self.request = kwargs.pop('request', None)
         super(CollaboratorForm, self).__init__(*args, **kwargs)
     
 class UserEditForm(ModelForm):
@@ -446,7 +446,7 @@ def canvas_edit(request, pk):
     form = CanvasEditForm(request.POST or None,
                           collaborators=collaborators, project_collaborator=project_collaborator,
                           project_collaborators=project_collaborators,
-                          initial={'title':canvas.title, 'owner':canvas.owner.pk, 'collaborators':collaborators, 'project':project}, request=request, instance=canvas)
+                          initial={'owner':canvas.owner.pk, 'collaborators':collaborators, 'project':project, 'canvas':pk}, request=request, instance=canvas)
 
     if request.POST and form.is_valid():
         pre_save = form.save(commit=False)
@@ -458,6 +458,63 @@ def canvas_edit(request, pk):
 
 
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Canvas'), context_instance=RequestContext(request))
+
+   #These next two def's suck. Don't use them,
+
+@login_required
+def canvas_edit_modal(request, pk):
+    """
+        This kind of needs to be rewritten....
+    """
+    canvas = get_object_or_404(Canvas, pk=pk)
+
+    if request.user != canvas.owner:
+        raise Http404
+
+    collaborators = canvas.collaborators.all()
+
+    project = canvas.project
+    project_collaborators = project.project_collaborators.all()
+    project_collaborator = Project.objects.filter(project_collaborators=request.user)
+
+    form = CanvasEditForm(request.POST or None,
+                          collaborators=collaborators, project_collaborator=project_collaborator,
+                          project_collaborators=project_collaborators,
+                          initial={'title':canvas.title, 'owner':canvas.owner.pk, 'collaborators':collaborators, 'project':project, 'canvas':pk}, request=request, instance=canvas)
+
+    if request.POST and request.is_ajax():
+        return_message = {'success':False, 'messages':'', 'errors':{}}
+        if form.is_valid():
+            try:
+                pre_save = form.save(commit=False)
+                #pre_save.owner = form.cleaned_data['owner']
+                pre_save.creator = canvas.creator
+                pre_save.created = canvas.created
+                pre_save.save()
+                pre_save.collaborators.clear()
+                for collab in form.cleaned_data['collaborator_list']:
+                    print collab
+                    pre_save.collaborators.add(User.objects.get(pk=collab))
+                return_message['success'] = True
+                return_message['messages'] = "Successfully added your canvas"
+                
+            except:
+                return_message['success'] = True
+                
+                return_message['messages'] = "Failed to add the canvas"
+            finally:
+                json = simplejson.dumps(return_message)
+                return HttpResponse(json, mimetype='application/json')
+        else:
+            d={}
+            for e in form.errors.iteritems():
+                d.update({e[0]:unicode(e[1])}) # e[0] is the id, unicode(e[1]) is the error HTML.
+            return_message['errors'] = d
+    
+            json = simplejson.dumps(return_message)
+    
+            return HttpResponse(json, mimetype='application/json')
+    return render_to_response('canvas_edit_modal.html', add_csrf(request, pk=pk, form=form, title='Edit Canvas'), context_instance=RequestContext(request))
 
    #These next two def's suck. Don't use them,
 

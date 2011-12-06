@@ -21,7 +21,7 @@ $(document).ready(function() {
 	  			for (error in data['errors'])
 				$("#id_" + error).after(data['errors'][error]);
 		  	}
-			console.log(data);
+			//console.log(data);
 		});
 		return false;
 	});

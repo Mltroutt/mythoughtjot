@@ -295,15 +295,38 @@
 	                        $("ul#updatesTab").empty();
 							//console.log(data['collaborators'])
 							$("ul#updatesTab").append('<a class=\"add_collaborator\" href="/canvas/{{ canvas.pk }}/add-collaborator/"><img src="/media/images/add.png" alt="Add" title="Add" /> Add a new collaborator</a>');
+							console.log(data['collaborators'])
 							for(collaborator in data['collaborators']) {
-								//console.log(data['collaborators'][collaborator])
-								$("ul#updatesTab").append('<li class=\"update\"><div class=\"collaborator_box\"><img src=\"/media/images/waht.png\" width=\"25px\" height=\"25px\"><a class=\"user_link\" href=\"/user/' + data['collaborators'][collaborator]["name"] + '/\">' + data['collaborators'][collaborator]['name'] + '</a><a class=\"remove_collaborator\" href=\"/canvas/'+canvas+'/remove-collaborator/' + data['collaborators'][collaborator]["id"] + '/\"><img src="/media/images/delete.png\" alt=\"Remove\" title=\"Remove\" /></a></div></li>');
+								console.log(data['collaborators'][collaborator])
+								console.log(data['collaborators'][collaborator]["name"])
+								$("ul#updatesTab").append('<li class="update"><div class="collaborator_box"><img src="/media/images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/' + data['collaborators'][collaborator]["name"] + '/">' + data['collaborators'][collaborator]['name'] + '</a><a class="remove_collaborator" href="/canvas/'+canvas+'/remove-collaborator/' + data['collaborators'][collaborator]["id"] + '/"><img src="/media/images/delete.png" alt="Remove" title="Remove" /></a></div></li>');
 							}
 	                    }else{
 	                        alert(data['error']);
 	                    }
 	                });
 	            }
+            });
+            $("#canvasButton").click(function(e){
+            var url = '/canvas/{{ canvas.pk }}/edit_modal/';
+                        var dialog = $('<div style="display:none"></div>').appendTo('body');
+                        dialog.load(
+                            url,
+                            function (responseText, textStatus, XMLHttpRequest) {
+                                dialog.dialog({
+                                 draggable: false,
+                                 width: 'auto',
+                                 modal: true,
+                                    // add a close listener to prevent adding multiple divs to the document
+                                    close: function(event, ui) {
+                                        // remove div with all data and events
+                                        dialog.remove();
+                                    }
+                                });
+                            }
+                        );
+                        //prevent the browser to follow the link
+                        return false;
             });
 		});
 	</script>
