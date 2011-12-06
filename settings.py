@@ -71,7 +71,7 @@ STATIC_URL = '/static/'
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-AUTH_PROFILE_MODULE='django_messaging.DmUser'
+AUTH_PROFILE_MODULE='canvas.UserProfile'
 
 # Additional locations of static files
 STATICFILES_DIRS = (

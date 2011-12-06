@@ -11,6 +11,24 @@ from django.http import HttpResponse, Http404
 from django.template.loader import render_to_string
 from django.db.models import Q
 
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('username','first_name','last_name','email')
+        exclude = ["password","is_staff", "is_active","is_superuser"]
+        
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(UserForm, self).__init__(*args,**kwargs)
+        
+class UserProfileForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = ["user"]
+        
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(UserProfileForm, self).__init__(*args,**kwargs)
 
 class ProjectForm(ModelForm):
 
@@ -154,6 +172,29 @@ def index(request):
         return redirect('/project/myprojects/')
     else:
         return redirect('/login/')
+
+@login_required
+def update_profile(request):
+    success = False
+    display_user = request.user
+    profile = UserProfile.objects.get_or_create(user=display_user)
+    
+    if request.POST:
+        uform = UserForm(data = request.POST,  instance=request.user)
+        pform = UserProfileForm(data = request.POST,instance = display_user.get_profile())
+        if uform.is_valid() and pform.is_valid():
+            user = uform.save(commit = False)
+            profile = pform.save(commit = False)
+            
+            profile.save()
+            user.save()
+            success = True
+    else:
+        uform = UserForm(instance = display_user)
+        pform = UserProfileForm(instance = display_user.get_profile())
+
+    return render_to_response('update_forms.html', add_csrf(request, uform=uform, pform=pform, title='Update User Profile'), context_instance=RequestContext(request))
+
 
 @login_required
 def create_project(request=None):
