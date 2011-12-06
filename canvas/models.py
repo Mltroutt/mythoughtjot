@@ -59,7 +59,7 @@ class UserProfile(models.Model):
     #avatar = models.ImageField("Profile Pic", upload_to="images/", blank=True, null=True)
     user = models.ForeignKey(User, unique=True)
 
-    #canvases = models.ManyToManyField(Canvas)
+    canvases = models.ManyToManyField(Canvas)
 
     def __unicode__(self):
         return unicode(self.user)
