@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ request.project.title }}{% endblock %}
+
+
+
+
+{% block content %}
+
+    <h2>{{project.Objects.get(pk=pk)}}</h2>
+    <br />
+    <h3><a href="/project/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a project</a></h3>
+    <ul id="projects">
+    {% for project in projects %}
+
+
+
+       <li> <span class="project_title">{{ project.title }}</span>
+        {% if request.user == project.owner %}
+            <a href="/project/{{ project.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a>
+            <a class="project_delete" href="/project/{{ project.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a>
+        {% endif %}
+        
+       <p class="description">{{ project.description }}</p>
+
+        <ul>
+        {% for canvas in project.canvas_set.all %}
+
+            {% if request.user in project.project_collaborators.all or request.user == canvas.owner %}
+
+                <li><a href="/canvas/{{canvas.pk}}/">{{ canvas.title }}</a> <a href="/canvas/{{ canvas.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a> <a class="canvas_delete" href="/canvas/{{ canvas.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a></li>
+            {% else %}{% if request.user in canvas.collaborators.all %}
+                <li>{{ canvas.title }}</li>
+            {% endif %}{% endif %}
+
+        {% endfor %}
+        {% if request.user in project.project_collaborators.all %}
+            <a href="/canvas/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a canvas</a>
+        {% endif %}
+        </ul>
+        </li>
+		
+    {% endfor %}
+     </ul>
+    
+
+{% endblock %}

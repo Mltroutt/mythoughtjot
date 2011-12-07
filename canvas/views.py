@@ -24,7 +24,7 @@ class UserForm(ModelForm):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        exclude = ["user"]
+        exclude = ["user","birthday"]
         
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
