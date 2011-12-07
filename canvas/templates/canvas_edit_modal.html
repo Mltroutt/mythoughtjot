@@ -23,6 +23,9 @@ $(document).ready(function() {
 			if(data['success']) {
 				$('#messages').html(data['messages']);
 				$("#messages").css('display','block');
+                setTimeout(function() {
+				      $('#canvas_settings').dialog("close");
+				}, 500);
 		  	}else{
 	  			for (error in data['errors'])
 					$("#id_" + error).after(data['errors'][error]);

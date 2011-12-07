@@ -15,12 +15,7 @@ $(document).ready(function() {
 				$("ul#updatesTab").empty();
 				//console.log(data['collaborators'])
 				$("ul#updatesTab").html('&nbsp').load('/canvas/'+canvas+'/load_mini_collaborators/');
-				setTimeout(function() {
-				      $("#messages").slideUp();
-				      $("#messages").empty();
-				      submit_button.removeAttr("disabled");
-				      $("#id_user").val("");
-				}, 2000);	
+				$('#add_collaborators').dialog("close");
 		  	}else{
 	  			for (error in data['errors'])
 				$("#id_" + error).after(data['errors'][error]);
@@ -28,7 +23,6 @@ $(document).ready(function() {
 		  	}
 			//console.log(data);
 		});
-		$('#add_collaborators').dialog("close");
 		return false;
 	});
 });

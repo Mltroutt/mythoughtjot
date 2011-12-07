@@ -8,10 +8,10 @@ from django.forms import ModelForm
 from django import forms
 from django.utils import simplejson
 from django.http import HttpResponse, Http404
-from django.template.loader import render_to_string
 from django.db.models import Q
-from django.db import connection
 from postman.models import Message
+
+
 
 class UserForm(ModelForm):
     class Meta:
@@ -26,7 +26,7 @@ class UserForm(ModelForm):
 class UserProfileForm(ModelForm):
     class Meta:
         model = UserProfile
-        exclude = ["user"]
+        exclude = ["user","birthday"]
         
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -328,6 +328,12 @@ def project_edit(request, pk):
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Project'), context_instance=RequestContext(request))
 
 
+@login_required
+def project(request,pk):
+    project = get_object_or_404(Project,pk=pk)
+    canvases = Canvas.objects.filter(project=pk)
+    
+    return render_to_response('project.html',{'project':project,'canvases':canvases}, context_instance=RequestContext(request))
 
 @login_required
 def myprojects(request):
@@ -530,18 +536,8 @@ def canvas_edit_modal(request, pk):
         if form.is_valid():
             try:
                 save = form.save()
-                print connection.queries
                 if form.cleaned_data['owner'] not in canvas.collaborators.all():
                     save.collaborators.add(form.cleaned_data['owner'])
-                #pre_save = form.save(commit=False)
-                #pre_save.owner = form.cleaned_data['owner']
-                #pre_save.creator = canvas.creator
-                #pre_save.created = canvas.created
-                #pre_save.save()
-                #pre_save.collaborators.clear()
-                #for collab in form.cleaned_data['collaborator_list']:
-                #    print collab
-                #pre_save.collaborators.add(form.cleaned_data['collaborators'])
                 return_message['success'] = True
                 return_message['messages'] = "Successfully edited your canvas"
                 
@@ -568,13 +564,14 @@ def canvas_edit_modal(request, pk):
 
    #These next two def's suck. Don't use them,
 
-@login_required
-def project(request, pk):
-    project = get_object_or_404(Project,pk=pk)
-    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
-    if not isCollaborator:
-        return redirect('/')
-    return render_to_response("project_view.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
+#@login_required
+#def project(request, pk):
+#    project = get_object_or_404(Project,pk=pk)
+#    canvas = Canvas.objects.filter(project=pk)
+#    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
+#    if not isCollaborator:
+#        return redirect('/')
+#    return render_to_response("project.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
 
 @login_required
 def canvas(request, pk):

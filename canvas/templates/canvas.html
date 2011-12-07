@@ -1,8 +1,7 @@
-{% load postman_tags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>mythoughtjot</title>
+	<title>{{ canvas.title }} - mythoughtjot</title>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
    <!-- <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" /> -->
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -40,15 +39,20 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/popup.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery.wysiwyg.js"></script>
 		<script type="text/javascript" src="{{ MEDIA_URL }}js/graffle.js"></script>
+		
+		<script type="text/javascript">
+			changeToolbar('#firstLoad');
+			startupMessage();
+		</script>
 </head>
 <body>
     <noscript>mythoughtjot requires JavaScript to be enabled in your browser to work properly.</noscript>
 <div id="wrapper">
-  <div id="header" style="height:45px;">
+  <div id="header">
 	
               <div id="headerLeft">
               	
-              	<div class="logo"><img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" /></div>
+              	<a href="/" title="mythoughtjot" alt="mythoughtjot"><img src="/media/images/mythoughtjotLogoAASD.png"></a>
 			  </div><div class="help"></div>
         <div id="coRightHeader"> 
 <h1 id="title" style="margin-top:2px; margin-bottom:2px; padding:0;">Welcome, {{ request.user.username }}</h1><span>Not {{ request.user.username}}? <a href="/logout/" style="display:inline;">Log out</a></span>
@@ -68,9 +72,7 @@
                     <li onclick="changeToolbar('#sharingTools');redo('users');"><div class="buttons" id="shareButton"><script type="text/javascript">renderIcon("users");</script></div></li>
                     <li onclick="notfinishedyet();redo('search');"><div class="buttons" id="searchButton"><script type="text/javascript">renderIcon("search");</script></div></li>
 					<li onclick="changeToolbar('#messagingTools');redo('mail');" id="messageButton"><div class="buttons" id="messagesButton"><script type="text/javascript">renderIcon("mail");</script></div></li>
-					{% if request.user == canvas.owner %}
-						<li onclick="changeToolbar('#settings');redo('settings');"><div class="buttons" id="canvasButton"><script type="text/javascript">renderIcon("settings");</script></div></li>
-					{% endif %}
+					<li onclick="changeToolbar('#settings');redo('settings');"><div class="buttons" id="canvasButton"><script type="text/javascript">renderIcon("settings");</script></div></li>
      
                 </ul>
             
@@ -78,6 +80,7 @@
         
       <div id="popupContact">
       <a href="#" id="popupContactClose">X</a>
+      <h1>Messages</h1>
        <div id="messagebox">
         <p>and here they are...</p>
        </div>
@@ -97,15 +100,15 @@
 	
 	<div id="coLeftHeader">
 		
-        <div class="slidedoutMenu">
+        <div class="slideMenu">
 		<div id="toolbox">
 
 
 	<div class="toolWindow" id="drawingTools">
-		<h1>Drawing</h1>
 		<div class="inner">
-			<input id="createBox" onclick="newDrawing();" type="button" value="New Drawing" />
-				<input id="createBox" onclick="removeDrawing();" type="button" value="Remove Canvas" />
+			<h1>Drawing</h1>
+			<input id="createBox" onclick="newDrawing();" type="button" value="START" />
+				<input id="createBox" onclick="removeDrawing();" type="button" value="REMOVE" />
 					<div id="modeRadio" class="left-stub">
 
 				<input name="modeRadio" id="writingRadio" type="radio" value="writing" checked="checked" />
@@ -126,21 +129,21 @@
 	</div>
 	
 	<div class="toolWindow" id="textTools">
-		<h1>Text</h1>
 		<div class="inner">
+			<h1>Text</h1>
 			<input id="createBox" onclick="createTextbox();" type="button" value="START" />
 				<input id="createBox" onclick="removeTextbox();" type="button" value="REMOVE" />
 				<h3>Create a Label</h3>
-				<input type="text" id="addlabel"/>
+				<input  style="height:20px;font-size:14px; padding:2px;" type="text" id="addlabel"/>
 				<input id="createtext" onclick="createLabel();" type="button" value="ADD" />
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="shapeTools">
-		<h1>Shapes</h1>
 		<div class="inner">
+			<h1>Shapes</h1>
 		<input type="button" class="circle" onclick="drawCircle();" value="Circle"/>
-		<input type="button" class="circle" onclick="drawEllipse();" value="Ellipse"/>
+		<input type="button" class="ellipse" onclick="drawEllipse();" value="Ellipse"/>
 		<input type="button" class="circle" onclick="drawRect();" value="Rectangle"/>
 		<input type="button" class="circle" onclick="drawRectwithRound();" value="Rounded Box"/>
 		<!-- <input type="button" class="circle" onclick="drawLine();" value="Line"/>  -->
@@ -149,36 +152,39 @@
 	</div>
 	
 	<div class="toolWindow" id="tableTools">
-		<h1>Tables and Graphs</h1>
-		<label>Table Title:</label>
-          <input type="button" class="addtabletitle" onclick="newTable()" value="New Table"/>
-          <input type="text" id="addtabletitle"/>
+		<div class="inner">
+			<h1>Tables</h1>
+		  <input type="text" style="width:36px; height:20px;font-size:14px; padding:2px;" class="valueinput" id="numRows" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Rows':this.value;" value="# of Rows"/>
+		  <input type="text" style="width:36px;height:20px;font-size:14px; padding:2px;"  class="valueinput" id="numColumns" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Cols':this.value;" value="# of Columns"/>
+          <input type="button" class="addtabletitle" onclick="createDynamicTable('table', document.getElementById('numRows').value, document.getElementById('numColumns').value)" value="New Table"/><br>
+          <input type="text" style="height:20px;font-size:14px; padding:2px;"  class="valueinput" id="addtabletitle"/>
           <input type="button" class="addtabletitle" onclick="newTableTitle()" value="Add Title"/>
           <input type="button"  class="addrowButton" onclick="addtablerow() " value="Add Row"/>
           <input type="button"  class="addcolumnButton" onclick="addtablecolumn()" value="Add Column"/>
-        <label>Create Graph:</label>
-       <input type="button" class="addtabletitle" onclick="barGraph()" value="Bar Graph"/>
+       <!-- <h3>Create Graph:</h3>
+       <input type="button" class="addtabletitle" onclick="createGraph ('table', document.getElementById('tableTit').value, 'bar')" value="Bar Graph"/>  -->
+	</div>
 	</div>
 	
 	<div class="toolWindow" id="sharingTools">
-		<h1>Share</h1>
 		<div class="inner">
-			
+			<h1>Share</h1>
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="messagingTools">
-		<h1>Messages</h1>
 		<div class="inner">
-			
+			<h1>Messages</h1>
 		</div>
 	</div>
 
 	<div class="toolWindow" id="settings">
-		<h1>Settings</h1>
-		
 		<div class="inner">
+			<h1>Settings</h1>
 			<input type="button"  class="settings" onclick="clearCanvas()" value="Clear Canvas"/>
+            {% if request.user == canvas.owner %}
+            <input type="button"  id="canvas_settings_button" class="settings" value="Canvas Settings"/>
+            {% endif %}
 			<h3>Canvas Type:</h3>
 			<input type="button"  class="background" onclick="changeCanvasBackground (1)" value="Notebook Paper"/>
 			<input type="button"  class="background" onclick="changeCanvasBackground (2)" value="Graphing Paper"/>
@@ -187,7 +193,12 @@
 		</div>
 	</div>
 
-
+	<div class="toolWindow" id="firstLoad">
+		<div class="inner">
+			<h1>Tool Options</h1>
+			<h2>Click a tool to begin!</h2>
+		</div>
+	</div>
 		</div>
 		
            <section id="slidenav">
@@ -202,37 +213,32 @@
                     {% if projects.count > 3 %}
                     <li><a href="/project/myprojects/">More...</a></li>
                     {% endif %}
-
                 </ul>
             <li class="nitem"><a href="#"><span></span> Others</a></li>
                 <ul class="nsub">
-                    <li><a href="#">Project 1</a></li>
-                    <li><a href="#">Project 2</a></li>
-                    <li><a href="#">Project 3</a></li>
+                    <li><a href="/projects/myprojects/">Project List</a></li>
                 </ul>
             <li class="nitem"><a href="#">Collaborators</a></li>
                 <ul class="nsub collaborators"  id="updatesTab">
-
+                
                 </ul>
 
         </ul>
-    </section>
-    
 <script type="text/javascript">
 		$(document).ready(function() {
-			
+
 			$("ul#updatesTab").empty();
 			//console.log(data['collaborators'])
 			$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
-			
+
 			$('.nsub').hide(); // hide sub-navigation items by default
-			
+
 			//checkMessages_initial();
-			
+
 			$('.nitem a').live('click', function(e){
 				e.preventDefault();
 				$(this).parent().next('.nsub').slideToggle('slow');
-				
+
 				if($(this).parent().next('.nsub').is(':hidden')) {
                     $(this).addClass("CurrentlySelected");
                 } else {
@@ -288,7 +294,7 @@
 	            e.preventDefault();
 	            if(confirm("Delete this collaborator?")){
 	                var link = $(this).attr("href");
-	
+
 	                $.get(link, function(data){
 	                    if(data['success']){
 	                        alert(data['message']);
@@ -307,9 +313,9 @@
 	                });
 	            }
             });
-            $("#canvasButton").click(function(e){
+            $("#canvas_settings_button").click(function(e){
             var url = '/canvas/{{ canvas.pk }}/edit_modal/';
-                        var dialog = $('<div style="display:none"></div>').appendTo('body');
+                        var dialog = $('<div style="display:none" id="canvas_settings"></div>').appendTo('body');
                         dialog.load(
                             url,
                             function (responseText, textStatus, XMLHttpRequest) {
@@ -338,81 +344,74 @@
 			$.ajax({
 	            type: "GET",
 	            url: "/check_message_count/",
-	
+
 	            async: true,
 	            cache: false,
 	            timeout:50000,
-	            
+
 	            success: function(data){
 	            	if(data['count'] > 0){
 	                	//alert("You have " + data['count'] + " new message.");
 	               	}
 	                setTimeout(
-	                    'checkMessages()', 
-	                    5000 
+	                    'checkMessages()',
+	                    5000
 	                );
 	            },
 	            error: function(XMLHttpRequest, textStatus, errorThrown){
 	                //addmsg("error", textStatus + " (" + errorThrown + ")");
 	                setTimeout(
-	                    'checkMessages()', 
-	                    30000); 
+	                    'checkMessages()',
+	                    30000);
 	            },
 	        });
 		}*/
 	</script>
 
-        
           </div>   <!-- end slideoutMenu -->
 		</div> <!-- end coLeftHeader -->
 	</div>		<!-- end updateCol-->
 
 <div id="content">
 	<div id="canvas">
-  <div id="table">
-      
-	<table id="celebs">
-		<caption><h3 id="tableTitle">My Table</h3></caption>
-      <tbody>
-        <tr>
-          <td>Matt Girard</td>
-          <td>225</td>
-          <td>320</td>
-          <td>223</td>
-        </tr>
-        <tr>
-          <td>Kate McCormly</td>
-          <td>289</td>
-          <td>123</td>
-          <td>147</td>
-        </tr>
-        <tr>
-          <td>Joy Cornwell</td>
-          <td>332</td>
-          <td>312</td>
-          <td>256</td>
-        </tr>
-        <tr>
-          <td>Josh Crews</td>
-          <td>125</td>
-          <td>176</td>
-          <td>130</td>
-        </tr>
-      </tbody>
-    </table>
- 
-  </div>
-        
-
+		
+		
 		<!--
-		<style type="text/css">
-		      #holder {
-                -moz-border-radius: 10px;
-                -webkit-border-radius: 10px;
-                border: solid 1px #333;
-            }
-            </style>
-		<div id="holder"></div>
+<table>
+	<caption id="tableTit">2009 Employee Sales by Department</caption>
+	<thead>
+		<tr>
+			<td></td>
+			<th scope="col">food</th>
+			<th scope="col">auto</th>
+			<th scope="col">household</th>
+			<th scope="col">furniture</th>
+			<th scope="col">kitchen</th>
+			<th scope="col">bath</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Mary</th>
+			<td>190</td>
+			<td>160</td>
+			<td>40</td>
+			<td>120</td>
+			<td>30</td>
+			<td>70</td>
+		</tr>
+		<tr>
+			<th scope="row">Tom</th>
+			<td>3</td>
+			<td>40</td>
+			<td>30</td>
+			<td>45</td>
+			<td>35</td>
+			<td>49</td>
+		</tr>	
+	</tbody>
+</table>
+		
 		-->
   </div>  <!-- end canvas -->
  </div>  <!-- end content -->
