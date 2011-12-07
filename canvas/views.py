@@ -11,6 +11,8 @@ from django.http import HttpResponse, Http404
 from django.db.models import Q
 from postman.models import Message
 
+
+
 class UserForm(ModelForm):
     class Meta:
         model = User
@@ -326,6 +328,12 @@ def project_edit(request, pk):
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Project'), context_instance=RequestContext(request))
 
 
+@login_required
+def project(request,pk):
+    project = get_object_or_404(Project,pk=pk)
+    canvases = Canvas.objects.filter(project=pk)
+    
+    return render_to_response('project.html',{'project':project,'canvases':canvases}, context_instance=RequestContext(request))
 
 @login_required
 def myprojects(request):
@@ -556,13 +564,14 @@ def canvas_edit_modal(request, pk):
 
    #These next two def's suck. Don't use them,
 
-@login_required
-def project(request, pk):
-    project = get_object_or_404(Project,pk=pk)
-    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
-    if not isCollaborator:
-        return redirect('/')
-    return render_to_response("project_view.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
+#@login_required
+#def project(request, pk):
+#    project = get_object_or_404(Project,pk=pk)
+#    canvas = Canvas.objects.filter(project=pk)
+#    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
+#    if not isCollaborator:
+#        return redirect('/')
+#    return render_to_response("project.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
 
 @login_required
 def canvas(request, pk):

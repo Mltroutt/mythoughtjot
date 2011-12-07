@@ -20,10 +20,12 @@ urlpatterns = patterns('',
     url(r'about/$', 'django.views.generic.simple.direct_to_template', {'template':'about.html'}),
     url(r'the-team/$', 'django.views.generic.simple.direct_to_template', {'template':'team.html'}),
     #url(r'^profiles/', include('profiles.urls')),
+    url(r'^project/(\d+)/$', redirect_to, {'url': 'project.html'}),
+    
     url(r'^project/myprojects/$', 'canvas.views.myprojects'),
     url(r'^project/$', redirect_to, {'url': 'myprojects'}),
     url(r'^myprojects/$', redirect_to, {'url': '/project/myprojects'}),
-    url(r'^project/(\d+)/$', 'canvas.views.project'),
+    
     url(r'^canvas/(\d+)/$', 'canvas.views.canvas'),
     #url(r'^node/(\d+)/$', 'canvas.views.node'),
     #url(r'^user/edit/$', 'canvas.views.edit_user'),

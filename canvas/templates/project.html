@@ -1,46 +1,60 @@
 {% extends "base.html" %}
 
 
-{% block title %}{{ request.project.title }}{% endblock %}
+{% block title %}{{ project.title }}{% endblock %}
 
+{% block css %}
+<style>
+ul#project {
+    list-style: none;
+    padding-left: 10px;
+    font-size: 14px;
+    line-height: 150%;
+}
+ul#project p.description {
+    font-size: 12px;
+}
+ul#project li {
+    padding-left: 5px;
+    padding-bottom: 15px;
+}
+ul#project li span.project_title {
+    font-size: 16px;
+}
+ul#project li ul {
+    list-style: none;
+    padding-left:5px;
+}
+ul#project li ul {
+    padding-left: 5px;
+}
+</style>
+{% endblock %}
 
-
+{% block header %}
+<div id="header">
+	
+              <div id="headerLeft">
+              	
+              	<div class="logo"><img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" /></div>
+			  </div><div class="help"></div>
+        <div id="coRightHeader"> 
+<h1 id="title" style="margin-top:2px; margin-bottom:2px; padding:0;">Welcome, {{ request.user.username }}</h1><span>Not {{ request.user.username}}? <a href="/logout/" style="display:inline;">Log out</a></span>
+           
+		</div> 
+	</div>		<!-- end header-->
+{% endblock %}
 
 {% block content %}
 
-    <h2>{{project.Objects.get(pk=pk)}}</h2>
+    <h2>{{project.title}} - Canvases</h2>
     <br />
-    <h3><a href="/project/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a project</a></h3>
-    <ul id="projects">
-    {% for project in projects %}
+    
+    <ul id="project">
+    {% for canvas in canvases %}
 
+	<li><a href="../../canvas/{{canvas.id}}">{{canvas.title}}</a></li>
 
-
-       <li> <span class="project_title">{{ project.title }}</span>
-        {% if request.user == project.owner %}
-            <a href="/project/{{ project.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a>
-            <a class="project_delete" href="/project/{{ project.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a>
-        {% endif %}
-        
-       <p class="description">{{ project.description }}</p>
-
-        <ul>
-        {% for canvas in project.canvas_set.all %}
-
-            {% if request.user in project.project_collaborators.all or request.user == canvas.owner %}
-
-                <li><a href="/canvas/{{canvas.pk}}/">{{ canvas.title }}</a> <a href="/canvas/{{ canvas.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a> <a class="canvas_delete" href="/canvas/{{ canvas.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a></li>
-            {% else %}{% if request.user in canvas.collaborators.all %}
-                <li>{{ canvas.title }}</li>
-            {% endif %}{% endif %}
-
-        {% endfor %}
-        {% if request.user in project.project_collaborators.all %}
-            <a href="/canvas/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a canvas</a>
-        {% endif %}
-        </ul>
-        </li>
-		
     {% endfor %}
      </ul>
     
