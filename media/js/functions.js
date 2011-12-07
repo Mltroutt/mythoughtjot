@@ -411,6 +411,10 @@ function defaultMessage() {
 	$('.help p').remove();
 	$('.help').append('<p>Select a tool to get started!<p>');
 }
+function startupMessage() {
+	$('.help p').remove();
+	$('.help').append("<p>This looks like a brand new canvas! Let's get started!<p>");
+}
 
 // draw shapes
 function createShape() {

@@ -70,8 +70,17 @@ by: Christopher Reynolds
 	font-size: 220%;
 	opacity: .6;
 }
-svg {
+#canvas svg {
 	position:absolute;
+}
+.glow {
+	-webkit-box-shadow:2px 2px 2px #bdcffd; 
+	-moz-box-shadow: 2px 2px 2px #bdcffd; 
+	box-shadow:2px 2px 2px #bdcffd; 
+	background:#9cb6fa;
+}
+table tr:nth-child(2n) .glow{
+	background:#9cb6fa;
 }
 
 iframe {
@@ -132,6 +141,9 @@ h1, h2, h3, h4 {
 h1 {
 	color: #ff7200;
 	font-size: 200%;
+}
+.inner h1 {
+	margin-bottom:10px;
 }
 h2 {
 	color: #ff7200;
@@ -212,7 +224,7 @@ h4 {
     color: #6D6E6E;
 }
 #header{
-	height:38px;
+	height:45px;
 	color:#fff;
 background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	margin-bottom:2px;
@@ -258,7 +270,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color:#fff;
 	height:20px;
 	padding:12px 0 0 0;
-	font-size:12px;
+	font-size:14px;
 }
 #coLeftHeader {
     border: 1px solid #5B5B5B;
@@ -323,6 +335,10 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 .others {
 	font-size:120%;
 }
+.i_am_insane{
+	position:absolute;
+	top:-4000px;
+}
 
 #slidenav { 
 	background: url(../images/DarkBack2.png) repeat;
@@ -351,37 +367,6 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color: #22201d; 
 }
 
-#slidenav ul.collaborators a {
-	color: #000;
-}
-
-#slidenav ul.collaborators a:hover {
-	color: #ccc;
-}
-
-#slidenav ul.collaborators a.add_collaborator {
-	color: #fff;
-	font-size:1.2em;
-}
-#slidenav ul.collaborators a.add_collaborator:hover {
-	color: #eeeeee;
-}
-
-#slidenav ul.collaborators div.collaborator_box {
-}
-
-#slidenav ul.collaborators div.collaborator_box a {
-	display: inline;
-}
-#slidenav ul.collaborators div.collaborator_box img {
-	margin:0;
-	float: none;
-	margin-top: 3px;
-}
-#slidenav ul.collaborators div.collaborator_box a.collaborator_delete {
-	padding-left: 5px;
-}
-
 #slidenav .nsub { 
 	padding:10px;
 }
@@ -407,6 +392,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	width:40px;
 	float:left;
 	height:100%;
+	position:fixed;
 	
 }
 #sidebar li {
@@ -464,6 +450,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color:#ff8400;
 	background: url("../images/DarkBack2.png") repeat;
 	padding:10px;
+	border-radius: 4px;
 }
 .toolWindow {
 	height:250px;
@@ -485,6 +472,9 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	padding:4px;
 	border-radius:4px;
 	height:190px;
+}
+#slideMenu {
+	position:fixed;
 }
 #drawingTools {
 
@@ -625,23 +615,22 @@ canvas {
 }
 #toolbox input {
 	padding:.2em;
-	border-radius:6px;
+	height:30px;
 	width:80px;
 }
 #toolbox button {
-	padding: 0.4em 1em;
+	padding: 0.6em;
 	border-radius:6px;
 }
-#table td {
+table td {
 	min-height:15px;
 	height:15px;
 	width:100px;
 }
-#table tr {
-		min-height:15px;
-	height:15px;
+table tr {
+	height:25px;
 }
-#table .hover{
+table .hover{
 	background:#DEECFF;
 }
 .test1 {
@@ -783,7 +772,7 @@ div.wysiwyg iframe { border: 0;  clear: left; margin: 4px 0 0 1px; }
 
 
 
-table {  border-collapse: collapse; }
+table {  border-collapse: collapse; position:absolute; }
 td, th { 
    text-align: center; 
    border: 1px solid #ddd; 
@@ -928,7 +917,6 @@ table {
 	border-right:0;
 	clear: both;
 	color: #333;
-	margin-bottom: 10px;
 }
 #emailZone {
 	border:1px solid #ddd;
@@ -965,5 +953,46 @@ table tr:nth-child(2n) td {
 	background: #f5f5f5;
 }
 table .altrow td {
+	background: #f5f5f5;
+}
+
+#static_content {
+	width: 960px;
+	background: #fff;
+	-moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #FFFFFF #FF7C00 #FF7C00 #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    border-style: solid;
+    border-width: 2px;
+    margin: 5px auto;
+}
+
+#static_content #content {
+	margin: 15px;
+}
+
+#static_content p {
+	padding: 10px;
+	font-size: 1.2em;
+	line-height: 150%;
+}
+
+#static_content table {
+	border: none;
+	height: auto;
+}
+
+#static_content table tr th {
+	border:1px solid #ddd;
+	text-align: right;
+	padding-right: 15px;
+	background: #ffffff;
+}
+
+#static_content table tr:nth-child(2n) th {
 	background: #f5f5f5;
 }
