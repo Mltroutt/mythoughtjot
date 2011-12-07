@@ -8,9 +8,7 @@ from django.forms import ModelForm
 from django import forms
 from django.utils import simplejson
 from django.http import HttpResponse, Http404
-from django.template.loader import render_to_string
 from django.db.models import Q
-from django.db import connection
 from postman.models import Message
 
 class UserForm(ModelForm):
@@ -530,18 +528,8 @@ def canvas_edit_modal(request, pk):
         if form.is_valid():
             try:
                 save = form.save()
-                print connection.queries
                 if form.cleaned_data['owner'] not in canvas.collaborators.all():
                     save.collaborators.add(form.cleaned_data['owner'])
-                #pre_save = form.save(commit=False)
-                #pre_save.owner = form.cleaned_data['owner']
-                #pre_save.creator = canvas.creator
-                #pre_save.created = canvas.created
-                #pre_save.save()
-                #pre_save.collaborators.clear()
-                #for collab in form.cleaned_data['collaborator_list']:
-                #    print collab
-                #pre_save.collaborators.add(form.cleaned_data['collaborators'])
                 return_message['success'] = True
                 return_message['messages'] = "Successfully edited your canvas"
                 
