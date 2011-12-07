@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+
+<h2>{{title}}</h2>
+<div id="messages" style="display:none" id="simple_form"></div>
+<form action="" method="POST" id="simple_form">{% csrf_token %}
+<table>
+{{uform.as_table}}
+{{pform.as_table}}
+</table>
+    <a href="../../password/change">Change Password</a>
+    <input type="submit" value="Submit" id="submit"/>
+</form>
+
+
+
+{% endblock %}

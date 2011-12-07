@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	$("form").submit(function(e) {
+		submit_button = $('input[type=submit]', this);
+		submit_button.attr('disabled', 'disabled');
 		user = $("#id_user").val();
 		canvas = $("#id_canvas").val();
 		csrf = $("input[name=csrfmiddlewaretoken]").val();
@@ -7,14 +9,19 @@ $(document).ready(function() {
 			$('ul.errorlist').remove();
 			if(data['success']) {
 				$('#messages').html(data['messages']);
-				$("#messages").css('display','block');
+				$("#messages").slideDown();
 				//window.location.href = data['redirect'];
-
+				//alert(data['collaborators']);
+				$("ul#updatesTab").empty();
+				//console.log(data['collaborators'])
+				$("ul#updatesTab").html('&nbsp').load('/canvas/'+canvas+'/load_mini_collaborators/');
+				$('#add_collaborators').dialog("close");
 		  	}else{
 	  			for (error in data['errors'])
 				$("#id_" + error).after(data['errors'][error]);
+				submit_button.removeAttr("disabled");
 		  	}
-			console.log(data);
+			//console.log(data);
 		});
 		return false;
 	});

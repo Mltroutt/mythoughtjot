@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic.simple import direct_to_template
+from django.views.generic.simple import direct_to_template, redirect_to
 
 
 # Uncomment the next two lines to enable the admin:
@@ -15,22 +15,36 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    url(r'^$', 'django.contrib.auth.views.login'),
-    url(r'about$', 'django.views.generic.simple.direct_to_template', {'template':'about.html'}),
+    #url(r'^$', 'django.contrib.auth.views.login'),
+    url(r'^$', 'canvas.views.index'),
+    url(r'about/$', 'django.views.generic.simple.direct_to_template', {'template':'about.html'}),
+    url(r'the-team/$', 'django.views.generic.simple.direct_to_template', {'template':'team.html'}),
     #url(r'^profiles/', include('profiles.urls')),
+    url(r'^project/myprojects/$', 'canvas.views.myprojects'),
+    url(r'^project/$', redirect_to, {'url': 'myprojects'}),
+    url(r'^myprojects/$', redirect_to, {'url': '/project/myprojects'}),
     url(r'^project/(\d+)/$', 'canvas.views.project'),
     url(r'^canvas/(\d+)/$', 'canvas.views.canvas'),
-    url(r'^node/(\d+)/$', 'canvas.views.node'),
-    #url(r'^user/(\d+)/$', 'canvas.views.user'),
+    #url(r'^node/(\d+)/$', 'canvas.views.node'),
+    #url(r'^user/edit/$', 'canvas.views.edit_user'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('registration.backends.default.urls')),
     url(r'^messages/', include('postman.urls')),
-    url(r'^project/create/', 'canvas.views.create_project'),
-    url(r'^canvas/create/', 'canvas.views.create_canvas'),
-    url(r'^canvas/create_modal/', 'canvas.views.create_canvas_modal'),
-    url(r'^canvas/(\d+)/add-collaborator/', 'canvas.views.canvas_add_collaborator'),
-    url(r'^canvas/(\d+)/remove-collaborator/', 'canvas.views.canvas_remove_collaborator'),
-
+    url(r'^project/create/$', 'canvas.views.create_project'),
+    url(r'^project/(\d+)/delete/$', 'canvas.views.project_delete'),
+    url(r'^project/(\d+)/edit/$', 'canvas.views.project_edit'),
+    url(r'^project/(\d+)/edit/$', 'canvas.views.project_edit'),
+    url(r'^canvas/create/$', 'canvas.views.create_canvas'),
+    url(r'^canvas/(\d+)/edit/$', 'canvas.views.canvas_edit'),
+    url(r'^canvas/(\d+)/edit_modal/$', 'canvas.views.canvas_edit_modal'),
+    url(r'^canvas/(\d+)/delete/$', 'canvas.views.canvas_delete'),
+    url(r'^canvas/create_modal/$', 'canvas.views.create_canvas_modal'),
+    url(r'^canvas/(\d+)/add-collaborator/$', 'canvas.views.canvas_add_collaborator'),
+    url(r'^canvas/(\d+)/remove-collaborator/(\d+)/$', 'canvas.views.canvas_remove_collaborator'),
+    url(r'^user/update/$', 'canvas.views.update_profile'),
+    url(r'^user/(\w+)/$', 'canvas.views.view_profile'),
+    url(r'^canvas/(\d+)/load_mini_collaborators/$', 'canvas.views.collaborator_mini_form'),
+    url(r'^check_message_count/$', 'canvas.views.check_messages'),
 )
 
 if settings.DEBUG:

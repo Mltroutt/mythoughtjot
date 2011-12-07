@@ -71,7 +71,7 @@ STATIC_URL = '/static/'
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
-AUTH_PROFILE_MODULE='django_messaging.DmUser'
+AUTH_PROFILE_MODULE='canvas.UserProfile'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -91,7 +91,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '%b0qhqorwv8+n%u7$w=#yh#2vuxqcz$(-&_3u4n27(l7--%!z2'
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/project/myprojects/'
 
 LOGIN_URL = '/login/'
 

@@ -1,22 +1,82 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>mythoughtjot</title>
+	<title>mythoughtjot - Log In</title>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
+<style type="text/css">
+
+#loginbox {
+	
+}
+.right {
+	
+}
+
+form label {
+	float:left;
+	width:70px;
+	text-align:right;
+	margin-right:7px;
+	color:#834706;
+	line-height:23px;
+	font-size:15px;
+}
+
+form input,
+form textarea {
+	padding:4px;
+	font:14px Georgia, "Times New Roman", Times, serif;
+	font-weight:bold;
+	color:#e27b0c;
+	border:1px solid #999999;
+	width:200px;
+
+}
+
+form input:focus,
+form textarea:focus {
+	border:1px solid #666;
+	background:#fff;
+}
+#submit {
+	background:#ce6c02;
+	border:none;
+	padding:4px 8px 4px 28px;
+	border-radius:6px; /* Don't expect this to work on IE6 or 7 */
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	color:#fff;
+	margin-left:77px; /* Total width of the labels + their right margin */
+	cursor:pointer;
+	margin-top:10px;
+	}
+
+#submit:hover {
+	background:#f67f00;
+}
+#submit:active {
+	background:#ffc586;
+}
+.right{
+	
+	margin-top:10px;
+	padding:10px;
+}
+
+</style>
+
 </head>
 <body>
 
-		<div id="mainheader">
-			 <div id="headerLeft">
-
-				<h1 id="title">mythoughtjot</h1>
-
+	 <div id="header">
+              <div id="headerLeft">
+              	<img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" />
 			  </div>
-		</div>
+	</div>		<!-- end header-->
 
 	<div id="logincontent">
 
@@ -35,28 +95,23 @@
 				<input id="id_username" type="text" tabindex="1" autocapitalize="off" spellcheck="false" autocorrect="off" autocomplete="off" value="" name="username">
 				<label for="id_password"> Password </label>
 				<input id="id_password" type="password" tabindex="2" name="password">
-				<a class="right" tabindex="4" style="margin: 10px 0 0;" href="{% url auth_password_reset %}">Forgot your password?</a>
-				<input class="primary" type="submit" tabindex="3" value="Log In">
-			<p class="clear">
-			New here?
-			<a href="/register?returnUrl=/">
-			<strong>Create an Account.</strong>
-			</a>
-			</p>
+				<input class="primary" id="submit" type="submit" tabindex="3" value="Log In">
 			<input type="hidden" value="{{ next }}" name="next" />
+			<p class="right"><a tabindex="4" style="margin: 10px 0 0;" href="{% url auth_password_reset %}">Forgot your password?</a>
+				<a href="/register?returnUrl=/"><strong>Create an Account.</strong></a></p>
 		<form>
+	<!--
 		<form class="secondary-col clearfix" method="post" action="/authenticate_openid">
 			<label> Or log in with: </label>
 			<input type="hidden" value="https://www.google.com/accounts/o8/id" name="openid_identifier">
 			<input class="primary" type="submit" value="Google Account">
 			<input type="hidden" value="{{ next }}" name="next">
 		</form>
+		-->
 		</div>
 	  </div> <!-- loginbox -->
 	 </div> <!-- end login box -->
 	<div id="footer">
-	<span><a href="www.mythoughtjot.com">mythoughtjot.com</a></span>
-
     <script type="text/javascript">
         document.getElementById('id_username').focus()
     </script>

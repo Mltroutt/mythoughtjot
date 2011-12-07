@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+
+{% block title %}Projects for {{ request.user.username }}{% endblock %}
+
+{% block css %}
+<style>
+ul#projects {
+    list-style: none;
+    padding-left: 10px;
+    font-size: 14px;
+    line-height: 150%;
+}
+ul#projects p.description {
+    font-size: 12px;
+}
+ul#projects li {
+    padding-left: 5px;
+    padding-bottom: 15px;
+}
+ul#projects li span.project_title {
+    font-size: 16px;
+}
+ul#projects li ul {
+    list-style: none;
+    padding-left:5px;
+}
+ul#projects li ul {
+    padding-left: 5px;
+}
+</style>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".canvas_delete").click(function(e) {
+            e.preventDefault();
+            if(confirm("Delete this canvas?")){
+                var link = $(this).attr("href");
+
+                $.get(link, function(data){
+                    if(data){
+                        alert("Successfully deleted the canvas.");
+                        window.location.reload();
+                    }else{
+                        alert("Canvas not deleted");
+                    }
+                });
+            }
+        });
+        $(".project_delete").click(function(e) {
+            e.preventDefault();
+            if(confirm("Delete this project and all its canvases?")){
+                var link = $(this).attr("href");
+
+                $.get(link, function(data){
+                    if(data){
+                        alert("Successfully deleted the project.");
+                        window.location.reload();
+                    }else{
+                        alert("Project not deleted");
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+    <h2>Sup brah, Projects Yo</h2>
+    <br />
+    <h3><a href="/project/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a project</a></h3>
+    <ul id="projects">
+    {% for project in projects %}
+
+
+
+       <li> <span class="project_title">{{ project.title }}</span>
+        {% if request.user == project.owner %}
+            <a href="/project/{{ project.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a>
+            <a class="project_delete" href="/project/{{ project.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a>
+        {% endif %}
+        
+       <p class="description">{{ project.description }}</p>
+
+        <ul>
+        {% for canvas in project.canvas_set.all %}
+
+            {% if request.user in project.project_collaborators.all or request.user == canvas.owner %}
+
+                <li><a href="/canvas/{{canvas.pk}}/">{{ canvas.title }}</a> <a href="/canvas/{{ canvas.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a> <a class="canvas_delete" href="/canvas/{{ canvas.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a></li>
+            {% else %}{% if request.user in canvas.collaborators.all %}
+                <li>{{ canvas.title }}</li>
+            {% endif %}{% endif %}
+
+        {% endfor %}
+        {% if request.user in project.project_collaborators.all %}
+            <a href="/canvas/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a canvas</a>
+        {% endif %}
+        </ul>
+        </li>
+		
+    {% endfor %}
+     </ul>
+    
+
+{% endblock %}

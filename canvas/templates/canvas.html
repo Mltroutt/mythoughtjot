@@ -1,8 +1,7 @@
-{% load postman_tags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>mythoughtjot</title>
+	<title>{{ canvas.title }} - mythoughtjot</title>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
    <!-- <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" /> -->
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -10,7 +9,7 @@
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script>!window.jQuery && document.write('<script src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"><\/script>')</script>
-
+	<script src="{{ MEDIA_URL }}js/jQuery/jQuery.js"></script>
 
   	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type='text/javascript' src='{{ MEDIA_URL }}js/pjs/processing-1.3.6.js'></script>
@@ -39,6 +38,12 @@
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/classes.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/popup.js"></script>
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/jQuery/jquery.wysiwyg.js"></script>
+		<script type="text/javascript" src="{{ MEDIA_URL }}js/graffle.js"></script>
+		
+		<script type="text/javascript">
+			changeToolbar('#firstLoad');
+			startupMessage();
+		</script>
 </head>
 <body>
     <noscript>mythoughtjot requires JavaScript to be enabled in your browser to work properly.</noscript>
@@ -47,10 +52,10 @@
 	
               <div id="headerLeft">
               	
-              	<div class="logo"><a href="/"></a></div>
+              	<div class="logo"><img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" /></div>
 			  </div><div class="help"></div>
         <div id="coRightHeader"> 
-<h1 id="title">Welcome, {{ user.username }}</h1>
+<h1 id="title" style="margin-top:2px; margin-bottom:2px; padding:0;">Welcome, {{ request.user.username }}</h1><span>Not {{ request.user.username}}? <a href="/logout/" style="display:inline;">Log out</a></span>
            
 		</div> 
 	</div>		<!-- end header-->
@@ -60,10 +65,10 @@
             <div id='buttons'>
             	
                 <ul>
-                	<li onclick="changeToolbar('#drawingTools');initButtons();newDrawing();redo('pencil');"><div class="buttons" id="drawButton"><script type="text/javascript">renderIcon("pencil");</script></div></li>
-                    <li onclick="changeToolbar('#textTools');createTextbox();redo('bubble');"><div class="buttons" id="textButton"><script type="text/javascript">renderIcon("bubble");</script></div></li>
-                    <li onclick="changeToolbar('#shapeTools');newshapeBox();redo('flipv');"><div class="buttons" id="shapeButton"><script type="text/javascript">renderIcon("flipv");</script></div></li>
-                    <li onclick="changeToolbar('#tableTools');newTable();redo('barchart');"><div class="buttons" id="graphButton"><script type="text/javascript">renderIcon("barchart");</script></div></li>
+                	<li onclick="changeToolbar('#drawingTools');initButtons();redo('pencil');"><div class="buttons" id="drawButton"><script type="text/javascript">renderIcon("pencil");</script></div></li>
+                    <li onclick="changeToolbar('#textTools');redo('bubble');"><div class="buttons" id="textButton"><script type="text/javascript">renderIcon("bubble");</script></div></li>
+                    <li onclick="changeToolbar('#shapeTools');redo('flipv');"><div class="buttons" id="shapeButton"><script type="text/javascript">renderIcon("flipv");</script></div></li>
+                    <li onclick="changeToolbar('#tableTools');redo('barchart');"><div class="buttons" id="graphButton"><script type="text/javascript">renderIcon("barchart");</script></div></li>
                     <li onclick="changeToolbar('#sharingTools');redo('users');"><div class="buttons" id="shareButton"><script type="text/javascript">renderIcon("users");</script></div></li>
                     <li onclick="notfinishedyet();redo('search');"><div class="buttons" id="searchButton"><script type="text/javascript">renderIcon("search");</script></div></li>
 					<li onclick="changeToolbar('#messagingTools');redo('mail');" id="messageButton"><div class="buttons" id="messagesButton"><script type="text/javascript">renderIcon("mail");</script></div></li>
@@ -72,7 +77,7 @@
                 </ul>
             
         </div>
-        <!---http://127.0.0.1:8000/messages/inbox_short/--->
+        
       <div id="popupContact">
       <a href="#" id="popupContactClose">X</a>
       <h1>Messages</h1>
@@ -95,13 +100,15 @@
 	
 	<div id="coLeftHeader">
 		
-        <div class="slidedoutMenu">
+        <div class="slideMenu">
 		<div id="toolbox">
 
 
 	<div class="toolWindow" id="drawingTools">
-		<h1>Drawing</h1>
 		<div class="inner">
+			<h1>Drawing</h1>
+			<input id="createBox" onclick="newDrawing();" type="button" value="START" />
+				<input id="createBox" onclick="removeDrawing();" type="button" value="REMOVE" />
 					<div id="modeRadio" class="left-stub">
 
 				<input name="modeRadio" id="writingRadio" type="radio" value="writing" checked="checked" />
@@ -118,104 +125,80 @@
 				<input id="clearButton" type="button" value="Clear" />
 				
 			</div>
-				<input id="createBox" onclick="newDrawing();" type="button" value="START" />
-				<input id="createBox" onclick="removeDrawing();" type="button" value="REMOVE" />
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="textTools">
-		<h1>Text</h1>
 		<div class="inner">
-			
+			<h1>Text</h1>
+			<input id="createBox" onclick="createTextbox();" type="button" value="START" />
+				<input id="createBox" onclick="removeTextbox();" type="button" value="REMOVE" />
+				<h3>Create a Label</h3>
+				<input  style="height:20px;font-size:14px; padding:2px;" type="text" id="addlabel"/>
+				<input id="createtext" onclick="createLabel();" type="button" value="ADD" />
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="shapeTools">
-		<h1>Shapes</h1>
 		<div class="inner">
-		<p>Select a shape and its appearance and then drag in the panel to create it.</p>
-		<div id="drawingTools">
-			<h2>Drawing Tools</h2>
-		<div class="row">
-			<span class="drawOpt">Shape</span>
-			<span class="drawOpt"><select id="shape">
-				<option value="rect">Rectangle</option><option value="circle">Circle</option>
-				<option value="ellipse">Ellipse</option><option value="line">Line</option>
-
-				<option value="polyline">Polyline</option><option value="polygon">Polygon</option>
-				</select></span>
-			<span class="drawOpt">Fill</span>
-			<span class="drawOpt"><select id="fill">
-				<option value="red">red</option><option value="yellow">yellow</option>
-				<option value="green">green</option><option value="blue">blue</option>
-
-				<option value="white">white</option><option value="gray">gray</option>
-				<option value="black">black</option><option value="none">none</option></select></span>
-		</div>
-		<div class="row">
-			<span class="drawOpt">Stroke width</span>
-			<span class="drawOpt"><select id="swidth">
-
-				<option value="1">1</option><option value="2">2</option>
-				<option value="3">3</option><option value="4">4</option>
-				<option value="5">5</option><option value="6">6</option>
-				<option value="7">7</option><option value="8">8</option>
-				<option value="9">9</option><option value="10">10</option></select></span>
-
-			<span class="drawOpt">Stroke</span>
-			<span class="drawOpt"><select id="stroke">
-				<option value="red">red</option><option value="yellow">yellow</option>
-				<option value="green">green</option><option value="blue" selected="selected">blue</option>
-				<option value="white">white</option><option value="gray">gray</option>
-
-				<option value="black">black</option><option value="none">none</option></select></span>
-		</div>
-		<div class="row">
-			<span class="drawOpt">&nbsp;</span>
-			<span class="drawOpt"><button type="button" id="undo">Undo</button></span>
-			<span class="drawOpt"><button type="button" id="clear2">Clear</button></span>
-			<span class="drawOpt"><button type="button" id="toSVG">To SVG</button></span>
-
-		</div>
-		<input type="button" onclick="whattodo();" value="Create Shape"/>
-	  </div>	<!-- end sketchpad -->
+			<h1>Shapes</h1>
+		<input type="button" class="circle" onclick="drawCircle();" value="Circle"/>
+		<input type="button" class="ellipse" onclick="drawEllipse();" value="Ellipse"/>
+		<input type="button" class="circle" onclick="drawRect();" value="Rectangle"/>
+		<input type="button" class="circle" onclick="drawRectwithRound();" value="Rounded Box"/>
+		<!-- <input type="button" class="circle" onclick="drawLine();" value="Line"/>  -->
+		
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="tableTools">
-		<h1>Tables and Graphs</h1>
-		<label>Table Title:</label>
-		<input type="text" id="addtabletitle"/>
-		<input type="button" class="addtabletitle" onclick="newTableTitle()" value="Add Title"/>
-		<input type="button"  class="addrowButton" onclick="addtablerow() " value="Add Row"/>
-		<input type="button"  class="addcolumnButton" onclick="addtablecolumn()" value="Add Column"/>
 		<div class="inner">
-			
-		</div>
+			<h1>Tables</h1>
+		  <input type="text" style="width:36px; height:20px;font-size:14px; padding:2px;" class="valueinput" id="numRows" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Rows':this.value;" value="# of Rows"/>
+		  <input type="text" style="width:36px;height:20px;font-size:14px; padding:2px;"  class="valueinput" id="numColumns" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Cols':this.value;" value="# of Columns"/>
+          <input type="button" class="addtabletitle" onclick="createDynamicTable('table', document.getElementById('numRows').value, document.getElementById('numColumns').value)" value="New Table"/><br>
+          <input type="text" style="height:20px;font-size:14px; padding:2px;"  class="valueinput" id="addtabletitle"/>
+          <input type="button" class="addtabletitle" onclick="newTableTitle()" value="Add Title"/>
+          <input type="button"  class="addrowButton" onclick="addtablerow() " value="Add Row"/>
+          <input type="button"  class="addcolumnButton" onclick="addtablecolumn()" value="Add Column"/>
+       <!-- <h3>Create Graph:</h3>
+       <input type="button" class="addtabletitle" onclick="createGraph ('table', document.getElementById('tableTit').value, 'bar')" value="Bar Graph"/>  -->
+	</div>
 	</div>
 	
 	<div class="toolWindow" id="sharingTools">
-		<h1>Share</h1>
 		<div class="inner">
-			
+			<h1>Share</h1>
 		</div>
 	</div>
 	
 	<div class="toolWindow" id="messagingTools">
-		<h1>Messages</h1>
 		<div class="inner">
-			
+			<h1>Messages</h1>
 		</div>
 	</div>
 
 	<div class="toolWindow" id="settings">
-		<h1>Settings</h1>
 		<div class="inner">
-			
+			<h1>Settings</h1>
+			<input type="button"  class="settings" onclick="clearCanvas()" value="Clear Canvas"/>
+            {% if request.user == canvas.owner %}
+            <input type="button"  id="canvas_settings_button" class="settings" value="Canvas Settings"/>
+            {% endif %}
+			<h3>Canvas Type:</h3>
+			<input type="button"  class="background" onclick="changeCanvasBackground (1)" value="Notebook Paper"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (2)" value="Graphing Paper"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (3)" value="Sketch Paper"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (4)" value="Plain White"/>
 		</div>
 	</div>
 
-
+	<div class="toolWindow" id="firstLoad">
+		<div class="inner">
+			<h1>Tool Options</h1>
+			<h2>Click a tool to begin!</h2>
+		</div>
+	</div>
 		</div>
 		
            <section id="slidenav">
@@ -223,126 +206,213 @@
         <ul>  	
             <li class="nitem"><a href="#">Me</a></li>
                 <ul class="nsub">
-                    <li><a href="#">New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
-                    <li><a href="#">Project 1</a></li>
-                    <li><a href="#">Project 2</a></li>
-                    <li><a href="#">Project 3</a></li>
+                    <li><a href="/project/create/">New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
+                    {% for project in projects %}
+                    <li><a href="/project/{{ project.pk }}/">{{ project.title }}</a></li>
+                    {% endfor %}
+                    {% if projects.count > 3 %}
+                    <li><a href="/project/myprojects/">More...</a></li>
+                    {% endif %}
                 </ul>
             <li class="nitem"><a href="#"><span></span> Others</a></li>
                 <ul class="nsub">
-                    <li><a href="#">Project 1</a></li>
-                    <li><a href="#">Project 2</a></li>
-                    <li><a href="#">Project 3</a></li>
+                    <li><a href="/projects/myprojects/">Project List</a></li>
                 </ul>
             <li class="nitem"><a href="#">Collaborators</a></li>
-                <ul class="nsub"  id="updatesTab">
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;14 sec ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Edited a drawing on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;30 sec ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;2 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;10 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;32 mins ago&#62;</span></li>
-                    <li class="update"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><strong><span style="color:#bb6d21">Someone's Name</span></strong><br><span style="font-size:.9em">Updated a table on your canvas!</span>&#160;&#160;<span style="font-size:.8em;color:#a33600">&#60;47 mins ago&#62;</span></li>
-					<li class="updateLast"><a href="#">More Updates>></a></li>
+                <ul class="nsub collaborators"  id="updatesTab">
+                
                 </ul>
 
         </ul>
-    </section>
-    
-        	<script type="text/javascript">
+<script type="text/javascript">
 		$(document).ready(function() {
+
+			$("ul#updatesTab").empty();
+			//console.log(data['collaborators'])
+			$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
+
 			$('.nsub').hide(); // hide sub-navigation items by default
-			
+
+			//checkMessages_initial();
+
 			$('.nitem a').live('click', function(e){
 				e.preventDefault();
 				$(this).parent().next('.nsub').slideToggle('slow');
-				
+
 				if($(this).parent().next('.nsub').is(':hidden')) {
                     $(this).addClass("CurrentlySelected");
                 } else {
                     $(this).removeClass("CurrentlySelected");
                 }
 			});
-			
-				function checkmessages() {
-		//{% postman_unread as unread_count %}				
-	   		alert('You have {{ unread_count }} unread messages.');
-	}
-	
-	/*
-	 * Canvas creation modal bax
-	 */
-	$("#canvas_create").click(function(e){
-		var url = '/canvas/create_modal/';
-            var dialog = $('<div style="display:none"></div>').appendTo('body');
-            dialog.load(
-                url, 
-                function (responseText, textStatus, XMLHttpRequest) {
-                    dialog.dialog({
-                    	draggable: false,
-                    	width: 'auto',
-                    	modal: true,
-                        // add a close listener to prevent adding multiple divs to the document
-                        close: function(event, ui) {
-                            // remove div with all data and events
-                            dialog.remove();
-                        }
-                    });
-                }
-            );
-            //prevent the browser to follow the link
-            return false;
-	});
-	$("#add_collaborator").click(function(e){
-		var url = '/canvas/{{pk}}/add-collaborator';
-            var dialog = $('<div style="display:none"></div>').appendTo('body');
-            dialog.load(
-                url, 
-                function (responseText, textStatus, XMLHttpRequest) {
-                    dialog.dialog({
-                    	draggable: false,
-                    	width: 'auto',
-                    	modal: true,
-                        // add a close listener to prevent adding multiple divs to the document
-                        close: function(event, ui) {
-                            // remove div with all data and events
-                            dialog.remove();
-                        }
-                    });
-                }
-            );
-            //prevent the browser to follow the link
-            return false;
-	});
-			
+            /*
+            * Canvas creation modal bax
+            */
+            $("#canvas_create").click(function(e){
+            var url = '/canvas/create_modal/';
+                        var dialog = $('<div style="display:none"></div>').appendTo('body');
+                        dialog.load(
+                            url,
+                            function (responseText, textStatus, XMLHttpRequest) {
+                                dialog.dialog({
+                                 draggable: false,
+                                 width: 'auto',
+                                 modal: true,
+                                    // add a close listener to prevent adding multiple divs to the document
+                                    close: function(event, ui) {
+                                        // remove div with all data and events
+                                        dialog.remove();
+                                    }
+                                });
+                            }
+                        );
+                        //prevent the browser to follow the link
+                        return false;
+            });
+            $(".add_collaborator").live('click', function(e){
+            var url = '/canvas/{{ canvas.pk }}/add-collaborator/';
+                        var dialog = $('<div id="add_collaborators" style="display:none"></div>').appendTo('body');
+                        dialog.load(
+                            url,
+                            function (responseText, textStatus, XMLHttpRequest) {
+                                dialog.dialog({
+                                 draggable: false,
+                                 width: 'auto',
+                                 modal: true,
+                                    // add a close listener to prevent adding multiple divs to the document
+                                    close: function(event, ui) {
+                                        // remove div with all data and events
+                                        dialog.remove();
+                                    }
+                                });
+                            }
+                        );
+                        //prevent the browser to follow the link
+                        return false;
+            });
+            $(".remove_collaborator").live('click', function(e){
+	            e.preventDefault();
+	            if(confirm("Delete this collaborator?")){
+	                var link = $(this).attr("href");
+
+	                $.get(link, function(data){
+	                    if(data['success']){
+	                        alert(data['message']);
+	                        $("ul#updatesTab").empty();
+							//console.log(data['collaborators'])
+							$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
+							console.log(data['collaborators'])
+							for(collaborator in data['collaborators']) {
+								//console.log(data['collaborators'][collaborator])
+								//console.log(data['collaborators'][collaborator]["name"])
+								$("ul#updatesTab").append('<li class="update"><div class="collaborator_box"><img src="/media/images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/' + data['collaborators'][collaborator]["name"] + '/">' + data['collaborators'][collaborator]['name'] + '</a><a class="remove_collaborator" href="/canvas/'+canvas+'/remove-collaborator/' + data['collaborators'][collaborator]["id"] + '/"><img src="/media/images/delete.png" alt="Remove" title="Remove" /></a></div></li>');
+							}
+	                    }else{
+	                        alert(data['error']);
+	                    }
+	                });
+	            }
+            });
+            $("#canvas_settings_button").click(function(e){
+            var url = '/canvas/{{ canvas.pk }}/edit_modal/';
+                        var dialog = $('<div style="display:none" id="canvas_settings"></div>').appendTo('body');
+                        dialog.load(
+                            url,
+                            function (responseText, textStatus, XMLHttpRequest) {
+                                dialog.dialog({
+                                 draggable: false,
+                                 width: 'auto',
+                                 modal: true,
+                                    // add a close listener to prevent adding multiple divs to the document
+                                    close: function(event, ui) {
+                                        // remove div with all data and events
+                                        dialog.remove();
+                                    }
+                                });
+                            }
+                        );
+                        //prevent the browser to follow the link
+                        return false;
+            });
+            $("#messageButton").click(function() {
+				$("#messagebox").empty();
+				$("#messagebox").html('&nbsp').load('/messages/inbox_short/');
+			});
 		});
+		/*
+		function checkMessages_initial() {
+			$.ajax({
+	            type: "GET",
+	            url: "/check_message_count/",
+
+	            async: true,
+	            cache: false,
+	            timeout:50000,
+
+	            success: function(data){
+	            	if(data['count'] > 0){
+	                	//alert("You have " + data['count'] + " new message.");
+	               	}
+	                setTimeout(
+	                    'checkMessages()',
+	                    5000
+	                );
+	            },
+	            error: function(XMLHttpRequest, textStatus, errorThrown){
+	                //addmsg("error", textStatus + " (" + errorThrown + ")");
+	                setTimeout(
+	                    'checkMessages()',
+	                    30000);
+	            },
+	        });
+		}*/
 	</script>
 
-        
           </div>   <!-- end slideoutMenu -->
 		</div> <!-- end coLeftHeader -->
 	</div>		<!-- end updateCol-->
 
 <div id="content">
 	<div id="canvas">
-<!--
-		<table id="testTable">
-
-			<caption>2009 Individual Sales by Category</caption>
-			<thead>
-				<tr>
-					<td></td>
-					<th>food</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-
-					<th>Mary</th>
-					<td>150</td>
-				</tr>
-			</tbody>
-		</table>
-	-->	 
+		
+		
+		<!--
+<table>
+	<caption id="tableTit">2009 Employee Sales by Department</caption>
+	<thead>
+		<tr>
+			<td></td>
+			<th scope="col">food</th>
+			<th scope="col">auto</th>
+			<th scope="col">household</th>
+			<th scope="col">furniture</th>
+			<th scope="col">kitchen</th>
+			<th scope="col">bath</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Mary</th>
+			<td>190</td>
+			<td>160</td>
+			<td>40</td>
+			<td>120</td>
+			<td>30</td>
+			<td>70</td>
+		</tr>
+		<tr>
+			<th scope="row">Tom</th>
+			<td>3</td>
+			<td>40</td>
+			<td>30</td>
+			<td>45</td>
+			<td>35</td>
+			<td>49</td>
+		</tr>	
+	</tbody>
+</table>
+		
+		-->
   </div>  <!-- end canvas -->
  </div>  <!-- end content -->
  

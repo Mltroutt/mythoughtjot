@@ -42,9 +42,20 @@ by: Christopher Reynolds
 	 opacity: .6;
 	 background:#ccc;
 }
+#labelPreview {
+	 border:2px #ddd dashed; 
+	 position:relative;
+	 width:100px;
+	 height:20px;
+	 border-radius: 4px;
+	 opacity: .6;
+	 background:#ccc;
+}
+#textLabel{
+	position:absolute;
+}
 #canvasTable {
 	position:absolute;
-	cursor:move;
 	min-width: 200px;
 }
 .head {
@@ -53,6 +64,25 @@ by: Christopher Reynolds
 	width:100%;
 	cursor:move;
 }
+.label {
+	color: #000;
+	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
+	font-size: 220%;
+	opacity: .6;
+}
+#canvas svg {
+	position:absolute;
+}
+.glow {
+	-webkit-box-shadow:2px 2px 2px #bdcffd; 
+	-moz-box-shadow: 2px 2px 2px #bdcffd; 
+	box-shadow:2px 2px 2px #bdcffd; 
+	background:#9cb6fa;
+}
+table tr:nth-child(2n) .glow{
+	background:#9cb6fa;
+}
+
 iframe {
 	font-family: Arial,Verdana,sans-serif;
 }
@@ -112,6 +142,9 @@ h1 {
 	color: #ff7200;
 	font-size: 200%;
 }
+.inner h1 {
+	margin-bottom:10px;
+}
 h2 {
 	color: #ff7200;
 	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
@@ -121,6 +154,9 @@ h3 {
 	color: #FF7200;
 	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
 	font-size: 165%;
+}
+.inner h3 {
+	color: #343434;
 }
 h4 {
 	color: #FF7200;
@@ -151,7 +187,6 @@ h4 {
 }
 
 #logincontent {
-	background: url(../images/stripesBack.png) repeat;
 	color: #333;
 	padding: 0px 10px 10px 0px;
 	min-height: 300px;
@@ -189,7 +224,7 @@ h4 {
     color: #6D6E6E;
 }
 #header{
-	height:38px;
+	height:45px;
 	color:#fff;
 background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	margin-bottom:2px;
@@ -199,10 +234,9 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 .logo {
 	border-radius: 4px;
 	padding:2px;
-	
 	height:32px;
 	width:226px;
-	background: url(../images/mythoughtjotLogoSD.png) no-repeat 2px 2px;
+/** background: url(../images/mythoughtjotLogoAASD.png) no-repeat 2px 2px;  **/
 }
 .logo a {
 	width:100%;
@@ -236,7 +270,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color:#fff;
 	height:20px;
 	padding:12px 0 0 0;
-	font-size:12px;
+	font-size:14px;
 }
 #coLeftHeader {
     border: 1px solid #5B5B5B;
@@ -301,6 +335,10 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 .others {
 	font-size:120%;
 }
+.i_am_insane{
+	position:absolute;
+	top:-4000px;
+}
 
 #slidenav { 
 	background: url(../images/DarkBack2.png) repeat;
@@ -354,6 +392,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	width:40px;
 	float:left;
 	height:100%;
+	position:fixed;
 	
 }
 #sidebar li {
@@ -388,7 +427,6 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	margin-top:10px;
 }
 #buttons {
-	background: url("../images/darkBack2.png") repeat scroll 0 0 transparent;
 	width:40px;
 	padding:4px 0 10px 0;
 	border:solid 1px #5b5b5b;
@@ -412,6 +450,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	color:#ff8400;
 	background: url("../images/DarkBack2.png") repeat;
 	padding:10px;
+	border-radius: 4px;
 }
 .toolWindow {
 	height:250px;
@@ -420,6 +459,7 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	border-radius:4px;
 	z-index:-10;
 	position:absolute;
+	background:#ddd;
 }
 .toolWindow .clickable{
 	float:right;
@@ -430,9 +470,11 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 }
 .inner {
 	padding:4px;
-	background:#f2f2f2;
 	border-radius:4px;
 	height:190px;
+}
+#slideMenu {
+	position:fixed;
 }
 #drawingTools {
 
@@ -548,9 +590,6 @@ canvas {
 	cursor:crosshair;
 	border:1px solid #eee;
 }
-svg {
-	cursor:crosshair;
-}
 .close {
 	border:1px solid #b83a3e;
 	border-radius:4px;
@@ -564,6 +603,35 @@ svg {
 }
 .close:hover {
 	background:#e40f17;
+}
+.row span {
+	font-size:12px;
+}
+.row .drawOpt {
+	
+}
+.toolWindow label{
+	margin:10px;
+}
+#toolbox input {
+	padding:.2em;
+	height:30px;
+	width:80px;
+}
+#toolbox button {
+	padding: 0.6em;
+	border-radius:6px;
+}
+table td {
+	min-height:15px;
+	height:15px;
+	width:100px;
+}
+table tr {
+	height:25px;
+}
+table .hover{
+	background:#DEECFF;
 }
 .test1 {
 	cursor:pointer;
@@ -704,7 +772,7 @@ div.wysiwyg iframe { border: 0;  clear: left; margin: 4px 0 0 1px; }
 
 
 
-table {  border-collapse: collapse; }
+table {  border-collapse: collapse; position:absolute; }
 td, th { 
    text-align: center; 
    border: 1px solid #ddd; 
@@ -828,7 +896,6 @@ body { font-size:62.5%; }
 
 /* Footer */
 #footer {
-	background:#464646;
 	height:30px;
 	color:#999;
 	border-radius: 0 0 10px 10px; 
@@ -850,7 +917,6 @@ table {
 	border-right:0;
 	clear: both;
 	color: #333;
-	margin-bottom: 10px;
 }
 #emailZone {
 	border:1px solid #ddd;
@@ -887,5 +953,46 @@ table tr:nth-child(2n) td {
 	background: #f5f5f5;
 }
 table .altrow td {
+	background: #f5f5f5;
+}
+
+#static_content {
+	width: 960px;
+	background: #fff;
+	-moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #FFFFFF #FF7C00 #FF7C00 #FFFFFF;
+    border-radius: 10px 10px 10px 10px;
+    border-style: solid;
+    border-width: 2px;
+    margin: 5px auto;
+}
+
+#static_content #content {
+	margin: 15px;
+}
+
+#static_content p {
+	padding: 10px;
+	font-size: 1.2em;
+	line-height: 150%;
+}
+
+#static_content table {
+	border: none;
+	height: auto;
+}
+
+#static_content table tr th {
+	border:1px solid #ddd;
+	text-align: right;
+	padding-right: 15px;
+	background: #ffffff;
+}
+
+#static_content table tr:nth-child(2n) th {
 	background: #f5f5f5;
 }
