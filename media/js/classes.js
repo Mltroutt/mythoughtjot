@@ -222,7 +222,7 @@ function renderText(textToRender){
 	n++;
 	var id = '"' + '#' + 'labelHeading' + n + '"';
 	var id2 = 'labelHeading'+n;
-    var label = '<span onhover="test1()" id="' + id2 + '">' + textToRender + '</span>';	
+    var label = '<span id="' + id2 + '">' + textToRender + '</span>';	
     $('#canvas').append($(label));
     attr = {font: "50px Helvetica", opacity: 0.5,};
     var classV = '"' + '.' + 'label' + '"';
@@ -232,7 +232,9 @@ function renderText(textToRender){
   }
  });
  } // end if
-
+	$('.help p').remove();
+	$('.help').append('<p>Great! Now you can drag your label where ever you need it.<p>');
+	$('.help p').css('color', '#a3ed9b');
 }
 
 $('.help').click(function(e) {
@@ -241,6 +243,10 @@ $('.help').click(function(e) {
 });
 
 function drawCircle(){
+	$('.help p').remove();
+	$('.help').append('<p>Click and drag to create this shape!<p>');
+	$('.help p').css('color', '#feb6b6');
+	//$('.ellipse').css({'background' '#F00'});
 	$("#canvas").mousedown(function(e){
     var X1 = (e.pageX - this.offsetLeft) - 8;
     var Y1 = (e.pageY - this.offsetTop) - 8;
@@ -264,12 +270,21 @@ function drawCircle(){
 		var paper = Raphael(X12, Y12, width, width);
 		var circle = paper.circle(width/2, width/2, width/2.2);
 		 $('svg').draggable({ containment: "#canvas" });
+		 $('svg').attr('class', 'svgDrawingObject');
+		 //$('#canvasButton svg').removeClass('svgDrawingObject');
+		 console.log("removed");
+		$('.help p').remove();
+		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
+		$('.help p').css('color', '#a3ed9b');	 
 	});
 	$(this).unbind('mousedown');
-  });	
+  });
 }
 
 function drawEllipse(){
+	$('.help p').remove();
+	$('.help').append('<p>Click and drag to create this shape!<p>');
+	$('.help p').css('color', '#feb6b6');
 	$("#canvas").mousedown(function(e){
     var X1 = (e.pageX - this.offsetLeft) - 8;
     var Y1 = (e.pageY - this.offsetTop) - 8;
@@ -295,12 +310,19 @@ function drawEllipse(){
 		var paper = Raphael(X12, Y12, width, height);
 		var ellipse = paper.ellipse(width/2, height/2, width/2.2, height/2.2 );
 		 $('svg').draggable({ containment: "#canvas" });
+		 $('svg').attr('class', 'svgDrawingObject');
+		$('.help p').remove();
+		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
+		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
-  });	
+  });
 }
 
 function drawRect(){
+	$('.help p').remove();
+	$('.help').append('<p>Click and drag to create this shape!<p>');
+	$('.help p').css('color', '#feb6b6');
 	$("#canvas").mousedown(function(e){
     var X1 = (e.pageX - this.offsetLeft) - 8;
     var Y1 = (e.pageY - this.offsetTop) - 8;
@@ -325,12 +347,19 @@ function drawRect(){
 		var paper = Raphael(X12, Y12, width+2, width+2);
 		var rect = paper.rect(1, 1, width, height);
 		 $('svg').draggable({ containment: "#canvas" });
+		 $('svg').attr('class', 'svgDrawingObject');
+		$('.help p').remove();
+		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
+		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
-  });	
+  });
 }
 
 function drawRectwithRound(){
+	$('.help p').remove();
+	$('.help').append('<p>Click and drag to create this shape!<p>');
+	$('.help p').css('color', '#feb6b6');
 	$("#canvas").mousedown(function(e){
     var X1 = (e.pageX - this.offsetLeft) - 8;
     var Y1 = (e.pageY - this.offsetTop) - 8;
@@ -355,9 +384,15 @@ function drawRectwithRound(){
 		var paper = Raphael(X12, Y12, width+2, width+2);
 		var rect = paper.rect(1, 1, width, height, 25);
 		 $('svg').draggable({ containment: "#canvas" });
+		 $('svg').attr('class', 'svgDrawingObject');
+		// $('#buttons svg').removeClass('svgDrawingObject');
+		$('.help p').remove();
+		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
+		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
-  });	
+  });
+  
 }
 
 function drawLine(){
@@ -387,92 +422,66 @@ function drawLine(){
 		var stringPath = "M" + 0 + " " + 0 + "L" + width + " " + height;
 		var path = paper.path(stringPath);
 		 $('svg').draggable({ containment: "#canvas" });
+		  $('svg').attr('class', 'svgDrawingObject');
+		$('.help p').remove();
+		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
+		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
-  });	
+  });
+
 }
 
-
-
-
-var inIncT = 1;
-function newTable(){
-	idIncT++;
-	$('.help p').remove();
-	$('.help').append('<p>Click anywhere to create a new Table.<p>');
-	$('.help p').css('color', '#feb6b6');
-	if(idIncT< 3){
-	$("#canvas").mousedown(function(e){
-	    var X1 = (e.pageX - this.offsetLeft) - 8;
-	    var Y1 = (e.pageY - this.offsetTop) - 8;
-	    var X12 = (e.pageX) - 8;
-    	var Y12 = (e.pageY) - 8;
-
-	    $("#canvas").append('<div id="showBoxTable"></div>');
-	    $("#showBoxTable").css('left', X1).css('top', Y1);
-	    
-	    $("#canvas").mousemove(function(e){
-	    	
-      var positionX = ((e.pageX - this.offsetLeft) - 8);
-      var positionY = ((e.pageY - this.offsetTop) - 8);
-      	   
-	      //$("#showBoxTable").height(height).width(width);
-	    $("#showBoxTable").css('left', positionX).css('top', positionY);
-    });
-
-	    $(this).mouseup(function(e){
-	    	 var X2 = (e.pageX);
-	        var Y2 = (e.pageY)-8;
-	    	$(this).unbind('mousemove');
-	    	$("#showBoxTable").remove();
-	    	$(this).unbind('mouseup');
-	    	
-			$("#canvas").append('<div id="canvasTable"><table><caption><h3>My Table</h3></caption><thead><tr><td>sdfsd</td><th>sdfsdf</th></tr></thead><tbody><tr><th></th><td></td></tr></tbody></table></div>');
-			//position the new drawing canvas correctly
-			$("#canvasTable").css('left', X2).css('top', Y2);
-			//$('#canvasTable td').editable();
-
-			$('.help p').remove();
-			$('.help').append('<p>Awesome, now you can begin editting your table!<p>');
-			$('.help p').css('color', '#a3ed9b');
-			//$("#canvasTable").draggable({ containment: "parent" });	
-			$(this).unbind('mouseup');	
-	        });
-	         $(this).unbind('mousedown');      	
-	});
-		         
- 
-} // end if
-} // end newDrawing
-
 function removeTable() {
-	$('#table').remove();
+	$('table').remove();
 	idIncT = 1;
 	defaultMessage();
 }
 
+var rowLimit = 0;
+var columnLimit = 0;
 function addtablerow() {
-$('#table tbody>tr:last').clone(true).insertAfter('#canvasTable tbody>tr:last');
+	if(rowLimit < 16){
+	$('table tbody>tr:last').clone(true).insertAfter('table tbody>tr:last').fadeIn("slow");
+     $("table tbody>tr:last td").empty();
+     rowLimit++;
+    }
+    else
+    alert("This version only allows for a limited number of rows.");
 }
-
 function addtablecolumn() {
-$('#table tr:first ').append("<td class='TableHeading'></td>");    
-
- $('#table tr:not(:first)').each(function(){
-       $(this).append("<td class='tdMiddleCells'></td>");
- });
-
+	if(columnLimit < 8){
+	var rowCount = $('table tr').length;
+	rowCount++;
+	console.log(rowCount);
+	for (var n=1;n<rowCount;n++){
+		console.log($('#table tr:nth-child(' + n + ') td:last'));
+		$('table tr:nth-child(' + n + ') td:last').clone(true).insertAfter('table tr:nth-child(' + n + ') td:last');
+		$('table tr:nth-child(' + n + ') td:last').empty();
+	  }
+	  columnLimit++;
+	 }
+	 else
+	 alert("This version only allows for a limited number of columns.");
 }
 
 function newTableTitle() {
-	$('#table caption h3').remove();
+	$('table caption h3').remove();
 	var newTitle = document.getElementById("addtabletitle").value;
-	$('#table caption').append("<h3>" + newTitle + "</h3>");
+	$('table caption').append("<h3>" + newTitle + "</h3>");
 }
 
 function clearCanvas() {
-	$('#canvas > *').remove();	
+	var r=confirm("Are you sure you want to clear your canvas?");
+if (r==true)
+  {
+	$('#canvas > *').remove();
+	$('.svgDrawingObject').remove();
+	defaultMessage();
+} 
+
 }
+	
 
 function isEmpty(str) {
     return (!str || 0 === str.length);
@@ -482,25 +491,85 @@ var some = $("#title").text();
 console.log(some);
 
 function barGraph(){
-	 $("table td").click(function () {
-		//var value = $('#table input:first').val();		
+	 $("table td").click(function () {		
 		var $td= $(this).closest('tr').children('td');
 		var n = 0;
 		var value=new Array();
 		while(1){
 		value[n]= $td.eq(n).text();
-			//$td.eq(n).css(border: '2px solid #ccc);
+			$td.eq(n).addClass("glow");
 			var isempty = isEmpty(value[n]);
 			n++;
 			if(isempty){break;}
 			
 		}
 		n--;
-		value[n] = $('#table input:first').val();
+		value[n] = $('table input:first').val();
 		n++;
 		for (var s = 0; s < n; s++){
 			console.log(value[s]);	
 		}
 	});
+	createGraph ('table', document.getElementById("tableTitle").value, 'bar')
 }
+var limitT = 0;
+function createDynamicTable(tbody, rows, cols) {
+	if(limitT < 1){
+		if (rows > 10) { alert("Version alpha only allows for up to 10 rows per table."); return};
+		if (cols > 10) { alert("Version alpha only allows for up to 10 columns per table."); return};
+	$('.help p').remove();
+	$('.help').append('<p>Click anywhere to create your new table.<p>');
+	$('.help p').css('color', '#feb6b6');
+	
+    $('#canvas').click(function(e){
+    	var X = (e.pageX);
+        var Y = (e.pageY);
+   if (tbody == null || tbody.length < 1) return;
+	     $('#canvas').append('<table><caption><h3 id="tableTitle">New Table</h3></caption><tbody>');
+	 for (var r = 1; r <= rows; r++) {
+	     var trow = $("<tr>");
+	 for (var c = 1; c <= cols; c++) {
+	     var cellText = "Cell " + r + "." + c
+	 $("<td>")
+	    .addClass("tableCell")
+	    .appendTo(trow);
+     }
+     trow.appendTo(tbody);
+}
+	$('#canvas').append('</tbody></table>');
+	//position the new drawing canvas correctly
+	$("table").css('left', X).css('top', Y);
+	
+	$('table td')
+		.click(function(){
+			if( !$(this).is('.input') ){
+				$(this).addClass('input')
+					.html('<input type="text" value="'+ $(this).text() +'" />')
+					.find('input').focus()
+					.blur(function(){
+						//remove td class, remove input
+						$(this).parent().removeClass('input').html($(this).val() || 0);
+						//update charts	
+						$('.visualize').trigger('visualizeRefresh');
+					});					
+			}
+			$('.help p').remove();
+			$('.help').append('<p>Name, numbers, or descriptions will do!<p>');
+			$('.help p').css('color', '#fff');
+		})
+		.hover(function(){ $(this).addClass('hover'); },function(){ $(this).removeClass('hover'); });
+		$('#canvas table').draggable({ containment: "#canvas" });	
+
+	  $('#canvas').unbind('click');
+	$('.help p').remove();
+	$('.help').append('<p>Click the cells of your table to edit them!<p>');
+	$('.help p').css('color', '#a3ed9b');
+  });
+  limitT++;
+  
+ } // end if
+ else
+  alert("We're sorry, version alpha only allows for one table to be created per canvas.");
+  
+}   
 

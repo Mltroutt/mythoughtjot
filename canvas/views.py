@@ -8,8 +8,8 @@ from django.forms import ModelForm
 from django import forms
 from django.utils import simplejson
 from django.http import HttpResponse, Http404
-from django.template.loader import render_to_string
 from django.db.models import Q
+from postman.models import Message
 
 class UserForm(ModelForm):
     class Meta:
@@ -110,7 +110,7 @@ class CanvasEditForm(ModelForm):
 
     class Meta:
         model = Canvas
-        exclude = {'creator','created','owner'}
+        exclude = {'creator','created'}
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -122,9 +122,9 @@ class CanvasEditForm(ModelForm):
         self.project_collaborators = kwargs.pop('project_collaborators', None)
         super(CanvasEditForm, self).__init__(*args, **kwargs)
         self.fields['canvas'] = forms.IntegerField(widget=forms.HiddenInput)
-        self.fields['project'] = forms.ModelChoiceField(self.project_collaborator)
-        self.fields['owner'] = forms.ModelChoiceField(self.project_collaborators)
-        self.fields['collaborators'] = forms.ModelMultipleChoiceField(self.collaborators,widget=form.SelectMultiple)
+        self.fields['project'].queryset = self.project_collaborator
+        self.fields['owner'].queryset = self.project_collaborators
+        self.fields['collaborators'].queryset = self.collaborators
 
 
 class CollaboratorForm(forms.Form):
@@ -154,8 +154,8 @@ class CollaboratorForm(forms.Form):
         return user
     
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('canvas', None)
-        #self.request = kwargs.pop('request', None)
+        #self.request = kwargs.pop('canvas', None)
+        self.request = kwargs.pop('request', None)
         super(CollaboratorForm, self).__init__(*args, **kwargs)
     
 class UserEditForm(ModelForm):
@@ -231,7 +231,7 @@ def create_project(request=None):
                     id = pre_save.pk
 
                     #and redirect to it
-                    return_message['redirect'] = '/project/'+str(id)
+                    return_message['redirect'] = '/canvas/create/'
 
                 except:
                     return_message['success'] = True
@@ -267,7 +267,7 @@ def create_project(request=None):
                 id = pre_save.pk
 
                 #and redirect to it
-                return redirect('/project/'+str(id))
+                return redirect('/canvas/create/')
             
     return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Project'), context_instance=RequestContext(request))
 
@@ -521,28 +521,23 @@ def canvas_edit_modal(request, pk):
     form = CanvasEditForm(request.POST or None,
                           collaborators=collaborators, project_collaborator=project_collaborator,
                           project_collaborators=project_collaborators,
-                          initial={'title':canvas.title, 'owner':canvas.owner.pk, 'collaborators':collaborators, 'project':project, 'canvas':pk}, request=request, instance=canvas)
+                          initial={'title':canvas.title, 'owner':canvas.owner.pk, 'project':project, 'canvas':pk}, request=request, instance=canvas)
 
     if request.POST and request.is_ajax():
         return_message = {'success':False, 'messages':'', 'errors':{}}
         if form.is_valid():
             try:
-                pre_save = form.save(commit=False)
-                #pre_save.owner = form.cleaned_data['owner']
-                pre_save.creator = canvas.creator
-                pre_save.created = canvas.created
-                pre_save.save()
-                #pre_save.collaborators.clear()
-                #for collab in form.cleaned_data['collaborator_list']:
-                #    print collab
-                #    pre_save.collaborators.add(User.objects.get(pk=collab))
+                save = form.save()
+                if form.cleaned_data['owner'] not in canvas.collaborators.all():
+                    save.collaborators.add(form.cleaned_data['owner'])
                 return_message['success'] = True
-                return_message['messages'] = "Successfully added your canvas"
+                return_message['messages'] = "Successfully edited your canvas"
                 
-            except:
+            except Exception,e:
+                print e
                 return_message['success'] = True
                 
-                return_message['messages'] = "Failed to add the canvas"
+                return_message['messages'] = "Failed to edit the canvas"
             finally:
                 json = simplejson.dumps(return_message)
                 return HttpResponse(json, mimetype='application/json')
@@ -555,6 +550,8 @@ def canvas_edit_modal(request, pk):
             json = simplejson.dumps(return_message)
     
             return HttpResponse(json, mimetype='application/json')
+
+    #form.fields['owner'].queryset = User.objects.filter(pk=project__project_collaborators,pk=canvas__collaborators)
     return render_to_response('canvas_edit_modal.html', add_csrf(request, pk=pk, form=form, title='Edit Canvas'), context_instance=RequestContext(request))
 
    #These next two def's suck. Don't use them,
@@ -565,8 +562,7 @@ def project(request, pk):
     isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
     if not isCollaborator:
         return redirect('/')
-    canvases = Canvas.objects.filter(project=pk)
-    return render_to_response("project.html", add_csrf(request, pk=pk, project=project, canvases=canvases), context_instance=RequestContext(request))
+    return render_to_response("project_view.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
 
 @login_required
 def canvas(request, pk):
@@ -719,10 +715,32 @@ def node(request, pk):
     return render_to_response("node.html", {'pk':pk})
 
 @login_required
-def edit_user(request):
+def collaborator_mini_form(request,pk):
+    if request.is_ajax():
+        canvas = get_object_or_404(Canvas, pk=pk)
+        collaborators = canvas.collaborators
+        
+        return render_to_response('collaborator_mini_form.html', add_csrf(request, canvas=canvas, collaborators=collaborators, title='Add a collaborator'), context_instance=RequestContext(request))
+    else:
+        raise Http404
 
-    form = UserEditForm(request.POST or None, request=request, instance=request.user)
-    return render_to_response('forms.html', add_csrf(request, form=form, title='Edit User'), context_instance=RequestContext(request))
+@login_required
+def check_messages(request):
+    if request.is_ajax():
+        message_count = {}
+        message_count['count'] = Message.objects.inbox_unread_count(request.user)
+        json = simplejson.dumps(message_count)
+        return HttpResponse(json, mimetype='application/json')
+    else:
+        raise Http404
+
+@login_required
+def view_profile(request,in_user):
+    view_user = get_object_or_404(User,username__exact=in_user)
+    
+    projects = Project.objects.filter(Q(project_collaborators=view_user) | Q(canvas__collaborators=view_user)).distinct()
+    
+    return render_to_response('user_profile.html', add_csrf(request, view_user=view_user, canvas=canvas, projects=projects), context_instance=RequestContext(request))
 
 def add_csrf(request, **kwargs):
     """Add CSRF to dictionary."""

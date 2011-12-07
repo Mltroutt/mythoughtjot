@@ -1,31 +1,24 @@
 {% extends "base.html" %}
 
 
-{% block title %}Projects for {{ request.user.username }}{% endblock %}
+{% block title %}{{ project.title }}{% endblock %}
 
 {% block css %}
 <style>
-ul#projects {
+#project {
     list-style: none;
     padding-left: 10px;
     font-size: 14px;
     line-height: 150%;
 }
-ul#projects p.description {
+#project p.description {
     font-size: 12px;
 }
-ul#projects li {
-    padding-left: 5px;
-    padding-bottom: 15px;
-}
-ul#projects li span.project_title {
-    font-size: 16px;
-}
-ul#projects li ul {
+#project li ul {
     list-style: none;
     padding-left:5px;
 }
-ul#projects li ul {
+#project li ul {
     padding-left: 5px;
 }
 </style>
@@ -69,22 +62,19 @@ ul#projects li ul {
 {% endblock %}
 
 {% block content %}
-
-    <h2>Sup brah, Projects Yo</h2>
+<div id="project">
+    <h2>{{ project.title }}</h2>
+    <br />
+    <p class="description">{{ project.description }}</p>
     <br />
     <h3><a href="/project/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a project</a></h3>
-    <ul id="projects">
-    {% for project in projects %}
 
-
-
-       <li> <span class="project_title">{{ project.title }}</span>
         {% if request.user == project.owner %}
             <a href="/project/{{ project.pk }}/edit/"><img src="{{ MEDIA_URL }}images/edit.png" alt="Edit" title="Edit" /></a>
             <a class="project_delete" href="/project/{{ project.pk }}/delete/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Delete" title="Delete" /></a>
         {% endif %}
         
-       <p class="description">{{ project.description }}</p>
+       
 
         <ul>
         {% for canvas in project.canvas_set.all %}
@@ -101,10 +91,7 @@ ul#projects li ul {
             <a href="/canvas/create/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Create a canvas</a>
         {% endif %}
         </ul>
-        </li>
-		
-    {% endfor %}
-     </ul>
-    
 
+    
+</div>
 {% endblock %}
