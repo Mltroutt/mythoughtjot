@@ -328,12 +328,12 @@ def project_edit(request, pk):
     return render_to_response('forms.html', add_csrf(request, form=form, title='Edit Project'), context_instance=RequestContext(request))
 
 
-@login_required
-def project(request,pk):
-    project = get_object_or_404(Project,pk=pk)
-    canvases = Canvas.objects.filter(project=pk)
-    
-    return render_to_response('project.html',{'project':project,'canvases':canvases}, context_instance=RequestContext(request))
+#@login_required
+#def project(request,pk):
+#    project = get_object_or_404(Project,pk=pk)
+#    canvases = Canvas.objects.filter(project=pk)
+#    
+#    return render_to_response('project.html',{'project':project,'canvases':canvases}, context_instance=RequestContext(request))
 
 @login_required
 def myprojects(request):
@@ -399,7 +399,7 @@ def create_canvas_modal(request):
             return HttpResponse(json, mimetype='application/json')
     #fill in the projects field with all projects the user is associated with
     form.fields['project'].queryset = Project.objects.filter(project_collaborators=request.user)
-    return render_to_response('canvas_create_short_form.html', add_csrf(request, form=form, title='Create A Canvas'), context_instance=RequestContext(request))
+    return render_to_response('canvas_create_short_form.html', add_csrf(request, form=form, title='Create a new canvas for your project'), context_instance=RequestContext(request))
 
 
 
@@ -457,7 +457,7 @@ def create_canvas(request):
                 id = pre_save.pk
                 return redirect('/canvas/'+str(id))
     form.fields['project'].queryset = Project.objects.filter(project_collaborators=request.user)
-    return render_to_response('forms.html', add_csrf(request, form=form, title='Create A Canvas'), context_instance=RequestContext(request))
+    return render_to_response('forms.html', add_csrf(request, form=form, title='Create a new canvas for your project'), context_instance=RequestContext(request))
 
 @login_required
 def canvas_delete(request, pk):
@@ -564,14 +564,14 @@ def canvas_edit_modal(request, pk):
 
    #These next two def's suck. Don't use them,
 
-#@login_required
-#def project(request, pk):
-#    project = get_object_or_404(Project,pk=pk)
-#    canvas = Canvas.objects.filter(project=pk)
-#    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
-#    if not isCollaborator:
-#        return redirect('/')
-#    return render_to_response("project.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
+@login_required
+def project(request, pk):
+    project = get_object_or_404(Project,pk=pk)
+    canvas = Canvas.objects.filter(project=pk)
+    isCollaborator = Project.objects.filter(pk=pk,project_collaborators=request.user).exists()
+    if not isCollaborator:
+        return redirect('/')
+    return render_to_response("project_view.html", add_csrf(request, pk=pk, project=project), context_instance=RequestContext(request))
 
 @login_required
 def canvas(request, pk):
@@ -582,7 +582,9 @@ def canvas(request, pk):
     nodes = Node.objects.filter(canvas=pk)
     #return the first 3 projects for the user
     projects = Project.objects.filter(project_collaborators=request.user)[:3]
-    return render_to_response("canvas.html", add_csrf(request, pk=pk, projects=projects, canvas=canvas, nodes=nodes), context_instance=RequestContext(request))
+    canvases = Canvas.objects.filter(project=canvas.project)[:3]
+    pid = Project.objects.get(canvas__pk=pk)
+    return render_to_response("canvas.html", add_csrf(request, pk=pk, projects=projects, canvas=canvas, canvases=canvases, pid=pid.pk,nodes=nodes), context_instance=RequestContext(request))
 
     #End sucky def's
 
@@ -715,6 +717,45 @@ def canvas_remove_collaborator(request, pk, user):
         
         return HttpResponse(json, mimetype='application/json')
 
+@login_required
+def canvas_save(request, pk):
+
+    canvas = get_object_or_404(Canvas, pk=pk)
+    
+    if request.user not in canvas.collaborators.all() and not request.is_ajax():
+        raise Http404
+    
+    message = {}
+    
+    try:
+        data = request.POST.get('canvas-data')
+
+        canvas.data = data
+        canvas.save()
+        
+        message['message'] = "Canvas successfully saved."
+    except Exception,e:
+        print e
+        message['message'] = "Something went wrong. Canvas not saved."
+    finally:
+        json = simplejson.dumps(message)
+        return HttpResponse(json, mimetype='application/json')
+
+@login_required
+def load_canvas(request, pk):
+    canvas = get_object_or_404(Canvas, pk=pk)
+    
+    if request.user not in canvas.collaborators.all() and not request.is_ajax():
+        raise Http404
+    
+    data = {}
+    
+    data['html'] = canvas.data
+    data['iframe'] = canvas.iframedata
+    
+    json = simplejson.dumps(data)
+    return HttpResponse(json, mimetype='application/json')
+
 def node(request, pk):
 
     """
@@ -729,7 +770,7 @@ def collaborator_mini_form(request,pk):
         canvas = get_object_or_404(Canvas, pk=pk)
         collaborators = canvas.collaborators
         
-        return render_to_response('collaborator_mini_form.html', add_csrf(request, canvas=canvas, collaborators=collaborators, title='Add a collaborator'), context_instance=RequestContext(request))
+        return render_to_response('collaborator_mini_form.html', add_csrf(request, canvas=canvas, collaborators=collaborators), context_instance=RequestContext(request))
     else:
         raise Http404
 

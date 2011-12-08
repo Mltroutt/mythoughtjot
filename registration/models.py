@@ -71,7 +71,7 @@ class RegistrationManager(models.Manager):
         
         """
         new_user = User.objects.create_user(username, email, password)
-        new_user.is_active = False
+        new_user.is_active = True
         new_user.first_name = first_name
         new_user.last_name = last_name
         new_user.save()
@@ -83,6 +83,8 @@ class RegistrationManager(models.Manager):
 
         return new_user
     create_inactive_user = transaction.commit_on_success(create_inactive_user)
+
+
 
     def create_profile(self, user):
         """

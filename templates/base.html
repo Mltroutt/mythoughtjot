@@ -3,7 +3,7 @@
 <head>
 	<title>{% block title %}mythoughtjot{% endblock %} - mythoughtjot</title>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="{{ MEDIA_URL }}css/static_style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="{{ MEDIA_URL }}css/static_styles.css" type="text/css" media="screen" />
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
   {% block css %}{% endblock %}
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
@@ -15,10 +15,19 @@
 </head>
 <body>
 {% block header %}
-	 <div id="header">
+<div id="header">
+	
               <div id="headerLeft">
-              	<a href="/" title="mythoughtjot" alt="mythoughtjot"><img src="{{ MEDIA_URL }}images/mythoughtjotLogoAASD.png" /></a>
-			  </div>
+              	
+              	<a href="/" title="mythoughtjot" alt="mythoughtjot"><img src="/media/images/mythoughtjotLogoAASD.png"></a>
+			  </div><div class="help"></div>
+        <div id="coRightHeader"> 
+        	{% if request.user.is_authenticated %}
+<h1 id="title" style="margin-top:2px; margin-bottom:2px; padding:0;">Welcome, {{ request.user.username }}</h1><span>Not {{ request.user.username}}? <a href="/logout/" style="display:inline;">Log out</a></span>
+           {% else %}
+           		<h1 id="title" style="margin-top:2px; margin-bottom:2px; padding:0;"><a href="/login/">Log in</a></h1>
+           {% endif %}
+		</div> 
 	</div>		<!-- end header-->
 {% endblock %}
 	<div id="static_content">
@@ -31,7 +40,6 @@
 	  
 	</div> <!-- end content -->
 	<div id="footer">
-	<span><a href="http://www.mythoughtjot.com">mythoughtjot.com</a></span>
 	</div>
 </body>
 </html>
