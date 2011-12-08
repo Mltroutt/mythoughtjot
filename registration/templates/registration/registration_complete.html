@@ -1,6 +1,14 @@
 {% extends "base.html" %}
         {% block title %}Registration Complete{% endblock %}
    
+   {% block javascript %}
+   		
+   		<script type="text/javascript">
+   		setTimeout("window.location = '/'", 1000);
+   		</script>
+   		
+   {% endblock %}
+   
    {% block content %}
         <h2>Registration Complete!</h2>
         {{ new_user.as_p }}

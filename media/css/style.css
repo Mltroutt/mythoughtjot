@@ -110,7 +110,7 @@ input[type="checkbox"] { vertical-align: bottom; *vertical-align: baseline; }
 
 a:hover, a:active { outline: none; }
 
-a, a:active, a:visited { color:#607890; }
+a, a:active, a:visited { color:#FF7200; }
 a:hover { color:#036; }
 
 
@@ -122,7 +122,7 @@ body { font:13px sans-serif; *font-size:small; *font:x-small; line-height:1.22; 
 table { font-size:inherit; font:100%; }
 select, input, textarea { font:99% sans-serif; }
 a {
-	color: #003d4c;
+	color: #FF7200;
 	text-decoration: none;
 	font-weight: bold;
 	
@@ -359,8 +359,8 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 	text-decoration: none; 
 	color: #fff; 
 	line-height:40px; 	
-	border-radius:6px;
 	padding:4px;
+	border:none;
 }
 #slidenav li a:hover { 
 	background: #fff;
@@ -419,7 +419,6 @@ background: url("../images/stripedBackD.gif") repeat scroll 0 0 transparent;
 .update {
 	border:solid 1px #ccc;
 	border-radius: 4px;
-	background: #fff;
 	color:#22201D;
 }
 .updateLast a{

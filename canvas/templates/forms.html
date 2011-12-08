@@ -6,7 +6,7 @@
 
 <h2>{{title}}</h2>
 <div id="messages" style="display:none" id="simple_form"></div>
-<form action="" method="POST" id="simple_form">{% csrf_token %}
+<form action="" method="POST" id="simple_form" style="overflow:hidden">{% csrf_token %}
 <table>
 {{form.as_table}}
 </table>

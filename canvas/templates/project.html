@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block css %}
+<style>
+ul#project {
+    list-style: none;
+    padding-left: 10px;
+    font-size: 14px;
+    line-height: 150%;
+}
+ul#project p.description {
+    font-size: 12px;
+}
+ul#project li {
+    padding-left: 5px;
+    padding-bottom: 15px;
+}
+ul#project li span.project_title {
+    font-size: 16px;
+}
+ul#project li ul {
+    list-style: none;
+    padding-left:5px;
+}
+ul#project li ul {
+    padding-left: 5px;
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+    <h2>{{project.title}} - Canvases</h2>
+    <br />
+    
+    <ul id="project">
+    {% for canvas in canvases %}
+
+	<li><a href="../../canvas/{{canvas.id}}">{{canvas.title}}</a></li>
+
+    {% endfor %}
+     </ul>
+    
+
+{% endblock %}

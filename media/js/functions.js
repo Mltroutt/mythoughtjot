@@ -30,17 +30,17 @@ function circle(x, y, r) {
 //change canvas background
 function changeCanvasBackground (x) {
    if (x == 1){
-    $("#canvas").css('background', '#FFF url(../media/images/canvasNote.png) 40px 40px');}
+    $("#canvas").css('background', '#FFF url(../../media/images/canvasNote.png) 40px 40px');}
    if (x == 2){
-    $("#canvas").css('background', '#FFF url(../media/images/canvasGraph.png)');}
+    $("#canvas").css('background', '#FFF url(../../media/images/canvasGraph.png)');}
    if (x == 3){
-    $("#canvas").css('background', '#FFF url(../media/images/canvasDrawing.png)');}  
+    $("#canvas").css('background', '#FFF url(../../media/images/canvasDrawing.png)');}  
    if (x == 4){
     $("#canvas").css('background-image', 'none');}    
    if (x == 5){
-   	$("#canvas").css('background-image', 'none');
-   	$("#canvas").css('color', '#ffffff');
-    $("#canvas").css('background-color', '#26211c');}    
+   	 $("#canvas").css('background', '#FFF url(../../media/images/darkBack.jpg)');}  
+     if (x == 6){
+    $("#canvas").css('background', '#FFF url(../../media/images/transparentBack.jpg)');}      
 
 }
 
@@ -54,10 +54,8 @@ function createGraph (id, title, type) {
 
 // NOT FINISHED alert
 function notfinishedyet() {
-	alert("Oops! mythoughtjot is still in its alpha version! This functionality will be available soon!");
+	alert("Oops! mythoughtjot is in its pre-alpha version! This functionality will be available soon!");
 }
-
-
 
 // Draw the selected element on the canvas
 function drawShape(x1, y1, x2, y2) {
@@ -386,11 +384,6 @@ function initWindow()
 	// handle window changes properly
 	window.onresize = refresh;
 	window.onorientationchange = refresh;
-}
-
-function trythefuckagain(){
-		// Drawing Shapes
-
 }
 
 //select what to do based on what was clicked

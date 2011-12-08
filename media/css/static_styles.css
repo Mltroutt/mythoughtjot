@@ -1,5 +1,5 @@
 #static_content {
-	width: 960px;
+	width: 600px;
 	background: #fff;
 	-moz-border-bottom-colors: none;
     -moz-border-image: none;
@@ -23,11 +23,10 @@
 	line-height: 150%;
 }
 
-#static_content table {
+#static_content #content table {
 	border: none;
-	height: auto;
+	position: relative;
 }
-
 #static_content table tr th {
 	border:1px solid #ddd;
 	text-align: right;
@@ -37,4 +36,13 @@
 
 #static_content table tr:nth-child(2n) th {
 	background: #f5f5f5;
+}
+#content h1 {
+	font-size:34px;
+}
+#content a {
+	color: #003d4c;
+	text-decoration: none;
+	font-weight: bold;
+	
 }

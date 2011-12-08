@@ -1,14 +1,15 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{{ canvas.title }} - mythoughtjot</title>
+	<title>mythoughtjot</title>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/style.css" type="text/css" media="screen" />
    <!-- <link rel="stylesheet" href="{{ MEDIA_URL }}css/menustyles.css" type="text/css" media="screen" /> -->
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" href="{{ MEDIA_URL }}css/jquery.svg.css" type="text/css" media="screen" />
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script>!window.jQuery && document.write('<script src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"><\/script>')</script>
+<script>!window.jQuery && document.write('<script src="js/jquery-1.4.2.min.js"><\/script>')</script>
 	<script src="{{ MEDIA_URL }}js/jQuery/jQuery.js"></script>
 
   	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
@@ -41,8 +42,14 @@
 		<script type="text/javascript" src="{{ MEDIA_URL }}js/graffle.js"></script>
 		
 		<script type="text/javascript">
-			changeToolbar('#firstLoad');
-			startupMessage();
+		 window.onload = function() {
+		 	startupMessage();
+		 	changeToolbar('#firstLoad');
+			$('#canvas svg').hover(function (e) {	
+			  removeButton();
+			  some();
+		});
+}
 		</script>
 </head>
 <body>
@@ -69,7 +76,7 @@
                     <li onclick="changeToolbar('#textTools');redo('bubble');"><div class="buttons" id="textButton"><script type="text/javascript">renderIcon("bubble");</script></div></li>
                     <li onclick="changeToolbar('#shapeTools');redo('flipv');"><div class="buttons" id="shapeButton"><script type="text/javascript">renderIcon("flipv");</script></div></li>
                     <li onclick="changeToolbar('#tableTools');redo('barchart');"><div class="buttons" id="graphButton"><script type="text/javascript">renderIcon("barchart");</script></div></li>
-                    <li onclick="changeToolbar('#sharingTools');redo('users');"><div class="buttons" id="shareButton"><script type="text/javascript">renderIcon("users");</script></div></li>
+                    <li onclick="notfinishedyet();redo('users');"><div class="buttons" id="shareButton"><script type="text/javascript">renderIcon("users");</script></div></li>
                     <li onclick="notfinishedyet();redo('search');"><div class="buttons" id="searchButton"><script type="text/javascript">renderIcon("search");</script></div></li>
 					<li onclick="changeToolbar('#messagingTools');redo('mail');" id="messageButton"><div class="buttons" id="messagesButton"><script type="text/javascript">renderIcon("mail");</script></div></li>
 					<li onclick="changeToolbar('#settings');redo('settings');"><div class="buttons" id="canvasButton"><script type="text/javascript">renderIcon("settings");</script></div></li>
@@ -80,7 +87,6 @@
         
       <div id="popupContact">
       <a href="#" id="popupContactClose">X</a>
-      <h1>Messages</h1>
        <div id="messagebox">
         <p>and here they are...</p>
        </div>
@@ -154,8 +160,8 @@
 	<div class="toolWindow" id="tableTools">
 		<div class="inner">
 			<h1>Tables</h1>
-		  <input type="text" style="width:36px; height:20px;font-size:14px; padding:2px;" class="valueinput" id="numRows" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Rows':this.value;" value="# of Rows"/>
-		  <input type="text" style="width:36px;height:20px;font-size:14px; padding:2px;"  class="valueinput" id="numColumns" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Cols':this.value;" value="# of Columns"/>
+		  <input type="text" style="width:36px; height:20px;font-size:14px; padding:2px;" class="valueinput" id="numRows" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Rows':this.value;" value="Rows"/>
+		  <input type="text" style="width:36px;height:20px;font-size:14px; padding:2px;"  class="valueinput" id="numColumns" onclick="this.value='';" onfocus="this.select()" onblur="this.value=!this.value?'Cols':this.value;" value="Cols"/>
           <input type="button" class="addtabletitle" onclick="createDynamicTable('table', document.getElementById('numRows').value, document.getElementById('numColumns').value)" value="New Table"/><br>
           <input type="text" style="height:20px;font-size:14px; padding:2px;"  class="valueinput" id="addtabletitle"/>
           <input type="button" class="addtabletitle" onclick="newTableTitle()" value="Add Title"/>
@@ -182,14 +188,16 @@
 		<div class="inner">
 			<h1>Settings</h1>
 			<input type="button"  class="settings" onclick="clearCanvas()" value="Clear Canvas"/>
-            {% if request.user == canvas.owner %}
+						            {% if request.user == canvas.owner %}
             <input type="button"  id="canvas_settings_button" class="settings" value="Canvas Settings"/>
             {% endif %}
 			<h3>Canvas Type:</h3>
-			<input type="button"  class="background" onclick="changeCanvasBackground (1)" value="Notebook Paper"/>
-			<input type="button"  class="background" onclick="changeCanvasBackground (2)" value="Graphing Paper"/>
-			<input type="button"  class="background" onclick="changeCanvasBackground (3)" value="Sketch Paper"/>
-			<input type="button"  class="background" onclick="changeCanvasBackground (4)" value="Plain White"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (6)" value="Transparent"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (1)" value="Notebook"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (2)" value="Graphing"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (3)" value="Sketch"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (4)" value="White"/>
+			<input type="button"  class="background" onclick="changeCanvasBackground (5)" value="Dark"/>
 		</div>
 	</div>
 
@@ -201,32 +209,39 @@
 	</div>
 		</div>
 		
-           <section id="slidenav">
+  <section id="slidenav">
 
         <ul>  	
-            <li class="nitem"><a href="#">Me</a></li>
+            <li class="nitem"><a href="#">Projects</a></li>
                 <ul class="nsub">
+                	{% for project in projects %}
+                	<li><a href="/project/{{project.pk}}/">{{project.title}}</a></li>
+                	{% endfor %}
+                	<li><a href="/project/myprojects/">View all</a></li>
                     <li><a href="/project/create/">New Project <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
-                    {% for project in projects %}
-                    <li><a href="/project/{{ project.pk }}/">{{ project.title }}</a></li>
-                    {% endfor %}
-                    {% if projects.count > 3 %}
-                    <li><a href="/project/myprojects/">More...</a></li>
-                    {% endif %}
+                    
                 </ul>
-            <li class="nitem"><a href="#"><span></span> Others</a></li>
+            <li class="nitem"><a href="#"><span></span> Canvases</a></li>
                 <ul class="nsub">
-                    <li><a href="/projects/myprojects/">Project List</a></li>
+                   {% for c in canvases %}
+                   	<li><a href="/canvas/{{c.pk}}/">{{c.title}}</a></li>
+                   {% endfor %}
+                   <li><a href="/project/{{pid}}/">View all</a></li>
+                   <li><a href="/canvas/create/" id="canvas_create">New Canvas <img src="{{ MEDIA_URL }}images/new.png"> </a></li>
+                   
                 </ul>
             <li class="nitem"><a href="#">Collaborators</a></li>
-                <ul class="nsub collaborators"  id="updatesTab">
+                <ul class="nsub"  id="updatesTab">
                 
                 </ul>
 
         </ul>
+    </section>
+    
 <script type="text/javascript">
 		$(document).ready(function() {
-
+			
+			
 			$("ul#updatesTab").empty();
 			//console.log(data['collaborators'])
 			$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
@@ -256,7 +271,7 @@
                             function (responseText, textStatus, XMLHttpRequest) {
                                 dialog.dialog({
                                  draggable: false,
-                                 width: 'auto',
+                                 width: '300px',
                                  modal: true,
                                     // add a close listener to prevent adding multiple divs to the document
                                     close: function(event, ui) {
@@ -277,7 +292,7 @@
                             function (responseText, textStatus, XMLHttpRequest) {
                                 dialog.dialog({
                                  draggable: false,
-                                 width: 'auto',
+                                 width: '300px',
                                  modal: true,
                                     // add a close listener to prevent adding multiple divs to the document
                                     close: function(event, ui) {
@@ -297,16 +312,7 @@
 
 	                $.get(link, function(data){
 	                    if(data['success']){
-	                        alert(data['message']);
-	                        $("ul#updatesTab").empty();
-							//console.log(data['collaborators'])
-							$("ul#updatesTab").html('&nbsp').load('/canvas/{{ canvas.pk }}/load_mini_collaborators/');
-							console.log(data['collaborators'])
-							for(collaborator in data['collaborators']) {
-								//console.log(data['collaborators'][collaborator])
-								//console.log(data['collaborators'][collaborator]["name"])
-								$("ul#updatesTab").append('<li class="update"><div class="collaborator_box"><img src="/media/images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/' + data['collaborators'][collaborator]["name"] + '/">' + data['collaborators'][collaborator]['name'] + '</a><a class="remove_collaborator" href="/canvas/'+canvas+'/remove-collaborator/' + data['collaborators'][collaborator]["id"] + '/"><img src="/media/images/delete.png" alt="Remove" title="Remove" /></a></div></li>');
-							}
+	                        $("ul#updatesTab").html('&nbsp').load('/canvas/{{canvas.pk}}/load_mini_collaborators/');
 	                    }else{
 	                        alert(data['error']);
 	                    }
@@ -338,7 +344,37 @@
 				$("#messagebox").empty();
 				$("#messagebox").html('&nbsp').load('/messages/inbox_short/');
 			});
+			$("#save-canvas").click(function (e) {
+				e.preventDefault();
+				var link = $(this).attr("href"),
+					data = $("#canvas").html();
+					
+					console.log($( '#someJunk' ).nextAll( 'svg' ));
+					
+					//console.log(svgs);
+					
+					//console.log($("#wysiwygIFrame").html());
+					if($("#wysiwygIFrame").length > 0){
+						data = '<div>'+data+'</div>';
+						var iframeText = $("iframe#wysiwygIFrame").contents().find("body").html();
+						var iframedata = "&lt;html xml:lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"&gt;&lt;head&gt;&lt;meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\"&gt;&lt;/head&gt;&lt;body style=\"margin: 0px;\"&gt;"+iframeText+"&lt;/body&gt;&lt;/html&gt;";
+
+					}
+				$.post(link, {'canvas-data':data, csrfmiddlewaretoken: '{{ csrf_token }}'}, function(data) {
+					alert(data['message']);
+				});
+			});
 		});
+		function loadCanvas() {
+			
+			$.get('/canvas/{{ canvas.pk }}/load_canvas/', function(data) {
+				$("canvas").html(data['html']);
+				if(data['iframe'].length >0){
+					$("iframe#wysiwygIFrame").html('');
+					$("iframe#wysiwygIFrame").html(data['iframe']);
+				}
+			});
+		}
 		/*
 		function checkMessages_initial() {
 			$.ajax({
@@ -367,15 +403,13 @@
 	        });
 		}*/
 	</script>
-
           </div>   <!-- end slideoutMenu -->
 		</div> <!-- end coLeftHeader -->
 	</div>		<!-- end updateCol-->
 
 <div id="content">
 	<div id="canvas">
-		
-		
+
 		<!--
 <table>
 	<caption id="tableTit">2009 Employee Sales by Department</caption>
