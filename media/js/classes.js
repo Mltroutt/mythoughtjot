@@ -242,7 +242,14 @@ $('.help').click(function(e) {
 	//$(this).css("border", "dashed 2px #F00");
 });
 
+var c = 0;
+var e = 0;
+var r = 0;
+var rr = 0;
+
 function drawCircle(){
+	//$('#messageButton svg').removeClass('svgDrawingObject');
+
 	$('.help p').remove();
 	$('.help').append('<p>Click and drag to create this shape!<p>');
 	$('.help p').css('color', '#feb6b6');
@@ -260,24 +267,26 @@ function drawCircle(){
       $("#showBox").height(height).width(width);
 });
     $(this).mouseup(function(e){
+    	globalsomething = 12;
     	$("#showBox").remove();
     	$(this).unbind('mousemove');
         var X2 = (e.pageX - this.offsetLeft) - 8;
         var Y2 = (e.pageY - this.offsetTop) - 8;
         //alert(X1 + " " + X2 + " " + Y1 + " " + Y2);
         $(this).unbind('mouseup');
-       	width = X2 - X1;	
-		var paper = Raphael(X12, Y12, width, width);
+       	width = X2 - X1;
+		var shapeid = 'svgShape'+c;
+		var paper = Raphael(X1, Y1, width, width);
 		var circle = paper.circle(width/2, width/2, width/2.2);
 		 $('svg').draggable({ containment: "#canvas" });
-		 $('svg').attr('class', 'svgDrawingObject');
-		 //$('#canvasButton svg').removeClass('svgDrawingObject');
-		 console.log("removed");
+		 //$('svg').css('position', 'absolute').css('left', X12).css('top', Y12);
 		$('.help p').remove();
 		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
 		$('.help p').css('color', '#a3ed9b');	 
 	});
 	$(this).unbind('mousedown');
+		$('#buttons svg').removeClass('svgDrawingObject');
+		c++;
   });
 }
 
@@ -307,15 +316,16 @@ function drawEllipse(){
        	width = X2 - X1;
        	height = Y2 - Y1;	
        	
-		var paper = Raphael(X12, Y12, width, height);
+		var paper = Raphael(X1, Y1, width, height);
 		var ellipse = paper.ellipse(width/2, height/2, width/2.2, height/2.2 );
-		 $('svg').draggable({ containment: "#canvas" });
-		 $('svg').attr('class', 'svgDrawingObject');
+		  $('svg').draggable({ containment: "#canvas" });
+		//$('#canvas svg').attr('class', 'svgDrawingObject').css('position', 'absolute').css('left', X12).css('top', Y12);
 		$('.help p').remove();
 		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
 		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
+	e++;
   });
 }
 
@@ -344,15 +354,16 @@ function drawRect(){
         $(this).unbind('mouseup');
        	width = X2 - X1;
        	height = Y2 - Y1;		
-		var paper = Raphael(X12, Y12, width+2, width+2);
+		var paper = Raphael(X1, Y1, width+2, width+2);
 		var rect = paper.rect(1, 1, width, height);
-		 $('svg').draggable({ containment: "#canvas" });
-		 $('svg').attr('class', 'svgDrawingObject');
+		  $('svg').draggable({ containment: "#canvas" });
+		// $('#canvas svg').attr('class', 'svgDrawingObject').css('position', 'absolute').css('left', X12).css('top', Y12);
 		$('.help p').remove();
 		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
 		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
+	r++;
   });
 }
 
@@ -381,16 +392,17 @@ function drawRectwithRound(){
         $(this).unbind('mouseup');
        	width = X2 - X1;
        	height = Y2 - Y1;		
-		var paper = Raphael(X12, Y12, width+2, width+2);
+		var paper = Raphael(X1, Y1, width+2, width+2);
 		var rect = paper.rect(1, 1, width, height, 25);
-		 $('svg').draggable({ containment: "#canvas" });
-		 $('svg').attr('class', 'svgDrawingObject');
+		  $('svg').draggable({ containment: "#canvas" });
+		 //$('#canvas svg').attr('class', 'svgDrawingObject').css('position', 'absolute').css('left', X12).css('top', Y12);
 		// $('#buttons svg').removeClass('svgDrawingObject');
 		$('.help p').remove();
 		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
 		$('.help p').css('color', '#a3ed9b');
 	});
 	$(this).unbind('mousedown');
+	rr++;
   });
   
 }
@@ -418,11 +430,11 @@ function drawLine(){
         $(this).unbind('mouseup');
        	width = X2 - X1;
        	height = Y2 - Y1;		
-		var paper = Raphael(X12, Y12, width, width);
+		var paper = Raphael(X1, Y1, width, width);
 		var stringPath = "M" + 0 + " " + 0 + "L" + width + " " + height;
 		var path = paper.path(stringPath);
-		 $('svg').draggable({ containment: "#canvas" });
-		  $('svg').attr('class', 'svgDrawingObject');
+		  $('svg').draggable({ containment: "#canvas" });
+		 // $('#canvas svg').attr('class', 'svgDrawingObject').css('position', 'absolute').css('left', X12).css('top', Y12);
 		$('.help p').remove();
 		$('.help').append('<p>Drag this shape anywhere on the canvas.<p>');
 		$('.help p').css('color', '#a3ed9b');
@@ -571,5 +583,12 @@ function createDynamicTable(tbody, rows, cols) {
  else
   alert("We're sorry, version alpha only allows for one table to be created per canvas.");
   
-}   
+}
 
+function removeButton() {
+	$('#canvas svg').insertAfter('<div id="deleteNode">X</div>');
+	
+	$('#deleteNode').click(function(e){
+		console.log("yeay");
+	});
+}
