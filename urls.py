@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     url(r'^', include('registration.backends.default.urls')),
     url(r'^messages/', include('postman.urls')),
     url(r'^project/create/$', 'canvas.views.create_project'),
-    url(r'^project/(\d+)$','canvas.views.project'),
+    url(r'^project/(\d+)/$','canvas.views.project'),
     url(r'^project/(\d+)/delete/$', 'canvas.views.project_delete'),
     url(r'^project/(\d+)/edit/$', 'canvas.views.project_edit'),
     
