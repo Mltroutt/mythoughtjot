@@ -1,5 +1,4 @@
 <a class="add_collaborator" href="/canvas/{{ canvas.pk }}/add-collaborator/"><img src="{{ MEDIA_URL }}images/add.png" alt="Add" title="Add" /> Add a new collaborator</a>
-{{ collaborators.all }}
 {% if collaborators.all|length %}
     {% for user in collaborators.all %}
         <li class="update"><div class="collaborator_box"><img src="{{ MEDIA_URL }}images/waht.png" width="25px" height="25px"><a class="user_link" href="/user/{{ user.username }}/">{{ user.username }}</a>{% if request.user == canvas.owner and user != request.user %}<a class="remove_collaborator" href="/canvas/{{ canvas.pk }}/remove-collaborator/{{ user.pk }}/"><img src="{{ MEDIA_URL }}images/delete.png" alt="Remove" title="Remove" /></a>{% endif %}</div></li>
